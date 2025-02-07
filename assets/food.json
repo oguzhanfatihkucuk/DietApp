@@ -1,0 +1,234 @@
+  [
+  {
+    "foodID": 1,
+    "foodName": "Yumurta (Haşlanmış)",
+    "portionType": "Adet",
+    "calories": 78,
+    "protein": 6.3,
+    "fat": 5.3,
+    "carbohydrates": 0.6,
+    "fiber": 0,
+    "sugar": 0.6,
+    "vitamins": {
+      "vitaminA": "260 IU",
+      "vitaminD": "44 IU",
+      "vitaminB12": "0.6 mcg"
+    },
+    "minerals": {
+      "calcium": "25 mg",
+      "iron": "0.6 mg",
+      "potassium": "63 mg"
+    },
+    "allergens": [ "Yumurta" ],
+    "ingredients": [ "Yumurta", "Su", "Tuz" ],
+    "preparationMethod": "Haşlanmış",
+    "notes": "Yumurta, yüksek protein içeriğiyle kahvaltıların vazgeçilmezidir."
+  },
+  {
+    "foodID": 2,
+    "foodName": "Somon (Izgara)",
+    "portionType": "Gram",
+    "calories": 208,
+    "protein": 20,
+    "fat": 13,
+    "carbohydrates": 0,
+    "fiber": 0,
+    "sugar": 0,
+    "vitamins": {
+      "vitaminD": "14 mcg",
+      "vitaminB12": "4.5 mcg"
+    },
+    "minerals": {
+      "selenium": "36 mcg",
+      "potassium": "384 mg"
+    },
+    "allergens": [ "Balık" ],
+    "ingredients": [ "Somon fileto", "Zeytinyağı", "Tuz", "Karabiber" ],
+    "preparationMethod": "Izgara",
+    "notes": "Somon, omega-3 yağ asitleri açısından zengin bir balık türüdür."
+  },
+  {
+    "foodID": 3,
+    "foodName": "Muz",
+    "portionSize": "Adet",
+    "calories": 105,
+    "protein": 1.3,
+    "fat": 0.4,
+    "carbohydrates": 27,
+    "fiber": 3.1,
+    "sugar": 14,
+    "vitamins": {
+      "vitaminC": "10 mg",
+      "vitaminB6": "0.4 mg"
+    },
+    "minerals": {
+      "potassium": "422 mg",
+      "magnesium": "32 mg"
+    },
+    "allergens": [ "None" ],
+    "ingredients": [ "Muz" ],
+    "preparationMethod": "Çiğ",
+    "notes": "Muz, potasyum açısından zengin bir meyvedir ve enerji verir."
+  },
+  {
+    "foodID": 4,
+    "foodName": "Yoğurt (Tam Yağlı)",
+    "portionSize": "Gram",
+    "calories": 150,
+    "protein": 8,
+    "fat": 8,
+    "carbohydrates": 11,
+    "fiber": 0,
+    "sugar": 11,
+    "vitamins": {
+      "vitaminB12": "1 mcg",
+      "calcium": "300 mg"
+    },
+    "minerals": {
+      "potassium": "380 mg",
+      "magnesium": "27 mg"
+    },
+    "allergens": [ "Süt" ],
+    "ingredients": [ "İnek sütü", "Yoğurt kültürü" ],
+    "preparationMethod": "Fermente",
+    "notes": "Yoğurt, probiyotikler açısından zengin bir süt ürünüdür."
+  },
+  {
+    "foodID": 5,
+    "foodName": "Brokoli (Haşlanmış)",
+    "portionSize": "Gram",
+    "calories": 55,
+    "protein": 3.7,
+    "fat": 0.6,
+    "carbohydrates": 11,
+    "fiber": 5.1,
+    "sugar": 2.2,
+    "vitamins": {
+      "vitaminC": "89 mg",
+      "vitaminK": "101 mcg"
+    },
+    "minerals": {
+      "potassium": "316 mg",
+      "calcium": "47 mg"
+    },
+    "allergens": [ "None" ],
+    "ingredients": [ "Brokoli", "Su", "Tuz" ],
+    "preparationMethod": "Haşlanmış",
+    "notes": "Brokoli, lif ve antioksidanlar açısından zengin bir sebzedir."
+  },
+  {
+    "foodID": 6,
+    "foodName": "Kinoa (Haşlanmış)",
+    "portionSize": "Gram",
+    "calories": 120,
+    "protein": 4.1,
+    "fat": 1.9,
+    "carbohydrates": 21,
+    "fiber": 2.8,
+    "sugar": 0.9,
+    "vitamins": {
+      "vitaminB6": "0.1 mg",
+      "folate": "42 mcg"
+    },
+    "minerals": {
+      "magnesium": "64 mg",
+      "iron": "1.5 mg"
+    },
+    "allergens": [ "None" ],
+    "ingredients": [ "Kinoa", "Su", "Tuz" ],
+    "preparationMethod": "Haşlanmış",
+    "notes": "Kinoa, yüksek protein içeriğiyle veganlar için popüler bir tahıldır."
+  },
+  {
+    "foodID": 7,
+    "foodName": "Tavuk Göğüs (Izgara)",
+    "portionSize": "Gram",
+    "calories": 165,
+    "protein": 31,
+    "fat": 3.6,
+    "carbohydrates": 0,
+    "fiber": 0,
+    "sugar": 0,
+    "vitamins": {
+      "vitaminB6": "0.5 mg",
+      "niacin": "10 mg"
+    },
+    "minerals": {
+      "selenium": "22 mcg",
+      "phosphorus": "210 mg"
+    },
+    "allergens": [ "None" ],
+    "ingredients": [ "Tavuk göğüs", "Zeytinyağı", "Tuz", "Karabiber" ],
+    "preparationMethod": "Izgara",
+    "notes": "Tavuk göğüs, düşük yağ ve yüksek protein içeriğiyle diyetlerin vazgeçilmezidir."
+  },
+  {
+    "foodID": 8,
+    "foodName": "Badem",
+    "portionSize": "Gram",
+    "calories": 164,
+    "protein": 6,
+    "fat": 14,
+    "carbohydrates": 6,
+    "fiber": 3.5,
+    "sugar": 1.2,
+    "vitamins": {
+      "vitaminE": "7.3 mg",
+      "riboflavin": "0.3 mg"
+    },
+    "minerals": {
+      "magnesium": "76 mg",
+      "calcium": "76 mg"
+    },
+    "allergens": [ "Fındık" ],
+    "ingredients": [ "Badem" ],
+    "preparationMethod": "Çiğ",
+    "notes": "Badem, sağlıklı yağlar ve lif açısından zengin bir kuruyemiştir."
+  },
+  {
+    "foodID": 9,
+    "foodName": "Elma",
+    "portionSize": "Adet",
+    "calories": 95,
+    "protein": 0.5,
+    "fat": 0.3,
+    "carbohydrates": 25,
+    "fiber": 4.4,
+    "sugar": 19,
+    "vitamins": {
+      "vitaminC": "8.4 mg",
+      "vitaminK": "4 mcg"
+    },
+    "minerals": {
+      "potassium": "195 mg",
+      "calcium": "11 mg"
+    },
+    "allergens": [ "None" ],
+    "ingredients": [ "Elma" ],
+    "preparationMethod": "Çiğ",
+    "notes": "Elma, lif ve antioksidanlar açısından zengin bir meyvedir."
+  },
+  {
+    "foodID": 10,
+    "foodName": "Tam Buğday Ekmeği",
+    "portionSize": "Dilim",
+    "calories": 92,
+    "protein": 4,
+    "fat": 1.2,
+    "carbohydrates": 17,
+    "fiber": 2.7,
+    "sugar": 1.4,
+    "vitamins": {
+      "thiamine": "0.1 mg",
+      "folate": "20 mcg"
+    },
+    "minerals": {
+      "iron": "1 mg",
+      "magnesium": "23 mg"
+    },
+    "allergens": [ "Gluten" ],
+    "ingredients": [ "Tam buğday unu", "Su", "Maya", "Tuz" ],
+    "preparationMethod": "Pişmiş",
+    "notes": "Tam buğday ekmeği, lif ve kompleks karbonhidratlar açısından zengindir."
+  }
+]

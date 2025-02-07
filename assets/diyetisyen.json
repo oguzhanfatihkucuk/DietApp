@@ -1,0 +1,18 @@
+{
+  "dietitian": {
+    "name": "Ayşe Yılmaz",
+    "id": 111023,
+    "expertise_area": "Weight Management and Sports Nutrition",
+    "contact": {
+      "phone": "+90 555 123 45 67",
+      "email": "ayse.yilmaz@diyetisyen.com",
+      "address": "123 Sağlık Sokak, Ankara, Türkiye"
+    },
+    "customer_id_list": [
+      1234,
+      2345,
+      3455,
+      4433
+    ]
+  }
+}
