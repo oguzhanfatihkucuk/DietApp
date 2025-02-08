@@ -1,76 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// Customer Modeli
-class Customer {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String phone;
-  final int age;
-  final String gender;
-  final double height;
-  final double weight;
-  final String healthStatus;
-  final String dietaryHabits;
-  final double dailyWaterAmount;
-  final String waterConsumptionHabit;
-  final String goals;
-  final List<DietPlan> dietPlans;
-
-  Customer({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.phone,
-    required this.age,
-    required this.gender,
-    required this.height,
-    required this.weight,
-    required this.healthStatus,
-    required this.dietaryHabits,
-    required this.dailyWaterAmount,
-    required this.waterConsumptionHabit,
-    required this.goals,
-    required this.dietPlans,
-  });
-}
-
-class DietPlan {
-  String planID;
-  String planName;
-  DateTime startDate;
-  DateTime endDate;
-  int dailyCalorieTarget;
-  int dailyProteinTarget;
-  int dailyFatTarget;
-  int dailyCarbohydrateTarget;
-  List<Meal> meals;
-
-  DietPlan({
-    required this.planID,
-    required this.planName,
-    required this.startDate,
-    required this.endDate,
-    required this.dailyCalorieTarget,
-    required this.dailyProteinTarget,
-    required this.dailyFatTarget,
-    required this.dailyCarbohydrateTarget,
-    required this.meals,
-  });
-}
-
-class Meal {
-  String mealName;
-  List<String> foods;
-  int calories;
-
-  Meal({
-    required this.mealName,
-    required this.foods,
-    required this.calories,
-  });
-}
-
+import 'Models/CustomerModel.dart';
+import 'Models/DietPlanModel.dart';
+import 'Models/MealModel.dart';
 // Ana Uygulama
 void main() {
   runApp(MyApp());
