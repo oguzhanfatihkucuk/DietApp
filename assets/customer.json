@@ -166,14 +166,14 @@
     ],
     "progressTracking": [
       {
-        "date": "2023-10-15",
+        "date": "15-10-2023",
         "weight": 67,
         "bodyFatPercentage": 25.5,
         "muscleMass": 40.2,
         "notes": "Hedeflere doğru ilerleme devam ediyor."
       },
       {
-        "date": "2023-11-01",
+        "date": "01-11-2023",
         "weight": 66,
         "bodyFatPercentage": 24.8,
         "muscleMass": 40.5,
@@ -452,8 +452,8 @@
       {
         "planID": "P002",
         "planName": "Kas Kütlesi Artırma",
-        "startDate": "2024-01-01",
-        "endDate": "2024-03-31",
+        "startDate": "01-01-2024",
+        "endDate": "31-03-2024",
         "dailyCalorieTarget": 2500,
         "dailyProteinTarget": 80,
         "dailyFatTarget": 30,
@@ -484,7 +484,7 @@
     ],
     "progressTracking": [
       {
-        "date": "2024-01-15",
+        "date": "15-01-2024",
         "weight": 84,
         "bodyFatPercentage": 20.5,
         "muscleMass": 42.0,

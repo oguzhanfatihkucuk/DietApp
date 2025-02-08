@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Müşteri Kayıt Ekranı',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -29,7 +30,7 @@ class CustomerRegistrationScreen extends StatefulWidget {
 
 class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-  List<DietPlan> _dietPlans = [];
+
   int _planCounter = 1;
   // Kişisel Bilgiler
   String firstName = '';
@@ -40,10 +41,12 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   String gender = 'Kadın'; // Default değeri Kadın
   double height = 0.0;
   double weight = 0.0;
+  int targetWeight= 0;
+  String activityLevel= "";
 
   // Sağlık Durumu
   String healthStatus = 'Yok'; // Default
-  String allergies = 'Gluten';
+  String allergies = 'Yok';
   String medicationUse = 'Yok';
 
   // Beslenme Alışkanlıkları
@@ -52,18 +55,19 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   bool vegetarian = false;
 
   // Su Tüketimi
-  double dailyWaterAmount = 1.5;
-  String waterConsumptionHabit = 'Az';
+  double dailyWaterAmount = 0;
+  String waterConsumptionHabit = '';
 
   // Hedefler
   bool weightLoss = false;
   bool muscleGain = false;
   bool healthierEating = false;
 
-  // Diyet Listesi
-  List<Meal> meals = [
+  List<DietPlan> _dietPlans = []; // Diyet Listesi
 
-  ];
+  List<Meal> meals = [];
+
+
 
   // Formu gönder
   void _submitForm() {
@@ -95,10 +99,10 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
         planName: 'Yeni Plan $_planCounter',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(Duration(days:7)),
-        dailyCalorieTarget: 2000,
-        dailyProteinTarget: 50,
-        dailyFatTarget: 30,
-        dailyCarbohydrateTarget: 100,
+         dailyCalorieTarget: 0,
+        dailyProteinTarget: 0,
+        dailyFatTarget: 0,
+        dailyCarbohydrateTarget: 0,
         meals: [],
       ));
     });
@@ -320,6 +324,44 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                           ),
                         ],
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              decoration: InputDecoration(labelText: 'Hedef Kilo'),
+                              keyboardType: TextInputType.number,
+                              onSaved: (value) => targetWeight = int.parse(value!),
+                              validator: (value) {
+                                if (value == null || value.isEmpty || int.tryParse(value) == null) {
+                                  return 'Geçerli bir kilo girin';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: DropdownButtonFormField<String>(
+                              value: activityLevel.isNotEmpty &&
+                                  ['Az', 'Orta', 'Yeterli', 'Yüksek'].contains(activityLevel)
+                                  ? activityLevel
+                                  : null, // Eğer geçerli bir değer değilse null yap
+                              decoration: InputDecoration(labelText: 'Aktivite Seviyesi'),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  activityLevel = newValue!;
+                                });
+                              },
+                              items: ['Az', 'Orta', 'Yeterli', 'Yüksek']
+                                  .map((label) => DropdownMenuItem(
+                                value: label,
+                                child: Text(label),
+                              ))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -400,6 +442,7 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min, // Column'un içeriğe göre boyut almasını sağla
                     children: [
                       Text(
                         'Su Tüketimi',
@@ -411,14 +454,30 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                         keyboardType: TextInputType.number,
                         onSaved: (value) => dailyWaterAmount = double.parse(value!),
                       ),
-                      TextFormField(
+                      SizedBox(height: 10), // Expanded yerine boşluk ekleyerek daha iyi bir görünüm sağlıyoruz
+                      DropdownButtonFormField<String>(
+                        value: waterConsumptionHabit != null &&
+                            ['Kötü', 'Orta', 'Yeterli', 'İyi'].contains(waterConsumptionHabit)
+                            ? waterConsumptionHabit
+                            : null, // Eğer geçerli bir değer değilse null yap
                         decoration: InputDecoration(labelText: 'Su Tüketim Alışkanlığı'),
-                        onSaved: (value) => waterConsumptionHabit = value!,
+                        onChanged: (newValue) {
+                          setState(() {
+                            waterConsumptionHabit = newValue!;
+                          });
+                        },
+                        items: ['Kötü', 'Orta', 'Yeterli', 'İyi']
+                            .map((label) => DropdownMenuItem(
+                          value: label,
+                          child: Text(label),
+                        ))
+                            .toList(),
                       ),
                     ],
                   ),
                 ),
               ),
+
               SizedBox(height: 20),
               // Hedefler
               Card(
