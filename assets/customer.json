@@ -12,7 +12,7 @@
     "email": "ayse.yilmaz@gmail.com",
     "weight": 68,
     "bodyMassIndex": 24.98,
-    "targetWeight": 60,
+    "targetWeight": 60.0,
     "activityLevel": "Orta",
     "healthStatus": {
       "chronicDiseases": [ "Yok" ],
