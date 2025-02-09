@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'Models/CustomerModel.dart';
 import 'Models/DietPlanModel.dart';
 import 'Models/DietaryHabits.dart';
@@ -44,7 +42,7 @@ class _CustomerRegistrationScreenState
   final _formKey = GlobalKey<FormState>();
   int _planCounter = 1;
 
-// Kullanıcı Bilgileri
+  // Kullanıcı Bilgileri
   int customerID = 25; // Eksik değişken eklendi
   int dietitianID = 33; // Eksik değişken eklendi
   bool isLoginBefore = false; // Eksik değişken eklendi
