@@ -11,6 +11,7 @@ import 'Models/HealthStatus.dart';
 import 'Models/Meal.dart';
 import 'Models/WaterConsumption.dart';
 import 'firebase_options.dart';
+import 'dart:math';
 
 final database = FirebaseDatabase.instance.ref();
 
@@ -23,6 +24,12 @@ Future<void> saveData(String key, Map<String, dynamic> data) async {
     print('Error saving data: $e');
   }
 }
+
+int _generate8DigitId() {
+  final random = Random();
+  return 100000 + random.nextInt(900000);
+}
+
 // Ana Uygulama
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,24 +67,24 @@ class _CustomerRegistrationScreenState
   int _planCounter = 1;
 
   // Kullanıcı Bilgileri
-  int customerID = 25; // Eksik değişken eklendi
-  int dietitianID = 33; // Eksik değişken eklendi
+  int customerID = _generate8DigitId();
+  int dietitianID = 1; // Eksik değişken eklendi
   bool isLoginBefore = false; // Eksik değişken eklendi
 
   // Kişisel Bilgiler
-  String firstName = '';
-  String lastName = '';
-  String email = '';
-  String phone = '';
-  int age = 0;
-  String gender = 'Kadın'; // Default değeri Kadın
-  double height = 0;
-  double weight = 0;
-  double targetWeight = 0;
-  String activityLevel = "";
+  late String firstName ;
+  late String lastName ;
+  late String email ;
+  late String phone ;
+  late int age ;
+  late String gender ="Kadın" ; // Default değeri Kadın
+  late double height ;
+  late double weight ;
+  late double targetWeight ;
+  late String activityLevel ="Orta";
 
 // Sağlık Durumu
-  List<String> allergies = [];
+  List<String> allergies= [] ;
   List<String> medicationUse = [];
   List<String> chronicDiseases = []; // Eksik değişken eklendi
 
@@ -114,8 +121,6 @@ class _CustomerRegistrationScreenState
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      debugPrint('$customerID');
-      debugPrint(firstName);
       final newCustomer = Customer(
         customerID: customerID,
         dietitianID: dietitianID,
@@ -160,10 +165,8 @@ class _CustomerRegistrationScreenState
       final customerJson = newCustomer.toJson();
       final jsonString = JsonEncoder.withIndent('  ').convert(customerJson);
 
-      debugPrint('MÜŞTERİ JSON VERİSİ:');
-      debugPrint(jsonString);
-
-      saveData('customer/user1',customerJson);
+      final path = 'customer/-Nxyz${newCustomer.customerID}'; // 👈 ID'yi path'e ekle
+      saveData(path, customerJson); // 👈 Dinamik path ile kaydet
 
       showDialog(
         context: context,
@@ -225,7 +228,7 @@ class _CustomerRegistrationScreenState
 
   Future<void> _selectDate(
       BuildContext context, DietPlan plan, bool isStartDate) async {
-    final DateTime? picked = await showDatePicker(
+      final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isStartDate ? plan.startDate : plan.endDate,
       firstDate: DateTime(DateTime.now().year),
@@ -387,6 +390,12 @@ class _CustomerRegistrationScreenState
                                   setState(() {
                                     gender = newValue!;
                                   });
+                                },
+                                validator: (value) { // Form validation için
+                                  if (value == null) {
+                                    return 'Lütfen cinsiyet seçiniz';
+                                  }
+                                  return null;
                                 },
                                 items: ['Kadın', 'Erkek']
                                     .map((label) => DropdownMenuItem(
