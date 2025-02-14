@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'Models/CustomerModel.dart';
@@ -8,10 +10,25 @@ import 'Models/Goals.dart';
 import 'Models/HealthStatus.dart';
 import 'Models/Meal.dart';
 import 'Models/WaterConsumption.dart';
+import 'firebase_options.dart';
 
+final database = FirebaseDatabase.instance.ref();
+
+// Function to save data
+Future<void> saveData(String key, Map<String, dynamic> data) async {
+  try {
+    await database.child(key).set(data);
+    print('Data saved successfully!');
+  } catch (e) {
+    print('Error saving data: $e');
+  }
+}
 // Ana Uygulama
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -92,8 +109,6 @@ class _CustomerRegistrationScreenState
     return 0.0;
   }
 
-
-
   // Formu gönder
   Future<void> _submitForm()  async {
     if (_formKey.currentState!.validate()) {
@@ -147,6 +162,8 @@ class _CustomerRegistrationScreenState
 
       debugPrint('MÜŞTERİ JSON VERİSİ:');
       debugPrint(jsonString);
+
+      saveData('customer/user1',customerJson);
 
       showDialog(
         context: context,
@@ -293,8 +310,10 @@ class _CustomerRegistrationScreenState
                           children: [
                             Expanded(
                               child: TextFormField(
+
                                 decoration: InputDecoration(labelText: 'Ad'),
                                 onSaved: (value) => firstName = value!,
+                                initialValue: "a",
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Ad boş olamaz';
@@ -308,6 +327,7 @@ class _CustomerRegistrationScreenState
                               child: TextFormField(
                                 decoration: InputDecoration(labelText: 'Soyad'),
                                 onSaved: (value) => lastName = value!,
+                                initialValue: "a",
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Soyad boş olamaz';
@@ -321,6 +341,7 @@ class _CustomerRegistrationScreenState
                         TextFormField(
                           decoration: InputDecoration(labelText: 'E-posta'),
                           onSaved: (value) => email = value!,
+                          initialValue: "a@",
                           validator: (value) {
                             if (value == null || !value.contains('@')) {
                               return 'Geçerli bir e-posta adresi girin';
@@ -331,6 +352,7 @@ class _CustomerRegistrationScreenState
                         TextFormField(
                           decoration: InputDecoration(labelText: 'Telefon'),
                           onSaved: (value) => phone = value!,
+                          initialValue: "a",
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Telefon boş olamaz';
@@ -344,6 +366,7 @@ class _CustomerRegistrationScreenState
                               child: TextFormField(
                                 decoration: InputDecoration(labelText: 'Yaş'),
                                 keyboardType: TextInputType.number,
+                                initialValue: "1",
                                 onSaved: (value) => age = int.parse(value!),
                                 validator: (value) {
                                   if (value == null ||
@@ -359,8 +382,7 @@ class _CustomerRegistrationScreenState
                             Expanded(
                               child: DropdownButtonFormField<String>(
                                 value: gender,
-                                decoration:
-                                    InputDecoration(labelText: 'Cinsiyet'),
+                                decoration:InputDecoration(labelText: 'Cinsiyet'),
                                 onChanged: (newValue) {
                                   setState(() {
                                     gender = newValue!;
@@ -383,6 +405,7 @@ class _CustomerRegistrationScreenState
                                 decoration:
                                     InputDecoration(labelText: 'Boy (cm)'),
                                 keyboardType: TextInputType.number,
+                                initialValue: "1",
                                 onSaved: (value) =>
                                     height = double.parse(value!),
                                 validator: (value) {
@@ -401,6 +424,7 @@ class _CustomerRegistrationScreenState
                                 decoration:
                                     InputDecoration(labelText: 'Kilo (kg)'),
                                 keyboardType: TextInputType.number,
+                                initialValue: "1",
                                 onSaved: (value) =>
                                     weight = double.parse(value!),
                                 validator: (value) {
@@ -421,6 +445,7 @@ class _CustomerRegistrationScreenState
                               child: TextFormField(
                                 decoration:
                                     InputDecoration(labelText: 'Hedef Kilo'),
+                                initialValue: "1",
                                 keyboardType: TextInputType.number,
                                 validator: (value) {
                                   if (value == null ||
@@ -441,10 +466,11 @@ class _CustomerRegistrationScreenState
                                         ['Az', 'Orta', 'Yeterli', 'Yüksek']
                                             .contains(activityLevel)
                                     ? activityLevel
-                                    : null,
+                                    : "Az",
                                 // Eğer geçerli bir değer değilse null yap
                                 decoration: InputDecoration(
                                     labelText: 'Aktivite Seviyesi'),
+
                                 onChanged: (newValue) {
                                   setState(() {
                                     activityLevel = newValue!;
@@ -572,6 +598,7 @@ class _CustomerRegistrationScreenState
                           decoration: InputDecoration(
                               labelText: 'Günlük Su Tüketimi (litre)'),
                           keyboardType: TextInputType.number,
+                          initialValue: "1",
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||

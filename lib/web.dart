@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -44,8 +46,8 @@ class CustomerInfoScreen extends StatefulWidget {
 
 class _CustomerInfoScreenState extends State<CustomerInfoScreen> {
   List<dynamic> customers = [];
-  final DatabaseReference _databaseRef =
-      FirebaseDatabase.instance.ref('customer');
+  final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
+
 
   @override
   void initState() {
@@ -55,21 +57,41 @@ class _CustomerInfoScreenState extends State<CustomerInfoScreen> {
 
   Future<void> _fetchCustomers() async {
     try {
-      final DatabaseReference ref = FirebaseDatabase.instance.ref("customer");
-      final snapshot = await ref.get();
+      // 1. Firebase referansını oluştur
+      final DatabaseReference ref = FirebaseDatabase.instance.ref("customers");
 
+      // 2. Verileri çek
+      final DatabaseEvent event = await ref.once();
+      final DataSnapshot snapshot = event.snapshot;
+
+      // 3. Veri kontrolü
       if (snapshot.exists) {
-        Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
-        List<dynamic> customerList = values.values.toList();
+        // 4. Veriyi işle
+        final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>?;
 
-        setState(() {
-          customers = customerList;
-        });
+        if (data != null) {
+          // 5. Müşteri listesine dönüştür
+          final List<Map<String, dynamic>> customers = data.entries.map((entry) {
+            return {
+              'id': entry.key,
+              ...Map<String, dynamic>.from(entry.value as Map)
+            };
+          }).toList();
+
+          // 6. State'i güncelle (mounted kontrolü ekledik)
+          if (mounted) {
+            setState(() {
+              this.customers = customers;
+            });
+          }
+        }
       } else {
-        print("🔥 Veri bulunamadı!");
+        print("📭 Veritabanında müşteri bulunamadı");
       }
+    } on FirebaseException catch (e) {
+      print("🔥 Firebase Hatası: ${e.code} - ${e.message}");
     } catch (e) {
-      print("⚠️ Veri çekme hatası: $e");
+      print("⚠️ Genel Hata: ${e.toString()}");
     }
   }
 
