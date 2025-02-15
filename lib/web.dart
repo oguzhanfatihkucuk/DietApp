@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'Components/BuildDivider.dart';
 import 'Components/buildInfoRow.dart';
@@ -7,8 +6,6 @@ import 'Components/buildSectionTitle.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,15 +21,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Müşteri Takip Arayüzü',
+      title: 'Müşteri Kayıt Ekranı',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Roboto', // Yazı tipi
-        textTheme: TextTheme(
-          headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
-          bodyMedium: TextStyle(fontSize: 14, color: Colors.grey[700]),
-        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: CustomerInfoScreen(),
     );
@@ -130,8 +122,16 @@ class _CustomerInfoScreenState extends State<CustomerInfoScreen> {
                 return field?.toString() ?? fallback;
               }
 
-              List<dynamic> safeList(dynamic list) =>
-                  (list as List<dynamic>?) ?? [];
+              List<dynamic> safeList(dynamic list) {
+                if (list is List<dynamic>) {
+                  return list;
+                } else if (list is Map) {
+                  return list.values.toList(); // Veya list.keys.toList()
+                } else {
+                  return [];
+                }
+              }
+
 
               return Card(
                 margin: EdgeInsets.all(10),
