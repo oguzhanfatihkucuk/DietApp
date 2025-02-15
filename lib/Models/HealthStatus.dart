@@ -9,7 +9,7 @@ class HealthStatus {
     required this.medicationUse,
   });
 
-  factory HealthStatus.fromJson(Map<String, dynamic> json) {
+  factory HealthStatus.fromJson(Map<dynamic, dynamic> json) {
     return HealthStatus(
       chronicDiseases: List<String>.from(json['chronicDiseases']),
       allergies: List<String>.from(json['allergies']),
@@ -17,7 +17,7 @@ class HealthStatus {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'chronicDiseases': chronicDiseases,
       'allergies': allergies,

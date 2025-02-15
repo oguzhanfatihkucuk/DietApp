@@ -1,8 +1,10 @@
+import 'package:diet/Models/WeeklyMealModel.dart';
 import 'WaterConsumption.dart';
 import 'DietPlanModel.dart';
 import 'DietaryHabits.dart';
 import 'Goals.dart';
 import 'HealthStatus.dart';
+import 'ProgressTracking.dart';
 
 class Customer {
   int customerID;
@@ -25,9 +27,9 @@ class Customer {
   WaterConsumption waterConsumption;
   Goals goals;
 
-  List<DietPlan> dietPlans;
-  List<dynamic> progressTracking;
-  List<dynamic> weeklyMeals;
+  List<ProgressTracking> progressTracking;
+  List<DietPlanModel> dietPlans;
+  List<WeeklyMealModel> weeklyMeals;
 
   Customer({
     required this.customerID,
@@ -54,7 +56,7 @@ class Customer {
     
   });
 
-  factory Customer.fromJson(Map<String, dynamic> json) {
+  factory Customer.fromJson(Map<dynamic, dynamic> json) {
     return Customer(
       customerID: json['customerID'],
       dietitianID: json['dietitianID'],
@@ -74,16 +76,13 @@ class Customer {
       dietaryHabits: DietaryHabits.fromJson(json['dietaryHabits']),
       waterConsumption: WaterConsumption.fromJson(json['waterConsumption']),
       goals: Goals.fromJson(json['goals']),
-      dietPlans: (json['dietPlans'] as List)
-          .map((plan) => DietPlan.fromJson(plan))
-          .toList(),
-      progressTracking: json['progressTracking'] ?? [],
-      weeklyMeals: json['weeklyMeals'] ?? [],
-
+      dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries.map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key)).toList() ?? [],
+      progressTracking: (json['progressTracking'] as List<dynamic>?)?.map((item) => ProgressTracking.fromJson(item as Map<dynamic, dynamic>)).toList() ?? [],
+      weeklyMeals: (json['weeklyMeals'] as List<dynamic>?) ?.map((weekly) => WeeklyMealModel.fromJson(Map<dynamic, dynamic>.from(weekly))).toList() ?? [],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'customerID': customerID,
       'dietitianID': dietitianID,
@@ -104,8 +103,9 @@ class Customer {
       'waterConsumption': waterConsumption.toJson(),
       'goals': goals.toJson(),
       'dietPlans': dietPlans.map((plan) => plan.toJson()).toList(),
-      'progressTracking': progressTracking,
-      'weeklyMeals': weeklyMeals,
+      'progressTracking': progressTracking.map((p) => p.toJson()).toList(),
+      'weeklyMeals': weeklyMeals.map((w) => w.toJson()).toList(),
     };
   }
 }
+

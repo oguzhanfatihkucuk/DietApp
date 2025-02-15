@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import 'firebase_options.dart';
 
+//TODO _saveProgress function will be control  because create feature is working correctly
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -98,7 +98,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
     progressRef.once().then((DatabaseEvent event) {
       if (event.snapshot.value != null) {
         // Mevcut listeyi al
-        List<dynamic> existingData = List<Map<String, dynamic>>.from(event.snapshot.value as List<dynamic>);
+        List<dynamic> existingData = List<Map<dynamic, dynamic>>.from(event.snapshot.value as List<dynamic>);
         existingData.add(newProgress);
 
         // Yeni listeyi kaydet

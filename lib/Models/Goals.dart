@@ -9,7 +9,7 @@ class Goals {
     required this.healthierEating,
   });
 
-  factory Goals.fromJson(Map<String, dynamic> json) {
+  factory Goals.fromJson(Map<dynamic, dynamic> json) {
     return Goals(
       weightLoss: json['weightLoss'],
       muscleGain: json['muscleGain'],
@@ -17,7 +17,7 @@ class Goals {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'weightLoss': weightLoss,
       'muscleGain': muscleGain,

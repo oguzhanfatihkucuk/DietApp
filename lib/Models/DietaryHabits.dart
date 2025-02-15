@@ -11,7 +11,7 @@ class DietaryHabits {
     required this.dislikedFoods,
   });
 
-  factory DietaryHabits.fromJson(Map<String, dynamic> json) {
+  factory DietaryHabits.fromJson(Map<dynamic, dynamic> json) {
     return DietaryHabits(
       vegan: json['vegan'],
       vegetarian: json['vegetarian'],
@@ -20,7 +20,7 @@ class DietaryHabits {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'vegan': vegan,
       'vegetarian': vegetarian,

@@ -8,7 +8,7 @@ class WaterConsumption {
   });
 
   // JSON'a çevirme (Firebase gibi yerlerde kullanmak için)
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'dailyWaterAmount': dailyWaterAmount,
       'waterConsumptionHabit': waterConsumptionHabit,
@@ -16,7 +16,7 @@ class WaterConsumption {
   }
 
   // JSON'dan nesne oluşturma (Veri çekerken kullanışlı olur)
-  factory WaterConsumption.fromJson(Map<String, dynamic> json) {
+  factory WaterConsumption.fromJson(Map<dynamic, dynamic> json) {
     return WaterConsumption(
       dailyWaterAmount: json['dailyWaterAmount'] ?? 0.0,
       waterConsumptionHabit: json['waterConsumptionHabit'] ?? '',

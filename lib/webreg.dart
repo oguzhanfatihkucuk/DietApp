@@ -8,7 +8,6 @@ import 'Models/DietPlanModel.dart';
 import 'Models/DietaryHabits.dart';
 import 'Models/Goals.dart';
 import 'Models/HealthStatus.dart';
-import 'Models/Meal.dart';
 import 'Models/WaterConsumption.dart';
 import 'firebase_options.dart';
 import 'dart:math';
@@ -16,7 +15,7 @@ import 'dart:math';
 final database = FirebaseDatabase.instance.ref();
 
 // Function to save data
-Future<void> saveData(String key, Map<String, dynamic> data) async {
+Future<void> saveData(String key, Map<dynamic, dynamic> data) async {
   try {
     await database.child(key).set(data);
     print('Data saved successfully!');
@@ -104,8 +103,8 @@ class _CustomerRegistrationScreenState
   bool muscleGain = false;
   bool healthierEating = false;
 
-  List<DietPlan> dietPlans = []; // Diyet Listesi
-  List<Meal> meals = [];
+  List<DietPlanModel> dietPlans = []; // Diyet Listesi
+  List<DietPlanMeal> meals = [];
 
 
 // Vücut Kitle İndeksi Hesaplaması
@@ -190,7 +189,7 @@ class _CustomerRegistrationScreenState
 
   void _addNewDietPlan() {
     setState(() {
-      dietPlans.add(DietPlan(
+      dietPlans.add(DietPlanModel(
         planID: 'P${(_planCounter++).toString().padLeft(3, '0')}',
         planName: 'Yeni Plan $_planCounter',
         startDate: DateTime.now(),
@@ -212,7 +211,7 @@ class _CustomerRegistrationScreenState
 
   void _addMealToPlan(int planIndex) {
     setState(() {
-      dietPlans[planIndex].meals.add(Meal(
+      dietPlans[planIndex].meals.add(DietPlanMeal(
             mealName: 'Yeni Öğün',
             foods: [],
             calories: 0,
@@ -227,7 +226,7 @@ class _CustomerRegistrationScreenState
   }
 
   Future<void> _selectDate(
-      BuildContext context, DietPlan plan, bool isStartDate) async {
+      BuildContext context, DietPlanModel plan, bool isStartDate) async {
       final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isStartDate ? plan.startDate : plan.endDate,
@@ -261,7 +260,7 @@ class _CustomerRegistrationScreenState
     }
   }
 
-  Widget _buildDatePickerField(String label, DietPlan plan, bool isStartDate) {
+  Widget _buildDatePickerField(String label, DietPlanModel plan, bool isStartDate) {
     return Expanded(
       child: InkWell(
         onTap: () => _selectDate(context, plan, isStartDate),
@@ -716,7 +715,7 @@ class _CustomerRegistrationScreenState
                         ),
                         ...dietPlans.asMap().entries.map((entry) {
                           int planIndex = entry.key;
-                          DietPlan plan = entry.value;
+                          DietPlanModel plan = entry.value;
                           return ExpansionTile(
                             title: Text(plan.planName),
                             trailing: IconButton(
@@ -817,12 +816,9 @@ class _CustomerRegistrationScreenState
                                         ),
                                       ],
                                     ),
-                                    ...plan.meals
-                                        .asMap()
-                                        .entries
-                                        .map((mealEntry) {
+                                    ...plan.meals.asMap().entries.map((mealEntry) {
                                       int mealIndex = mealEntry.key;
-                                      Meal meal = mealEntry.value as Meal;
+                                      DietPlanMeal meal = mealEntry.value;
                                       return Column(
                                         children: [
                                           Row(
@@ -830,36 +826,40 @@ class _CustomerRegistrationScreenState
                                               Expanded(
                                                 child: TextFormField(
                                                   initialValue: meal.mealName,
-                                                  decoration: InputDecoration(
-                                                      labelText: 'Öğün Adı'),
-                                                  onChanged: (value) =>
-                                                      meal.mealName = value,
+                                                  decoration: InputDecoration(labelText: 'Öğün Adı'),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      meal.mealName = value;
+                                                    });
+                                                  },
                                                 ),
                                               ),
                                               IconButton(
                                                 icon: Icon(Icons.delete),
-                                                onPressed: () =>
-                                                    _removeMealFromPlan(
-                                                        planIndex, mealIndex),
+                                                onPressed: () => _removeMealFromPlan(planIndex, mealIndex),
                                               ),
                                             ],
                                           ),
                                           TextFormField(
-                                            initialValue: meal.foods.join(', '),
-                                            decoration: InputDecoration(
-                                                labelText:
-                                                    'Yiyecekler (virgülle ayırın)'),
-                                            onChanged: (value) =>
-                                                meal.foods = value.split(','),
+
                                           ),
                                           TextFormField(
-                                            initialValue:
-                                                meal.calories.toString(),
-                                            decoration: InputDecoration(
-                                                labelText: 'Kalori'),
+                                            initialValue: meal.calories.toString(),
+                                            decoration: InputDecoration(labelText: 'Kalori'),
                                             keyboardType: TextInputType.number,
-                                            onChanged: (value) => meal
-                                                .calories = int.parse(value),
+                                            validator: (value) {
+                                              if (value == null || int.tryParse(value) == null) {
+                                                return 'Lütfen geçerli bir sayı girin';
+                                              }
+                                              return null;
+                                            },
+                                            onChanged: (value) {
+                                              if (value.isNotEmpty) {
+                                                setState(() {
+                                                  meal.calories = int.parse(value);
+                                                });
+                                              }
+                                            },
                                           ),
                                           Divider(),
                                         ],

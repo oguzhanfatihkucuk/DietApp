@@ -1,18 +1,17 @@
 import 'package:intl/intl.dart';
-import 'Meal.dart';
 
-class DietPlan {
+class DietPlanModel {
   String planID;
-  String planName;
-  DateTime startDate;
-  DateTime endDate;
-  int dailyCalorieTarget;
-  int dailyProteinTarget;
-  int dailyFatTarget;
-  int dailyCarbohydrateTarget;
-  List<Meal> meals;
+  late final String planName;
+  late final DateTime startDate;
+  late final DateTime endDate;
+  late final int dailyCalorieTarget;
+  late final int dailyProteinTarget;
+  late final int dailyFatTarget;
+  late final int dailyCarbohydrateTarget;
+  late final List<DietPlanMeal> meals;
 
-  DietPlan({
+  DietPlanModel({
     required this.planID,
     required this.planName,
     required this.startDate,
@@ -24,33 +23,69 @@ class DietPlan {
     required this.meals,
   });
 
-  factory DietPlan.fromJson(Map<String, dynamic> json) {
-    return DietPlan(
-      planID: json['planID'],
-      planName: json['planName'],
-      startDate: json['startDate'],
-      endDate: json['endDate'],
-      dailyCalorieTarget: json['dailyCalorieTarget'],
-      dailyProteinTarget: json['dailyProteinTarget'],
-      dailyFatTarget: json['dailyFatTarget'],
-      dailyCarbohydrateTarget: json['dailyCarbohydrateTarget'],
-      meals: (json['meals'] as List)
-          .map((meal) => Meal.fromJson(meal))
-          .toList(),
+  factory DietPlanModel.fromJson(Map<dynamic, dynamic> json) {
+    final dateFormat = DateFormat('yyyy-MM-dd');
+
+    return DietPlanModel(
+      planID: json['planID']?.toString() ?? '',
+      planName: json['planName']?.toString() ?? 'Plansız',
+      startDate: json['startDate'] != null
+          ? dateFormat.parse(json['startDate'] as String)
+          : DateTime.now(),
+      endDate: json['endDate'] != null
+          ? dateFormat.parse(json['endDate'] as String)
+          : DateTime.now(),
+      dailyCalorieTarget: (json['dailyCalorieTarget'] as num?)?.toInt() ?? 0,
+      dailyProteinTarget: (json['dailyProteinTarget'] as num?)?.toInt() ?? 0,
+      dailyFatTarget: (json['dailyFatTarget'] as num?)?.toInt() ?? 0,
+      dailyCarbohydrateTarget: (json['dailyCarbohydrateTarget'] as num?)?.toInt() ?? 0,
+      meals: (json['meals'] as List<dynamic>?) // Açık tip belirleme
+          ?.map((meal) => DietPlanMeal.fromJson(meal as Map<dynamic, dynamic>))
+          .toList() ?? [],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'planID': planID,
       'planName': planName,
-      'startDate': DateFormat('yyyy-MM-dd').format(startDate), // DateTime → String
-      'endDate': DateFormat('yyyy-MM-dd').format(endDate), // DateTime → String
+      'startDate': DateFormat('yyyy-MM-dd').format(startDate),
+      'endDate': DateFormat('yyyy-MM-dd').format(endDate),
       'dailyCalorieTarget': dailyCalorieTarget,
       'dailyProteinTarget': dailyProteinTarget,
       'dailyFatTarget': dailyFatTarget,
       'dailyCarbohydrateTarget': dailyCarbohydrateTarget,
       'meals': meals.map((meal) => meal.toJson()).toList(),
+    };
+  }
+}
+
+class DietPlanMeal {
+  late final String mealName;
+  late final List<dynamic> foods;
+  late final int calories;
+
+  DietPlanMeal({
+    required this.mealName,
+    required this.foods,
+    required this.calories,
+  });
+
+  factory DietPlanMeal.fromJson(Map<dynamic, dynamic> json) {
+    return DietPlanMeal(
+      mealName: json['mealName']?.toString() ?? 'Öğün Adı Yok',
+      calories: (json['calories'] as num?)?.toInt() ?? 0,
+      foods: (json['foods'] as List<dynamic>?) // Açık tip belirleme
+          ?.map((food) => food.toString()) // Her öğeyi String'e çevir
+          .toList() ?? [],
+    );
+  }
+
+  Map<dynamic, dynamic> toJson() {
+    return {
+      'mealName': mealName,
+      'calories': calories,
+      'foods': foods,
     };
   }
 }
