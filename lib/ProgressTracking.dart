@@ -19,6 +19,21 @@ class CustomerListScreen extends StatefulWidget {
 
 class _CustomerListScreenState extends State<CustomerListScreen> {
   List<String> customerIds = [];
+  DatabaseReference dbRef = FirebaseDatabase.instance.ref("customer");
+
+  void _fetchCustomers() async {
+    DatabaseEvent event = await dbRef.once();
+    if (event.snapshot.value != null) {
+      Map<dynamic, dynamic> customersMap = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+
+      // Müşteri ID’lerini listeye çevir ve setState ile güncelle
+      setState(() {
+        customerIds = customersMap.keys.map((key) => key.toString()).toList();
+      });
+
+      print("Müşteri ID'leri: $customerIds");
+    }
+  }
 
   @override
   void initState() {
@@ -26,25 +41,13 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
     _fetchCustomers();
   }
 
-  DatabaseReference dbRef = FirebaseDatabase.instance.ref("customer");
-
-  void _fetchCustomers() async {
-    DatabaseEvent event = await dbRef.once();
-    if (event.snapshot.value != null) {
-      Map<dynamic, dynamic> customersMap = event.snapshot.value as Map<dynamic, dynamic>;
-
-      // Müşteri ID’lerini listeye çevir
-      List<String> customerIds = customersMap.keys.map((key) => key.toString()).toList();
-
-      print("Müşteri ID'leri: $customerIds");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Müşteriler")),
-      body: ListView.builder(
+      body: customerIds.isEmpty
+          ? Center(child: CircularProgressIndicator()) // Veri yüklenene kadar göster
+          : ListView.builder(
         itemCount: customerIds.length,
         itemBuilder: (context, index) {
           return ListTile(
@@ -63,6 +66,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
     );
   }
 }
+
 
 class AddProgressScreen extends StatefulWidget {
   final String customerId;
