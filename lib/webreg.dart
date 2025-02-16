@@ -9,32 +9,25 @@ import 'Models/DietaryHabits.dart';
 import 'Models/Goals.dart';
 import 'Models/HealthStatus.dart';
 import 'Models/WaterConsumption.dart';
+import 'Models/ProgressTracking.dart';  //TODO this line will be implement to 114
+import 'Models/WeeklyMealModel.dart';   //TODO this line will be implement to 115
 import 'firebase_options.dart';
 import 'dart:math';
 
-final database = FirebaseDatabase.instance.ref();
-
-// Function to save data
-Future<void> saveData(String key, Map<dynamic, dynamic> data) async {
-  try {
-    await database.child(key).set(data);
-    print('Data saved successfully!');
-  } catch (e) {
-    print('Error saving data: $e');
-  }
-}
-
-int _generate8DigitId() {
+int generate8DigitId() {
   final random = Random();
   return 100000 + random.nextInt(900000);
 }
 
 // Ana Uygulama
 void main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+
   runApp(MyApp());
 }
 
@@ -54,19 +47,32 @@ class MyApp extends StatelessWidget {
 }
 
 class CustomerRegistrationScreen extends StatefulWidget {
+
   @override
   _CustomerRegistrationScreenState createState() =>
       _CustomerRegistrationScreenState();
+
 }
 
-class _CustomerRegistrationScreenState
-    extends State<CustomerRegistrationScreen> {
+class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen> {
+
+
+  final database = FirebaseDatabase.instance.ref();
+
+  Future<void> saveData(String key, Map<dynamic, dynamic> data) async {
+    try {
+      await database.child(key).set(data);
+      print('Data saved successfully!');
+    } catch (e) {
+      print('Error saving data: $e');
+    }
+  }
 
   final _formKey = GlobalKey<FormState>();
   int _planCounter = 1;
 
   // Kullanıcı Bilgileri
-  int customerID = _generate8DigitId();
+  int customerID = generate8DigitId();
   int dietitianID = 1; // Eksik değişken eklendi
   bool isLoginBefore = false; // Eksik değişken eklendi
 
@@ -155,9 +161,9 @@ class _CustomerRegistrationScreenState
           muscleGain: muscleGain,
           healthierEating: healthierEating,
         ),
-        dietPlans: dietPlans,
-        progressTracking: [],
-        weeklyMeals: [], // Diyet planlarını ekleyerek düzelttim
+        dietPlans: dietPlans,   //TODO
+        progressTracking: [],   //TODO
+        weeklyMeals: [], //     //TODO
       );
 
       // JSON'a çevirme ve loglama
@@ -895,4 +901,5 @@ class _CustomerRegistrationScreenState
       ),
     );
   }
+
 }

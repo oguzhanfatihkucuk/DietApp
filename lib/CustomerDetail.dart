@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:diet/Models/CustomerModel.dart';
 import 'Components/buildInfoRow.dart';
 import 'Components/buildSectionTitle.dart'; // Özel widget'larınız olduğunu varsayıyorum
+import 'Components/buildListInfo.dart';
 
 class CustomerDetailScreen extends StatelessWidget {
   final Customer customer;
@@ -66,10 +67,10 @@ class CustomerDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             buildSectionTitle('Sağlık Durumu'),
-            ..._buildListInfo(
+            ...buildListInfo(
                 'Kronik Hastalıklar', customer.healthStatus.chronicDiseases),
-            ..._buildListInfo('Alerjiler', customer.healthStatus.allergies),
-            ..._buildListInfo(
+            ...buildListInfo('Alerjiler', customer.healthStatus.allergies),
+            ...buildListInfo(
                 'Kullanılan İlaçlar', customer.healthStatus.medicationUse),
           ],
         ),
@@ -89,9 +90,9 @@ class CustomerDetailScreen extends StatelessWidget {
                 'Vegan', customer.dietaryHabits.vegan ? 'Evet' : 'Hayır'),
             buildInfoRow('Vejetaryen',
                 customer.dietaryHabits.vegetarian ? 'Evet' : 'Hayır'),
-            ..._buildListInfo(
+            ...buildListInfo(
                 'Sevilen Yiyecekler', customer.dietaryHabits.likedFoods),
-            ..._buildListInfo(
+            ...buildListInfo(
                 'Sevilmeyen Yiyecekler', customer.dietaryHabits.dislikedFoods),
           ],
         ),
@@ -225,22 +226,7 @@ class CustomerDetailScreen extends StatelessWidget {
   }
 
   // Yardımcı Metotlar
-  List<Widget> _buildListInfo(String title, List<dynamic> items) {
-    if (items.isEmpty) return [buildInfoRow(title, 'Bilgi yok')];
-    return [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-      ),
-      ...items
-          .map((item) => Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 4),
-                child: Text('• $item'),
-              ))
-          .toList(),
-    ];
-  }
+
 }
+
+

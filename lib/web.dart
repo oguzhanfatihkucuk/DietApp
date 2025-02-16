@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'Components/BuildDivider.dart';
-import 'Components/buildInfoRow.dart';
-import 'Components/buildSectionTitle.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'CustomerDetail.dart';
 import 'Models/CustomerModel.dart';
@@ -14,7 +10,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  //TODO Navigation yapısın kur
+  //Giris
+      //Kayıt Yap
+      //Müşteri Takip
+      //İlerleme Takibi Ekle
+      //Diet Planı Ekle
   runApp(MyApp());
 }
 

@@ -1,579 +1,420 @@
-[
-  {
-    "customerID": 12345,
-    "dietitianID": 111023,
-    "firstName": "Ayşe",
-    "lastName": "Yılmaz",
-    "isLoginBefore": false,
-    "age": 28,
-    "gender": "Kadın",
-    "height": 165,
-    "phone": "+90 555 123 45 65",
-    "email": "ayse.yilmaz@gmail.com",
-    "weight": 68,
-    "bodyMassIndex": 24.98,
-    "targetWeight": 60.0,
-    "activityLevel": "Orta",
-    "healthStatus": {
-      "chronicDiseases": [ "Yok" ],
-      "allergies": [ "Gluten" ],
-      "medicationUse": [ "Yok" ]
-    },
-    "dietaryHabits": {
-      "vegan": false,
-      "vegetarian": false,
-      "likedFoods": [ "Meyve", "Sebze", "Balık" ],
-      "dislikedFoods": [ "Fast Food", "Şekerli İçecekler" ]
-    },
-    "waterConsumption": {
-      "dailyWaterAmount": 1.5,
-      "waterConsumptionHabit": "Az"
-    },
-    "goals": {
-      "weightLoss": true,
-      "muscleGain": false,
-      "healthierEating": true
-    },
-    "dietPlans": [
-      {
-        "planID": "P001",
-        "planName": "Kilo Verme Planı",
-        "startDate": "2023-10-02",
-        "endDate": "2023-10-08",
-        "dailyCalorieTarget": 1500,
-        "dailyProteinTarget": 80,
-        "dailyFatTarget": 30,
-        "dailyCarbohydrateTarget": 120,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": ["Yumurta", "Tam Buğday Ekmeği", "Yeşillik"],
-            "calories": 300
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": ["Izgara Tavuk", "Quinoa Salatası"],
-            "calories": 400
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": ["Sebze Yemeği", "Yoğurt"],
-            "calories": 350
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": ["Meyve", "Badem"],
-            "calories": 150
-          }
-        ]
-      },
-      {
-        "planID": "P002",
-        "planName": "Kas Geliştirme Planı",
-        "startDate": "2023-10-09",
-        "endDate": "2023-10-15",
-        "dailyCalorieTarget": 2500,
-        "dailyProteinTarget": 150,
-        "dailyFatTarget": 50,
-        "dailyCarbohydrateTarget": 200,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": ["Peynirli Omlet", "Yulaf Ezmesi"],
-            "calories": 500
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": ["Somon Balığı", "Esmer Pirinç", "Brokoli"],
-            "calories": 700
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": ["Hindi Göğsü", "Tatlı Patates"],
-            "calories": 600
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": ["Protein Shake", "Fıstık Ezmesi"],
-            "calories": 200
-          }
-        ]
-      },
-      {
-        "planID": "P003",
-        "planName": "Dengeli Beslenme Planı",
-        "startDate": "2023-10-16",
-        "endDate": "2023-10-22",
-        "dailyCalorieTarget": 2000,
-        "dailyProteinTarget": 100,
-        "dailyFatTarget": 40,
-        "dailyCarbohydrateTarget": 150,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": ["Mevsim Meyveleri", "Yoğurt", "Ceviz"],
-            "calories": 400
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": ["Ton Balıklı Salata", "Tam Buğday Kraker"],
-            "calories": 500
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": ["Kırmızı Et", "Bulgar Pilavı", "Zeytinyağlı Sebze"],
-            "calories": 600
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": ["Kuru Kayısı", "Leblebi"],
-            "calories": 100
-          }
-        ]
-      },
-      {
-        "planID": "P004",
-        "planName": "Vejetaryen Plan",
-        "startDate": "2023-10-23",
-        "endDate": "2023-10-29",
+{
+  "-Nxyz123456": {
+    "activityLevel": "Düşük",
+    "age": 45,
+    "bodyMassIndex": 30.2,
+    "customerID": 123456,
+    "dietPlans": {
+      "0": {
         "dailyCalorieTarget": 1800,
-        "dailyProteinTarget": 90,
-        "dailyFatTarget": 35,
-        "dailyCarbohydrateTarget": 130,
+        "dailyCarbohydrateTarget": 120,
+        "dailyFatTarget": 33,
+        "dailyProteinTarget": 65,
+        "endDate": "2024-07-15",
         "meals": [
           {
-            "mealName": "Kahvaltı",
-            "foods": ["Chia Tohumlu Pudding", "Muz"],
-            "calories": 350
+            "calories": 350,
+            "foods": [
+              "Yulaf",
+              "Süt",
+              "Tarçın"
+            ],
+            "mealName": "Kahvaltı"
           },
           {
-            "mealName": "Öğle Yemeği",
-            "foods": ["Mercimek Köftesi", "Ayran"],
-            "calories": 450
+            "calories": 500,
+            "foods": [
+              "Izgara Tavuk",
+              "Brokoli"
+            ],
+            "mealName": "Öğle Yemeği"
           },
           {
-            "mealName": "Akşam Yemeği",
-            "foods": ["Fırın Kabak", "Kinoa Salatası"],
-            "calories": 400
+            "calories": 450,
+            "foods": [
+              "Mercimek Çorbası",
+              "Zeytinyağlı Enginar"
+            ],
+            "mealName": "Akşam Yemeği"
           },
           {
-            "mealName": "Ara Öğün",
-            "foods": ["Bitter Çikolata", "Badem Sütü"],
-            "calories": 150
+            "calories": 400,
+            "foods": [
+              "Yunan Yoğurdu",
+              "Ceviz"
+            ],
+            "mealName": "Ara Öğün"
           }
-        ]
-      }
-    ],
-    "progressTracking": [
-      {
-        "date": "15-10-2023",
-        "weight": 67,
-        "bodyFatPercentage": 25.5,
-        "muscleMass": 40.2,
-        "notes": "Hedeflere doğru ilerleme devam ediyor."
+        ],
+        "planID": "P004",
+        "planName": "Kiloyu Sabitleme",
+        "startDate": "2024-02-01"
       },
-      {
-        "date": "01-11-2023",
-        "weight": 66,
-        "bodyFatPercentage": 24.8,
-        "muscleMass": 40.5,
-        "notes": "Kilo verme hızı beklenen düzeyde."
+      "-OJ9dprCs1x7wIQ_L0_Y": {
+        "dailyCalorieTarget": 2000,
+        "dailyCarbohydrateTarget": 300,
+        "dailyFatTarget": 30,
+        "dailyProteinTarget": 50,
+        "endDate": "2025-03-01",
+        "meals": [
+          {
+            "calories": 1,
+            "foods": [
+              "a",
+              "b",
+              "c"
+            ],
+            "mealName": "kahvaltı"
+          }
+        ],
+        "planID": "-OJ9dprCs1x7wIQ_L0_Y",
+        "planName": "Plan1",
+        "startDate": "2025-02-23"
       }
-    ],
-    "weeklyMeals": [
-      {
-        "date": "23.05.2024",
-        "totalCaloriesConsumed": 1800,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": [
-              {
-                "foodName": "Yumurta",
-                "portion": "1 adet",
-                "calories": 78
-              },
-              {
-                "foodName": "Tam Buğday Ekmeği",
-                "portion": "1 dilim",
-                "calories": 92
-              },
-              {
-                "foodName": "Yeşillik",
-                "portion": "50 gram",
-                "calories": 15
-              }
-            ],
-            "totalCalories": 185
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": [
-              {
-                "foodName": "Izgara Tavuk",
-                "portion": "150 gram",
-                "calories": 248
-              },
-              {
-                "foodName": "Quinoa Salatası",
-                "portion": "100 gram",
-                "calories": 120
-              }
-            ],
-            "totalCalories": 368
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": [
-              {
-                "foodName": "Sebze Yemeği",
-                "portion": "200 gram",
-                "calories": 150
-              },
-              {
-                "foodName": "Yoğurt",
-                "portion": "150 gram",
-                "calories": 150
-              }
-            ],
-            "totalCalories": 300
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": [
-              {
-                "foodName": "Meyve",
-                "portion": "1 adet (elma)",
-                "calories": 95
-              },
-              {
-                "foodName": "Badem",
-                "portion": "30 gram",
-                "calories": 164
-              }
-            ],
-            "totalCalories": 259
-          }
-        ]
-      },
-      {
-        "date": "24.05.2024",
-        "totalCaloriesConsumed": 1750,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": [
-              {
-                "foodName": "Peynir",
-                "portion": "50 gram",
-                "calories": 100
-              },
-              {
-                "foodName": "Zeytin",
-                "portion": "10 adet",
-                "calories": 50
-              },
-              {
-                "foodName": "Domates",
-                "portion": "1 adet",
-                "calories": 22
-              }
-            ],
-            "totalCalories": 172
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": [
-              {
-                "foodName": "Balık (Somon)",
-                "portion": "100 gram",
-                "calories": 208
-              },
-              {
-                "foodName": "Yeşil Salata",
-                "portion": "150 gram",
-                "calories": 50
-              }
-            ],
-            "totalCalories": 258
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": [
-              {
-                "foodName": "Mercimek Çorbası",
-                "portion": "300 gram",
-                "calories": 250
-              },
-              {
-                "foodName": "Tam Buğday Ekmeği",
-                "portion": "1 dilim",
-                "calories": 92
-              }
-            ],
-            "totalCalories": 342
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": [
-              {
-                "foodName": "Yoğurt",
-                "portion": "150 gram",
-                "calories": 150
-              },
-              {
-                "foodName": "Meyve",
-                "portion": "1 adet (muz)",
-                "calories": 105
-              }
-            ],
-            "totalCalories": 255
-          }
-        ]
-      },
-      {
-        "date": "25.05.2024",
-        "totalCaloriesConsumed": 1900,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": [
-              {
-                "foodName": "Yulaf Ezmesi",
-                "portion": "50 gram",
-                "calories": 194
-              },
-              {
-                "foodName": "Süt",
-                "portion": "200 ml",
-                "calories": 120
-              },
-              {
-                "foodName": "Meyve",
-                "portion": "1 adet (elma)",
-                "calories": 95
-              }
-            ],
-            "totalCalories": 409
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": [
-              {
-                "foodName": "Tavuk Salatası",
-                "portion": "200 gram",
-                "calories": 300
-              },
-              {
-                "foodName": "Tam Buğday Ekmeği",
-                "portion": "1 dilim",
-                "calories": 92
-              }
-            ],
-            "totalCalories": 392
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": [
-              {
-                "foodName": "Kırmızı Et",
-                "portion": "150 gram",
-                "calories": 330
-              },
-              {
-                "foodName": "Pilav",
-                "portion": "100 gram",
-                "calories": 130
-              },
-              {
-                "foodName": "Yoğurt",
-                "portion": "150 gram",
-                "calories": 150
-              }
-            ],
-            "totalCalories": 610
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": [
-              {
-                "foodName": "Badem",
-                "portion": "30 gram",
-                "calories": 164
-              },
-              {
-                "foodName": "Meyve",
-                "portion": "1 adet (portakal)",
-                "calories": 62
-              }
-            ],
-            "totalCalories": 226
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "customerID": 67890,
-    "dietitianID": 111024,
-    "firstName": "Mehmet",
-    "lastName": "Kaya",
-    "isLoginBefore": false,
-    "age": 32,
-    "gender": "Erkek",
-    "height": 178,
-    "phone": "+90 533 987 65 43",
-    "email": "mehmet.kaya@gmail.com",
-    "weight": 85,
-    "bodyMassIndex": 26.8,
-    "targetWeight": 78,
-    "activityLevel": "Yüksek",
-    "healthStatus": {
-      "chronicDiseases": [ "Hipertansiyon" ],
-      "allergies": [ "Laktoz" ],
-      "medicationUse": [ "Tansiyon İlacı" ]
     },
     "dietaryHabits": {
+      "dislikedFoods": [
+        "Tatlılar",
+        "Gazlı İçecekler"
+      ],
+      "likedFoods": [
+        "Tavuk",
+        "Yoğurt",
+        "Zeytinyağı"
+      ],
       "vegan": false,
-      "vegetarian": false,
-      "likedFoods": [ "Tavuk", "Peynir", "Sebzeler" ],
-      "dislikedFoods": [ "Fast Food", "Gazlı İçecekler" ]
+      "vegetarian": false
     },
-    "waterConsumption": {
-      "dailyWaterAmount": "2.5 litre",
-      "waterConsumptionHabit": "İyi"
-    },
+    "dietitianID": 111456,
+    "email": "gokhan.yildirim@gmail.com",
+    "firstName": "Gökhan",
+    "gender": "Erkek",
     "goals": {
-      "weightLoss": true,
-      "muscleGain": true,
-      "healthierEating": true
+      "healthierEating": true,
+      "muscleGain": false,
+      "weightLoss": true
     },
-    "dietPlans": [
-      {
-        "planID": "P002",
-        "planName": "Kas Kütlesi Artırma",
-        "startDate": "01-01-2024",
-        "endDate": "31-03-2024",
-        "dailyCalorieTarget": 2500,
-        "dailyProteinTarget": 80,
-        "dailyFatTarget": 30,
-        "dailyCarbohydrateTarget": 120,
-        "meals": [
-          {
-            "mealName": "Kahvaltı",
-            "foods": [ "Yulaf", "Süt", "Badem" ],
-            "calories": 500
-          },
-          {
-            "mealName": "Öğle Yemeği",
-            "foods": [ "Izgara Tavuk", "Esmer Pirinç" ],
-            "calories": 700
-          },
-          {
-            "mealName": "Akşam Yemeği",
-            "foods": [ "Somon", "Sebzeler" ],
-            "calories": 600
-          },
-          {
-            "mealName": "Ara Öğün",
-            "foods": [ "Protein Shake", "Kuruyemiş" ],
-            "calories": 400
-          }
-        ]
-      }
-    ],
+    "healthStatus": {
+      "allergies": [
+        "a"
+      ],
+      "chronicDiseases": [
+        "Tip 2 Diyabet"
+      ],
+      "medicationUse": [
+        "Diyabet İlaçları"
+      ]
+    },
+    "height": 174,
+    "lastName": "Yıldırım",
+    "phone": "+90 532 456 78 90",
     "progressTracking": [
       {
-        "date": "15-01-2024",
-        "weight": 84,
-        "bodyFatPercentage": 20.5,
-        "muscleMass": 42.0,
-        "notes": "Kas kazanımı olumlu ilerliyor."
+        "bodyFatPercentage": 27.5,
+        "date": "2024-02-10",
+        "muscleMass": 33.2,
+        "notes": "Kan şekeri dengelenmeye başladı.",
+        "weight": 92
       },
       {
-        "date": "2024-02-01",
-        "weight": 82,
-        "bodyFatPercentage": 19.5,
-        "muscleMass": 43.2,
-        "notes": "Daha fazla protein tüketmeye odaklanılmalı."
+        "bodyFatPercentage": 26.8,
+        "date": "2024-02-15",
+        "muscleMass": 34,
+        "notes": "Daha dikkatli bir diyet uygulanmalı.",
+        "weight": 90.5
       }
     ],
+    "targetWeight": 85,
+    "waterConsumption": {
+      "dailyWaterAmount": 2,
+      "waterConsumptionHabit": "Orta"
+    },
     "weeklyMeals": [
       {
-        "date": "01.02.2024",
-        "totalCaloriesConsumed": 2600,
+        "date": "10.02.2024",
         "meals": [
           {
+            "foods": [
+              {
+                "calories": 150,
+                "foodName": "Yulaf",
+                "portion": "50 gram"
+              },
+              {
+                "calories": 120,
+                "foodName": "Süt",
+                "portion": "200 ml"
+              },
+              {
+                "calories": 80,
+                "foodName": "Tarçın",
+                "portion": "1 tatlı kaşığı"
+              }
+            ],
             "mealName": "Kahvaltı",
-            "foods": [
-              {
-                "foodName": "Yumurta",
-                "portion": "2 adet",
-                "calories": 156
-              },
-              {
-                "foodName": "Tam Buğday Ekmeği",
-                "portion": "2 dilim",
-                "calories": 184
-              },
-              {
-                "foodName": "Avokado",
-                "portion": "50 gram",
-                "calories": 80
-              }
-            ],
-            "totalCalories": 420
+            "totalCalories": 350
           },
           {
-            "mealName": "Öğle Yemeği",
             "foods": [
               {
+                "calories": 280,
                 "foodName": "Izgara Tavuk",
-                "portion": "200 gram",
-                "calories": 330
+                "portion": "150 gram"
               },
               {
-                "foodName": "Tatlı Patates",
-                "portion": "100 gram",
-                "calories": 90
+                "calories": 100,
+                "foodName": "Brokoli",
+                "portion": "150 gram"
               }
             ],
-            "totalCalories": 420
+            "mealName": "Öğle Yemeği",
+            "totalCalories": 380
           },
           {
-            "mealName": "Akşam Yemeği",
             "foods": [
               {
-                "foodName": "Somon",
-                "portion": "150 gram",
-                "calories": 250
+                "calories": 150,
+                "foodName": "Mercimek Çorbası",
+                "portion": "200 ml"
               },
               {
-                "foodName": "Sebzeler",
-                "portion": "200 gram",
-                "calories": 80
+                "calories": 200,
+                "foodName": "Zeytinyağlı Enginar",
+                "portion": "150 gram"
               }
             ],
+            "mealName": "Akşam Yemeği",
+            "totalCalories": 350
+          },
+          {
+            "foods": [
+              {
+                "calories": 250,
+                "foodName": "Yunan Yoğurdu",
+                "portion": "150 gram"
+              },
+              {
+                "calories": 150,
+                "foodName": "Ceviz",
+                "portion": "30 gram"
+              }
+            ],
+            "mealName": "Ara Öğün",
+            "totalCalories": 400
+          }
+        ],
+        "totalCaloriesConsumed": 1480
+      }
+    ],
+    "weight": 90.5
+  },
+  "-Nxyz789123": {
+    "activityLevel": "Orta",
+    "age": 28,
+    "bodyMassIndex": 24.5,
+    "customerID": 789123,
+    "dietPlans": {
+      "0": {
+        "dailyCalorieTarget": 1800,
+        "dailyCarbohydrateTarget": 120,
+        "dailyFatTarget": 33,
+        "dailyProteinTarget": 65,
+        "endDate": "2024-07-15",
+        "meals": [
+          {
+            "calories": 350,
+            "foods": [
+              "Yulaf",
+              "Süt",
+              "Tarçın"
+            ],
+            "mealName": "Kahvaltı"
+          },
+          {
+            "calories": 500,
+            "foods": [
+              "Izgara Tavuk",
+              "Brokoli"
+            ],
+            "mealName": "Öğle Yemeği"
+          },
+          {
+            "calories": 450,
+            "foods": [
+              "Mercimek Çorbası",
+              "Zeytinyağlı Enginar"
+            ],
+            "mealName": "Akşam Yemeği"
+          },
+          {
+            "calories": 400,
+            "foods": [
+              "Yunan Yoğurdu",
+              "Ceviz"
+            ],
+            "mealName": "Ara Öğün"
+          }
+        ],
+        "planID": "P004",
+        "planName": "Kiloyu Sabitleme",
+        "startDate": "2024-02-01"
+      },
+      "-OJ9dprCs1x7wIQ_L0_Y": {
+        "dailyCalorieTarget": 2000,
+        "dailyCarbohydrateTarget": 300,
+        "dailyFatTarget": 30,
+        "dailyProteinTarget": 50,
+        "endDate": "2025-03-01",
+        "meals": [
+          {
+            "calories": 1,
+            "foods": [
+              "a",
+              "b",
+              "c"
+            ],
+            "mealName": "kahvaltı"
+          }
+        ],
+        "planID": "-OJ9dprCs1x7wIQ_L0_Y",
+        "planName": "Plan1",
+        "startDate": "2025-02-23"
+      }
+    },
+    "dietaryHabits": {
+      "dislikedFoods": [
+        "Pizza",
+        "Meyve Suyu"
+      ],
+      "likedFoods": [
+        "Tavuk",
+        "Zeytinyağı",
+        "Meyveler"
+      ],
+      "vegan": false,
+      "vegetarian": false
+    },
+    "dietitianID": 111123,
+    "email": "ayse.kilic@gmail.com",
+    "firstName": "Ayşe",
+    "gender": "Kadın",
+    "goals": {
+      "healthierEating": true,
+      "muscleGain": false,
+      "weightLoss": true
+    },
+    "healthStatus": {
+      "allergies": [
+        "a"
+      ],
+      "chronicDiseases": [
+        "Tip 2 Diyabet"
+      ],
+      "medicationUse": [
+        "Diyabet İlaçları"
+      ]
+    },
+    "height": 165,
+    "lastName": "Kılıç",
+    "phone": "+90 534 112 23 45",
+    "progressTracking": [
+      {
+        "bodyFatPercentage": 23.4,
+        "date": "2024-02-05",
+        "muscleMass": 32.5,
+        "notes": "İlk haftada kilo kaybı başladı.",
+        "weight": 68
+      },
+      {
+        "bodyFatPercentage": 22,
+        "date": "2024-02-12",
+        "muscleMass": 33.1,
+        "notes": "Daha sıkı antrenman yapmaya devam edilmeli.",
+        "weight": 66.5
+      }
+    ],
+    "targetWeight": 62,
+    "waterConsumption": {
+      "dailyWaterAmount": 2,
+      "waterConsumptionHabit": "Orta"
+    },
+    "weeklyMeals": [
+      {
+        "date": "05.02.2024",
+        "meals": [
+          {
+            "foods": [
+              {
+                "calories": 140,
+                "foodName": "Yulaf",
+                "portion": "50 gram"
+              },
+              {
+                "calories": 100,
+                "foodName": "Süt",
+                "portion": "200 ml"
+              },
+              {
+                "calories": 90,
+                "foodName": "Muz",
+                "portion": "1 adet"
+              }
+            ],
+            "mealName": "Kahvaltı",
             "totalCalories": 330
           },
           {
-            "mealName": "Ara Öğün",
             "foods": [
               {
-                "foodName": "Protein Shake",
-                "portion": "1 porsiyon",
-                "calories": 300
+                "calories": 250,
+                "foodName": "Izgara Tavuk",
+                "portion": "150 gram"
               },
               {
-                "foodName": "Kuruyemiş",
-                "portion": "40 gram",
-                "calories": 220
+                "calories": 150,
+                "foodName": "Kinoa",
+                "portion": "100 gram"
               }
             ],
-            "totalCalories": 520
+            "mealName": "Öğle Yemeği",
+            "totalCalories": 400
+          },
+          {
+            "foods": [
+              {
+                "calories": 200,
+                "foodName": "Levrek",
+                "portion": "120 gram"
+              },
+              {
+                "calories": 150,
+                "foodName": "Sebzeler",
+                "portion": "150 gram"
+              }
+            ],
+            "mealName": "Akşam Yemeği",
+            "totalCalories": 350
+          },
+          {
+            "foods": [
+              {
+                "calories": 250,
+                "foodName": "Protein Shake",
+                "portion": "1 porsiyon"
+              },
+              {
+                "calories": 120,
+                "foodName": "Fındık",
+                "portion": "30 gram"
+              }
+            ],
+            "mealName": "Ara Öğün",
+            "totalCalories": 370
           }
-        ]
+        ],
+        "totalCaloriesConsumed": 1450
       }
-    ]
+    ],
+    "weight": 66.5
   }
-]
+}
