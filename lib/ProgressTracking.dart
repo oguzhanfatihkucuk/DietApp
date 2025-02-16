@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'firebase_options.dart';
 
-//TODO _saveProgress function will be control  because create feature is working correctly
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -77,7 +77,7 @@ class AddProgressScreen extends StatefulWidget {
 }
 
 class _AddProgressScreenState extends State<AddProgressScreen> {
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("customers");
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("customer");
   final TextEditingController weightController = TextEditingController();
   final TextEditingController bodyFatController = TextEditingController();
   final TextEditingController muscleMassController = TextEditingController();
