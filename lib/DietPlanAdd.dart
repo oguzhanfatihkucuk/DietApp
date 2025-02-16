@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'Models/DietPlanModel.dart';
 import 'firebase_options.dart';
 
-//TODO _savePlan function will be control  because create feature is working correctly
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -135,8 +135,6 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
       // Firebase reference'ı oluştur
       DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/${widget.customerId}/dietPlans")  .push();
 
-
-
       // Plan ID'sini güncelle
       plan.planID = dietPlansRef.key!;
 
@@ -222,7 +220,8 @@ class _AddMealScreenState extends State<AddMealScreen> {
   final _formKey = GlobalKey<FormState>();
   String _mealName = "";
   int _calories = 0;
-  final List<String> _foods =[] ;
+  String _foodsInput = ""; // Kullanıcının girdiği besinler
+  List<String> foods = []; // Besinler listesi
 
   @override
   Widget build(BuildContext context) {
@@ -237,23 +236,45 @@ class _AddMealScreenState extends State<AddMealScreen> {
               TextFormField(
                 onSaved: (value) => _mealName = value!,
                 decoration: InputDecoration(labelText: "Öğün Adı"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen öğün adı giriniz";
+                  }
+                  return null;
+                },
               ),
               TextFormField(
-                onSaved: (value) => _foods,
-                decoration: InputDecoration(labelText: "Saat (HH:mm)"),
+                onSaved: (value) => _foodsInput = value!,
+                decoration: InputDecoration(labelText: "Besinler (virgülle ayırın)"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen besinleri giriniz";
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 onSaved: (value) => _calories = int.parse(value!),
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: "Kalori"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen kalori giriniz";
+                  }
+                  return null;
+                },
               ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+
+                    // Besinleri virgülle ayır ve listeye çevir
+                    foods = _foodsInput.split(',').map((food) => food.trim()).toList();
+
                     Navigator.pop(context, DietPlanMeal(
                       mealName: _mealName,
-                      foods:_foods ,
+                      foods: foods, // List<String> olarak gönder
                       calories: _calories,
                     ));
                   }

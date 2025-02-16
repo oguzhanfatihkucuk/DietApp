@@ -39,9 +39,9 @@ class DietPlanModel {
       dailyProteinTarget: (json['dailyProteinTarget'] as num?)?.toInt() ?? 0,
       dailyFatTarget: (json['dailyFatTarget'] as num?)?.toInt() ?? 0,
       dailyCarbohydrateTarget: (json['dailyCarbohydrateTarget'] as num?)?.toInt() ?? 0,
-      meals: (json['meals'] as List<dynamic>?) // Açık tip belirleme
-          ?.map((meal) => DietPlanMeal.fromJson(meal as Map<dynamic, dynamic>))
-          .toList() ?? [],
+      meals: (json['meals'] as List<dynamic>?) // List<dynamic> olarak oku
+          ?.map((meal) => DietPlanMeal.fromJson(meal as Map<String, dynamic>))
+          .toList() ?? [], // List<DietPlanMeal> olarak dönüştür
     );
   }
 
@@ -62,7 +62,7 @@ class DietPlanModel {
 
 class DietPlanMeal {
   late final String mealName;
-  late final List<dynamic> foods;
+  late final List<String> foods;
   late final int calories;
 
   DietPlanMeal({
@@ -71,21 +71,21 @@ class DietPlanMeal {
     required this.calories,
   });
 
-  factory DietPlanMeal.fromJson(Map<dynamic, dynamic> json) {
+  factory DietPlanMeal.fromJson(Map<String, dynamic> json) {
     return DietPlanMeal(
       mealName: json['mealName']?.toString() ?? 'Öğün Adı Yok',
       calories: (json['calories'] as num?)?.toInt() ?? 0,
-      foods: (json['foods'] as List<dynamic>?) // Açık tip belirleme
+      foods: (json['foods'] as List<dynamic>?) // List<dynamic> olarak oku
           ?.map((food) => food.toString()) // Her öğeyi String'e çevir
-          .toList() ?? [],
+          .toList() ?? [], // List<String> olarak dönüştür
     );
   }
 
-  Map<dynamic, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'mealName': mealName,
       'calories': calories,
-      'foods': foods,
+      'foods': foods, // List<String> doğrudan JSON'a çevrilebilir
     };
   }
 }
