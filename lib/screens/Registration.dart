@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:diet/Models/WeeklyMealModel.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../Models/CustomerModel.dart';
@@ -10,7 +9,6 @@ import '../Models/Goals.dart';
 import '../Models/HealthStatus.dart';
 import '../Models/ProgressTracking.dart';
 import '../Models/WaterConsumption.dart';
-import '../firebase_options.dart';
 import 'dart:math';
 
 int generate8DigitId() {
@@ -54,7 +52,6 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   }
 
   final _formKey = GlobalKey<FormState>();
-  int _planCounter = 1;
 
   // Kullanıcı Bilgileri
   int customerID = generate8DigitId();

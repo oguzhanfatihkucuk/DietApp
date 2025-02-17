@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:diet/Models/CustomerModel.dart';
 import '../Components/buildInfoRow.dart';
-import '../Components/buildSectionTitle.dart'; // Özel widget'larınız olduğunu varsayıyorum
+import '../Components/buildSectionTitle.dart';
 import '../Components/buildListInfo.dart';
 
 class CustomerDetailScreen extends StatelessWidget {

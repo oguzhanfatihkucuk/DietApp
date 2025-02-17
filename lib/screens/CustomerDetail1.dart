@@ -1,28 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'CustomerDetail.dart';
+import 'CustomerDetail2.dart';
 import '../Models/CustomerModel.dart';
-import '../firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-/*
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  //TODO Navigation yapısın kur
-  //Giris
-      //Kayıt Yap
-      //Müşteri Takip
-      //İlerleme Takibi Ekle
-      //Diet Planı Ekle
-  runApp(MyApp());
-}
-*/
 
-class beforeReg extends StatelessWidget {
-
+class CustomerDetail1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
