@@ -1,16 +1,15 @@
 import 'dart:convert';
+import 'package:diet/Models/WeeklyMealModel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'Models/CustomerModel.dart';
 import 'Models/DietPlanModel.dart';
 import 'Models/DietaryHabits.dart';
 import 'Models/Goals.dart';
 import 'Models/HealthStatus.dart';
+import 'Models/ProgressTracking.dart';
 import 'Models/WaterConsumption.dart';
-import 'Models/ProgressTracking.dart';  //TODO this line will be implement to 114
-import 'Models/WeeklyMealModel.dart';   //TODO this line will be implement to 115
 import 'firebase_options.dart';
 import 'dart:math';
 
@@ -110,7 +109,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   bool healthierEating = false;
 
   List<DietPlanModel> dietPlans = []; // Diyet Listesi
-  List<DietPlanMeal> meals = [];
+  List<ProgressTracking> progressTracking= [];
+  List<WeeklyMealModel> weeklyMeals= [];
 
 
 // Vücut Kitle İndeksi Hesaplaması
@@ -161,9 +161,9 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
           muscleGain: muscleGain,
           healthierEating: healthierEating,
         ),
-        dietPlans: dietPlans,   //TODO
-        progressTracking: [],   //TODO
-        weeklyMeals: [], //     //TODO
+        dietPlans: dietPlans,
+        progressTracking: progressTracking,
+        weeklyMeals: weeklyMeals, //
       );
 
       // JSON'a çevirme ve loglama
@@ -189,101 +189,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
         ),
       );
       _formKey.currentState!.reset();
-      _removeDietPlan(0);
+
     }
-  }
-
-  void _addNewDietPlan() {
-    setState(() {
-      dietPlans.add(DietPlanModel(
-        planID: 'P${(_planCounter++).toString().padLeft(3, '0')}',
-        planName: 'Yeni Plan $_planCounter',
-        startDate: DateTime.now(),
-        endDate: DateTime.now().add(Duration(days: 7)),
-        dailyCalorieTarget: 0,
-        dailyProteinTarget: 0,
-        dailyFatTarget: 0,
-        dailyCarbohydrateTarget: 0,
-        meals: [],
-      ));
-    });
-  }
-
-  void _removeDietPlan(int index) {
-    setState(() {
-      dietPlans.removeAt(index);
-    });
-  }
-
-  void _addMealToPlan(int planIndex) {
-    setState(() {
-      dietPlans[planIndex].meals.add(DietPlanMeal(
-            mealName: 'Yeni Öğün',
-            foods: [],
-            calories: 0,
-          ));
-    });
-  }
-
-  void _removeMealFromPlan(int planIndex, int mealIndex) {
-    setState(() {
-      dietPlans[planIndex].meals.removeAt(mealIndex);
-    });
-  }
-
-  Future<void> _selectDate(
-      BuildContext context, DietPlanModel plan, bool isStartDate) async {
-      final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: isStartDate ? plan.startDate : plan.endDate,
-      firstDate: DateTime(DateTime.now().year),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.blueAccent,
-              onPrimary: Colors.white,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      setState(() {
-        if (isStartDate) {
-          plan.startDate = picked;
-          // Bitiş tarihini otomatik ayarla (örneğin 30 gün sonrası)
-          if (plan.endDate.isBefore(picked.add(Duration(days: 30)))) {
-            plan.endDate = picked.add(Duration(days: 30));
-          }
-        } else {
-          plan.endDate = picked;
-        }
-      });
-    }
-  }
-
-  Widget _buildDatePickerField(String label, DietPlanModel plan, bool isStartDate) {
-    return Expanded(
-      child: InkWell(
-        onTap: () => _selectDate(context, plan, isStartDate),
-        child: InputDecorator(
-          decoration: InputDecoration(
-            labelText: label,
-            border: OutlineInputBorder(),
-            suffixIcon: Icon(Icons.calendar_today),
-          ),
-          child: Text(
-            DateFormat('dd/MM/yyyy')
-                .format((isStartDate ? plan.startDate : plan.endDate)),
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -505,7 +412,6 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                   ),
                 ),
                 SizedBox(height: 20),
-
                 // Sağlık Durumu
                 Card(
                   elevation: 4,
@@ -520,29 +426,45 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                         SizedBox(height: 10),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText:
-                                  'Kronik Hastalıklar (virgülle ayırın)'),
-                          onSaved: (value) => chronicDiseases =
-                              value!.isEmpty ? [] : value.split(', '),
+                            labelText: 'Kronik Hastalıklar (virgülle ayırın)',
+                          ),
+                          onSaved: (value) => chronicDiseases = value!.isEmpty ? [] : value.split(', '),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Lütfen kronik hastalıklarınızı giriniz.';
+                            }
+                            return null; // Geçerli bir değer girildiğinde null döndürülür.
+                          },
                         ),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'Alerjiler (virgülle ayırın)'),
-                          onSaved: (value) => allergies =
-                              value!.isEmpty ? [] : value.split(', '),
+                            labelText: 'Alerjiler (virgülle ayırın)',
+                          ),
+                          onSaved: (value) => allergies = value!.isEmpty ? [] : value.split(', '),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Lütfen alerjilerinizi giriniz.';
+                            }
+                            return null;
+                          },
                         ),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'İlaçlar (virgülle ayırın)'),
-                          onSaved: (value) => medicationUse =
-                              value!.isEmpty ? [] : value.split(', '),
+                            labelText: 'İlaçlar (virgülle ayırın)',
+                          ),
+                          onSaved: (value) => medicationUse = value!.isEmpty ? [] : value.split(', '),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Lütfen kullandığınız ilaçları giriniz.';
+                            }
+                            return null;
+                          },
                         ),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
-
                 // Beslenme Alışkanlıkları
                 Card(
                   elevation: 4,
@@ -557,17 +479,28 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                         SizedBox(height: 10),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText:
-                                  'Sevdiği Yiyecekler (virgülle ayırın)'),
-                          onSaved: (value) => likedFoods =
-                              value!.isEmpty ? [] : value.split(', '),
+                            labelText: 'Sevdiği Yiyecekler (virgülle ayırın)',
+                          ),
+                          onSaved: (value) => likedFoods = value!.isEmpty ? [] : value.split(', '),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Lütfen sevdiğiniz yiyecekleri giriniz.';
+                            }
+                            return null;
+                          },
                         ),
+
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText:
-                                  'Sevmediği Yiyecekler (virgülle ayırın)'),
-                          onSaved: (value) => dislikedFoods =
-                              value!.isEmpty ? [] : value.split(', '),
+                            labelText: 'Sevmediği Yiyecekler (virgülle ayırın)',
+                          ),
+                          onSaved: (value) => dislikedFoods = value!.isEmpty ? [] : value.split(', '),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Lütfen sevmediğiniz yiyecekleri giriniz.';
+                            }
+                            return null;
+                          },
                         ),
                         CheckboxListTile(
                           title: Text('Vegan'),
@@ -693,190 +626,6 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                             });
                           },
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Diyet Listesi
-                Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Diyet Planları',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: _addNewDietPlan,
-                            ),
-                          ],
-                        ),
-                        ...dietPlans.asMap().entries.map((entry) {
-                          int planIndex = entry.key;
-                          DietPlanModel plan = entry.value;
-                          return ExpansionTile(
-                            title: Text(plan.planName),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () => _removeDietPlan(planIndex),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      initialValue: plan.planName,
-                                      decoration: InputDecoration(
-                                          labelText: 'Plan Adı'),
-                                      onChanged: (value) =>
-                                          plan.planName = value,
-                                    ),
-                                    SizedBox(height: 20),
-                                    Row(
-                                      children: [
-                                        _buildDatePickerField(
-                                            'Başlangıç Tarihi', plan, true),
-                                        SizedBox(width: 10),
-                                        _buildDatePickerField(
-                                            'Bitiş Tarihi', plan, false),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                                labelText:
-                                                    'Günlük Kalori Hedefi'),
-                                            keyboardType: TextInputType.number,
-                                            initialValue: plan
-                                                .dailyCalorieTarget
-                                                .toString(),
-                                            onChanged: (value) =>
-                                                plan.dailyCalorieTarget =
-                                                    int.parse(value),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                                labelText:
-                                                    'Günlük Karbonitrat Hedefi'),
-                                            keyboardType: TextInputType.number,
-                                            initialValue: plan
-                                                .dailyCarbohydrateTarget
-                                                .toString(),
-                                            onChanged: (value) =>
-                                                plan.dailyCarbohydrateTarget =
-                                                    int.parse(value),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                                labelText:
-                                                    'Günlük Protein Hedefi'),
-                                            keyboardType: TextInputType.number,
-                                            initialValue: plan
-                                                .dailyProteinTarget
-                                                .toString(),
-                                            onChanged: (value) =>
-                                                plan.dailyProteinTarget =
-                                                    int.parse(value),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                                labelText: 'Günlük Yağ Hedefi'),
-                                            keyboardType: TextInputType.number,
-                                            initialValue:
-                                                plan.dailyFatTarget.toString(),
-                                            onChanged: (value) =>
-                                                plan.dailyFatTarget =
-                                                    int.parse(value),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Öğünler'),
-                                        IconButton(
-                                          icon: Icon(Icons.add),
-                                          onPressed: () =>
-                                              _addMealToPlan(planIndex),
-                                        ),
-                                      ],
-                                    ),
-                                    ...plan.meals.asMap().entries.map((mealEntry) {
-                                      int mealIndex = mealEntry.key;
-                                      DietPlanMeal meal = mealEntry.value;
-                                      return Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: TextFormField(
-                                                  initialValue: meal.mealName,
-                                                  decoration: InputDecoration(labelText: 'Öğün Adı'),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      meal.mealName = value;
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.delete),
-                                                onPressed: () => _removeMealFromPlan(planIndex, mealIndex),
-                                              ),
-                                            ],
-                                          ),
-                                          TextFormField(
-
-                                          ),
-                                          TextFormField(
-                                            initialValue: meal.calories.toString(),
-                                            decoration: InputDecoration(labelText: 'Kalori'),
-                                            keyboardType: TextInputType.number,
-                                            validator: (value) {
-                                              if (value == null || int.tryParse(value) == null) {
-                                                return 'Lütfen geçerli bir sayı girin';
-                                              }
-                                              return null;
-                                            },
-                                            onChanged: (value) {
-                                              if (value.isNotEmpty) {
-                                                setState(() {
-                                                  meal.calories = int.parse(value);
-                                                });
-                                              }
-                                            },
-                                          ),
-                                          Divider(),
-                                        ],
-                                      );
-                                    }).toList(),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
                       ],
                     ),
                   ),
