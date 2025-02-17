@@ -3,14 +3,14 @@ import 'package:diet/Models/WeeklyMealModel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'Models/CustomerModel.dart';
-import 'Models/DietPlanModel.dart';
-import 'Models/DietaryHabits.dart';
-import 'Models/Goals.dart';
-import 'Models/HealthStatus.dart';
-import 'Models/ProgressTracking.dart';
-import 'Models/WaterConsumption.dart';
-import 'firebase_options.dart';
+import '../Models/CustomerModel.dart';
+import '../Models/DietPlanModel.dart';
+import '../Models/DietaryHabits.dart';
+import '../Models/Goals.dart';
+import '../Models/HealthStatus.dart';
+import '../Models/ProgressTracking.dart';
+import '../Models/WaterConsumption.dart';
+import '../firebase_options.dart';
 import 'dart:math';
 
 int generate8DigitId() {
@@ -18,19 +18,7 @@ int generate8DigitId() {
   return 100000 + random.nextInt(900000);
 }
 
-// Ana Uygulama
-void main() async{
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class Registration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,8 +42,6 @@ class CustomerRegistrationScreen extends StatefulWidget {
 }
 
 class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen> {
-
-
   final database = FirebaseDatabase.instance.ref();
 
   Future<void> saveData(String key, Map<dynamic, dynamic> data) async {

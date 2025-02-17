@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'CustomerDetail.dart';
-import 'Models/CustomerModel.dart';
-import 'firebase_options.dart';
+import '../Models/CustomerModel.dart';
+import '../firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+/*
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -18,8 +19,11 @@ void main() async {
       //Diet Planı Ekle
   runApp(MyApp());
 }
+*/
 
-class MyApp extends StatelessWidget {
+class beforeReg extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

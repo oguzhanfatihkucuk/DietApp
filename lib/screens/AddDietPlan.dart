@@ -2,10 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
-import 'Models/DietPlanModel.dart';
-import 'firebase_options.dart';
+import '../Models/DietPlanModel.dart';
+import '../firebase_options.dart';
 
-
+/*
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -13,13 +13,14 @@ void main() async {
   );
   runApp(MaterialApp(home: CustomerListScreen()));
 }
+*/
 
-class CustomerListScreen extends StatefulWidget {
+class AddDietPlan extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
 }
 
-class _CustomerListScreenState extends State<CustomerListScreen> {
+class _CustomerListScreenState extends State<AddDietPlan> {
   List<String> customerIds = [];
   DatabaseReference dbRef = FirebaseDatabase.instance.ref("customer");
 
@@ -84,12 +85,12 @@ class AddDietPlanScreen extends StatefulWidget {
 class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _planNameController = TextEditingController();
+  final TextEditingController _calorieTargetController = TextEditingController();
+  final TextEditingController _proteinTargetController = TextEditingController();
+  final TextEditingController _fatTargetController = TextEditingController();
+  final TextEditingController _carbTargetController = TextEditingController();
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(Duration(days: 7));
-  int _calorieTarget = 2000;
-  int _proteinTarget = 50;
-  int _fatTarget = 30;
-  int _carbTarget = 300;
   List<DietPlanMeal> _meals = [];
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
@@ -118,13 +119,12 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
         planName: _planNameController.text,
         startDate: _startDate,
         endDate: _endDate,
-        dailyCalorieTarget: _calorieTarget,
-        dailyProteinTarget: _proteinTarget,
-        dailyFatTarget: _fatTarget,
-        dailyCarbohydrateTarget: _carbTarget,
+        dailyCalorieTarget: int.tryParse(_calorieTargetController.text) ?? 0,
+        dailyProteinTarget: int.tryParse(_proteinTargetController.text) ?? 0,
+        dailyFatTarget: int.tryParse(_fatTargetController.text) ?? 0,
+        dailyCarbohydrateTarget: int.tryParse(_carbTargetController.text) ?? 0,
         meals: _meals,
       );
-
       _saveToFirebase(newPlan);
     }
   }
@@ -133,7 +133,7 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
   void _saveToFirebase(DietPlanModel plan) async {
     try {
       // Firebase reference'ı oluştur
-      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/${widget.customerId}/dietPlans")  .push();
+      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/${widget.customerId}/dietPlans").push();
 
       // Plan ID'sini güncelle
       plan.planID = dietPlansRef.key!;
@@ -183,8 +183,58 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
                 title: Text("Bitiş Tarihi: ${DateFormat('yyyy-MM-dd').format(_endDate)}"),
                 onTap: () => _selectDate(context, false),
               ),
-              // Diğer hedef alanları için benzer TextFormField'lar ekleyin
-              // Öğün ekleme butonu
+              TextFormField(
+                controller: _calorieTargetController,
+                decoration: InputDecoration(labelText: "Hedef Kalori Miktarı"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen hedef kalori miktarını giriniz";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Lütfen geçerli bir kalori değeri giriniz";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _proteinTargetController,
+                decoration: InputDecoration(labelText: "Hedef Protein Miktarı"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen hedef protein miktarını giriniz";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Lütfen geçerli bir protein değeri giriniz";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _fatTargetController,
+                decoration: InputDecoration(labelText: "Hedef Yağ Miktarı"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen hedef yağ miktarını giriniz";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Lütfen geçerli bir yağ değeri giriniz";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _carbTargetController,
+                decoration: InputDecoration(labelText: "Hedef Karbonhidrat Miktarı"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Lütfen hedef karbonhidrat miktarını giriniz";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Lütfen geçerli bir karbonhidrat değeri giriniz";
+                  }
+                  return null;
+                },
+              ),
               ElevatedButton(
                 onPressed: () async {
                   final newMeal = await Navigator.push<DietPlanMeal>(
@@ -210,6 +260,7 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
     );
   }
 }
+
 
 class AddMealScreen extends StatefulWidget {
   @override

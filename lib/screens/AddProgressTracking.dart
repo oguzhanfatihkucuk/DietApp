@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'firebase_options.dart';
+import './../firebase_options.dart';
 
 
+/*
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -11,13 +12,14 @@ void main() async{
   );
   runApp(MaterialApp(home: CustomerListScreen()));
 }
+*/
 
-class CustomerListScreen extends StatefulWidget {
+class AddProgressTracking extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
 }
 
-class _CustomerListScreenState extends State<CustomerListScreen> {
+class _CustomerListScreenState extends State<AddProgressTracking> {
   List<String> customerIds = [];
   DatabaseReference dbRef = FirebaseDatabase.instance.ref("customer");
 
