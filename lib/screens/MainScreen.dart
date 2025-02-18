@@ -33,7 +33,7 @@ class _MainscreenState extends State<Mainscreen> {
                   text: 'Müşteri Kayıt',
                   onPressed: () {
                     setState(() {
-                      currentPage = Registration();
+                      currentPage = RegistrationMain();
                     });
                   },
                 ),
@@ -41,7 +41,7 @@ class _MainscreenState extends State<Mainscreen> {
                   text: 'Müşteri İzleme',
                   onPressed: () {
                     setState(() {
-                      currentPage = CustomerDetail1();
+                      currentPage = CustomerDetailMain();
                     });
                   },
                 ),
@@ -49,7 +49,7 @@ class _MainscreenState extends State<Mainscreen> {
                   text: 'Diyet Planı Ekleme',
                   onPressed: () {
                     setState(() {
-                      currentPage = AddDietPlan();
+                      currentPage = AddDietPlanMain();
                     });
                   },
                 ),
@@ -57,7 +57,7 @@ class _MainscreenState extends State<Mainscreen> {
                   text: 'İlerleme Süreci Ekleme',
                   onPressed: () {
                     setState(() {
-                      currentPage = AddProgressTracking();
+                      currentPage = AddProgressTrackingMain();
                     });
                   },
                 ),
