@@ -3,6 +3,20 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import '../Models/DietPlanModel.dart';
 
+class AddDietPlanMain extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: AddDietPlan(),
+    );
+  }
+}
+
 class AddDietPlan extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
@@ -72,13 +86,16 @@ class AddDietPlanScreen extends StatefulWidget {
 
 class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _planNameController = TextEditingController();
   final TextEditingController _calorieTargetController = TextEditingController();
   final TextEditingController _proteinTargetController = TextEditingController();
   final TextEditingController _fatTargetController = TextEditingController();
   final TextEditingController _carbTargetController = TextEditingController();
+
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(Duration(days: 7));
+
   List<DietPlanMeal> _meals = [];
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
@@ -117,7 +134,6 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
     }
   }
 
-  // Firebase işlemi için sonraki adımda dolduracağız
   void _saveToFirebase(DietPlanModel plan) async {
     try {
       // Firebase reference'ı oluştur
@@ -237,6 +253,13 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
                 },
                 child: Text("Öğün Ekle"),
               ),
+              // Öğünleri listeleme alanı
+              Column(
+                children: _meals.map((meal) => ListTile(
+                  title: Text(meal.mealName),
+                  subtitle: Text("Kalori: ${meal.calories}, Besinler: ${meal.foods.join(', ')}"),
+                )).toList(),
+              ),
               ElevatedButton(
                 onPressed: _savePlan,
                 child: Text("Planı Kaydet"),
@@ -249,14 +272,15 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
   }
 }
 
-
 class AddMealScreen extends StatefulWidget {
   @override
   _AddMealScreenState createState() => _AddMealScreenState();
 }
 
 class _AddMealScreenState extends State<AddMealScreen> {
+
   final _formKey = GlobalKey<FormState>();
+
   String _mealName = "";
   int _calories = 0;
   String _foodsInput = ""; // Kullanıcının girdiği besinler
