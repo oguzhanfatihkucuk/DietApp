@@ -4,12 +4,24 @@ import 'package:firebase_database/firebase_database.dart';
 import '../Models/CustomerModel.dart';
 import 'AddProgressTracking2.dart';
 
-//TODO will be like customerdetail1
+class AddProgressTrackingMain extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: AddProgressTracking(),
+    );
+  }
+}
+
 class AddProgressTracking extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
 }
-
 
 class _CustomerListScreenState extends State<AddProgressTracking> {
   List<dynamic> customers = [];

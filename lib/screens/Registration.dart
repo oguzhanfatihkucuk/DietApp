@@ -16,7 +16,7 @@ int generate8DigitId() {
   return 100000 + random.nextInt(900000);
 }
 
-class Registration extends StatelessWidget {
+class RegistrationMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -5,7 +5,7 @@ import '../Models/CustomerModel.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 
-class CustomerDetail1 extends StatelessWidget {
+class CustomerDetailMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
