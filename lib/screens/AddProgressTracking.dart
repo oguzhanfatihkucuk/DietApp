@@ -1,5 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+
+import 'CustomerDetail2.dart';
+
 
 
 class AddProgressTracking extends StatefulWidget {
@@ -7,23 +11,10 @@ class AddProgressTracking extends StatefulWidget {
   _CustomerListScreenState createState() => _CustomerListScreenState();
 }
 
+
 class _CustomerListScreenState extends State<AddProgressTracking> {
-  List<String> customerIds = [];
-  DatabaseReference dbRef = FirebaseDatabase.instance.ref("customer");
-
-  void _fetchCustomers() async {
-    DatabaseEvent event = await dbRef.once();
-    if (event.snapshot.value != null) {
-      Map<dynamic, dynamic> customersMap = Map<dynamic, dynamic>.from(event.snapshot.value as Map);
-
-      // Müşteri ID’lerini listeye çevir ve setState ile güncelle
-      setState(() {
-        customerIds = customersMap.keys.map((key) => key.toString()).toList();
-      });
-
-      print("Müşteri ID'leri: $customerIds");
-    }
-  }
+  List<dynamic> customers = [];
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customers');
 
   @override
   void initState() {
@@ -31,25 +22,67 @@ class _CustomerListScreenState extends State<AddProgressTracking> {
     _fetchCustomers();
   }
 
+  // Firebase'den müşteri verilerini çekme
+  Future<void> _fetchCustomers() async {
+    try {
+      final DatabaseEvent event = await _databaseRef.once();
+      final DataSnapshot snapshot = event.snapshot;
+
+      if (snapshot.exists) {
+        final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>;
+
+        if (data != null) {
+          final List<Map<String, dynamic>> customersList = data.entries.map((entry) {
+            return {
+              'id': entry.key,
+              ...Map<String, dynamic>.from(entry.value as Map),
+            };
+          }).toList();
+
+          // State güncelleme
+          if (mounted) {
+            setState(() {
+              customers = customersList;
+            });
+          }
+        }
+      } else {
+        print("📭 Veritabanında müşteri bulunamadı");
+      }
+    } on FirebaseException catch (e) {
+      print("🔥 Firebase Hatası: ${e.code} - ${e.message}");
+    } catch (e) {
+      print("⚠️ Genel Hata: ${e.toString()}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Müşteriler")),
-      body: customerIds.isEmpty
-          ? Center(child: CircularProgressIndicator()) // Veri yüklenene kadar göster
+      appBar: AppBar(
+        title: Text('Müşteriler'),
+      ),
+      body: customers.isEmpty
+          ? Center(child: CircularProgressIndicator()) // Veriler yüklenene kadar göster
           : ListView.builder(
-        itemCount: customerIds.length,
+        itemCount: customers.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text("Müşteri ID: ${customerIds[index]}"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddProgressScreen(customerIds[index]),
-                ),
-              );
-            },
+          final customer = customers[index];
+
+          return Card(
+            child: ListTile(
+              title: Text('${customer['firstName']} ${customer['lastName']}'),
+              subtitle: Text('ID: ${customer['id']}'),
+              onTap: () {
+                // Müşteri detay sayfasına yönlendirme
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CustomerDetailScreen(customer: customer),
+                  ),
+                );
+              },
+            ),
           );
         },
       ),
@@ -57,72 +90,4 @@ class _CustomerListScreenState extends State<AddProgressTracking> {
   }
 }
 
-
-class AddProgressScreen extends StatefulWidget {
-  final String customerId;
-  AddProgressScreen(this.customerId);
-
-  @override
-  _AddProgressScreenState createState() => _AddProgressScreenState();
-}
-
-class _AddProgressScreenState extends State<AddProgressScreen> {
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("customer");
-  final TextEditingController weightController = TextEditingController();
-  final TextEditingController bodyFatController = TextEditingController();
-  final TextEditingController muscleMassController = TextEditingController();
-  final TextEditingController notesController = TextEditingController();
-
-  void _saveProgress() {
-    String date = DateTime.now().toIso8601String().split('T')[0]; // "YYYY-MM-DD" formatında tarih
-    Map<String, dynamic> newProgress = {
-      "date": date,
-      "weight": double.parse(weightController.text),
-      "bodyFatPercentage": double.parse(bodyFatController.text),
-      "muscleMass": double.parse(muscleMassController.text),
-      "notes": notesController.text,
-    };
-
-    DatabaseReference progressRef = _dbRef.child("${widget.customerId}/progressTracking");
-
-    progressRef.once().then((DatabaseEvent event) {
-      if (event.snapshot.value != null) {
-        // Mevcut listeyi al
-        List<dynamic> existingData = List<Map<dynamic, dynamic>>.from(event.snapshot.value as List<dynamic>);
-        existingData.add(newProgress);
-
-        // Yeni listeyi kaydet
-        progressRef.set(existingData);
-      } else {
-        // İlk defa kayıt yapılıyorsa direkt liste olarak kaydet
-        progressRef.set([newProgress]);
-      }
-    }).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Başarıyla eklendi!")));
-      Navigator.pop(context);
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Hata: $error")));
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("İlerleme Ekle - ${widget.customerId}")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(controller: weightController, decoration: InputDecoration(labelText: "Kilo (kg)"), keyboardType: TextInputType.number),
-            TextField(controller: bodyFatController, decoration: InputDecoration(labelText: "Vücut Yağ Oranı (%)"), keyboardType: TextInputType.number),
-            TextField(controller: muscleMassController, decoration: InputDecoration(labelText: "Kas Kütlesi (kg)"), keyboardType: TextInputType.number),
-            TextField(controller: notesController, decoration: InputDecoration(labelText: "Notlar")),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: _saveProgress, child: Text("Kaydet")),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
