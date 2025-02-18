@@ -32,14 +32,13 @@ class Registration extends StatelessWidget {
 }
 
 class CustomerRegistrationScreen extends StatefulWidget {
-
   @override
   _CustomerRegistrationScreenState createState() =>
       _CustomerRegistrationScreenState();
-
 }
 
-class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen> {
+class _CustomerRegistrationScreenState
+    extends State<CustomerRegistrationScreen> {
   final database = FirebaseDatabase.instance.ref();
 
   Future<void> saveData(String key, Map<dynamic, dynamic> data) async {
@@ -59,19 +58,28 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   bool isLoginBefore = false; // Eksik değişken eklendi
 
   // Kişisel Bilgiler
-  late String firstName ;
-  late String lastName ;
-  late String email ;
-  late String phone ;
-  late int age ;
-  late String gender ="Kadın" ; // Default değeri Kadın
-  late double height ;
-  late double weight ;
-  late double targetWeight ;
-  late String activityLevel ="Orta";
+  late String firstName;
+
+  late String lastName;
+
+  late String email;
+
+  late String phone;
+
+  late int age;
+
+  late String gender = "Kadın"; // Default değeri Kadın
+  late double height;
+
+  late double weight;
+
+  late double targetWeight;
+
+  late String activityLevel = "Orta";
 
 // Sağlık Durumu
-  List<String> allergies= [] ;
+  List<String> allergies = [];
+
   List<String> medicationUse = [];
   List<String> chronicDiseases = []; // Eksik değişken eklendi
 
@@ -92,9 +100,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   bool healthierEating = false;
 
   List<DietPlanModel> dietPlans = []; // Diyet Listesi
-  List<ProgressTracking> progressTracking= [];
-  List<WeeklyMealModel> weeklyMeals= [];
-
+  List<ProgressTracking> progressTracking = [];
+  List<WeeklyMealModel> weeklyMeals = [];
 
 // Vücut Kitle İndeksi Hesaplaması
   double get bodyMassIndex {
@@ -105,7 +112,7 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   }
 
   // Formu gönder
-  Future<void> _submitForm()  async {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -153,7 +160,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
       final customerJson = newCustomer.toJson();
       final jsonString = JsonEncoder.withIndent('  ').convert(customerJson);
 
-      final path = 'customer/-Nxyz${newCustomer.customerID}'; // 👈 ID'yi path'e ekle
+      final path =
+          'customer/-Nxyz${newCustomer.customerID}'; // 👈 ID'yi path'e ekle
       saveData(path, customerJson); // 👈 Dinamik path ile kaydet
 
       showDialog(
@@ -172,7 +180,6 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
         ),
       );
       _formKey.currentState!.reset();
-
     }
   }
 
@@ -208,7 +215,6 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                           children: [
                             Expanded(
                               child: TextFormField(
-
                                 decoration: InputDecoration(labelText: 'Ad'),
                                 onSaved: (value) => firstName = value!,
                                 initialValue: "a",
@@ -280,13 +286,15 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                             Expanded(
                               child: DropdownButtonFormField<String>(
                                 value: gender,
-                                decoration:InputDecoration(labelText: 'Cinsiyet'),
+                                decoration:
+                                    InputDecoration(labelText: 'Cinsiyet'),
                                 onChanged: (newValue) {
                                   setState(() {
                                     gender = newValue!;
                                   });
                                 },
-                                validator: (value) { // Form validation için
+                                validator: (value) {
+                                  // Form validation için
                                   if (value == null) {
                                     return 'Lütfen cinsiyet seçiniz';
                                   }
@@ -411,7 +419,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                           decoration: InputDecoration(
                             labelText: 'Kronik Hastalıklar (virgülle ayırın)',
                           ),
-                          onSaved: (value) => chronicDiseases = value!.isEmpty ? [] : value.split(', '),
+                          onSaved: (value) => chronicDiseases =
+                              value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen kronik hastalıklarınızı giriniz.';
@@ -423,7 +432,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                           decoration: InputDecoration(
                             labelText: 'Alerjiler (virgülle ayırın)',
                           ),
-                          onSaved: (value) => allergies = value!.isEmpty ? [] : value.split(', '),
+                          onSaved: (value) => allergies =
+                              value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen alerjilerinizi giriniz.';
@@ -435,7 +445,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                           decoration: InputDecoration(
                             labelText: 'İlaçlar (virgülle ayırın)',
                           ),
-                          onSaved: (value) => medicationUse = value!.isEmpty ? [] : value.split(', '),
+                          onSaved: (value) => medicationUse =
+                              value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen kullandığınız ilaçları giriniz.';
@@ -464,7 +475,8 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                           decoration: InputDecoration(
                             labelText: 'Sevdiği Yiyecekler (virgülle ayırın)',
                           ),
-                          onSaved: (value) => likedFoods = value!.isEmpty ? [] : value.split(', '),
+                          onSaved: (value) => likedFoods =
+                              value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen sevdiğiniz yiyecekleri giriniz.';
@@ -472,12 +484,12 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
                             return null;
                           },
                         ),
-
                         TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Sevmediği Yiyecekler (virgülle ayırın)',
                           ),
-                          onSaved: (value) => dislikedFoods = value!.isEmpty ? [] : value.split(', '),
+                          onSaved: (value) => dislikedFoods =
+                              value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen sevmediğiniz yiyecekleri giriniz.';
@@ -633,5 +645,4 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
       ),
     );
   }
-
 }

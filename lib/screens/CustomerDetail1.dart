@@ -6,12 +6,10 @@ import 'package:firebase_database/firebase_database.dart';
 
 
 class CustomerDetail1 extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Müşteri Kayıt Ekranı',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

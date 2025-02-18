@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import '../Models/CustomerModel.dart';
+import 'AddProgressTracking2.dart';
 
-import 'CustomerDetail2.dart';
-
-
-
+//TODO will be like customerdetail1
 class AddProgressTracking extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
@@ -14,7 +13,7 @@ class AddProgressTracking extends StatefulWidget {
 
 class _CustomerListScreenState extends State<AddProgressTracking> {
   List<dynamic> customers = [];
-  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customers');
+  final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
 
   @override
   void initState() {
@@ -22,27 +21,33 @@ class _CustomerListScreenState extends State<AddProgressTracking> {
     _fetchCustomers();
   }
 
-  // Firebase'den müşteri verilerini çekme
   Future<void> _fetchCustomers() async {
     try {
-      final DatabaseEvent event = await _databaseRef.once();
+      // 1. Firebase referansını oluştur
+      final DatabaseReference ref = FirebaseDatabase.instance.ref("customers");
+
+      // 2. Verileri çek
+      final DatabaseEvent event = await ref.once();
       final DataSnapshot snapshot = event.snapshot;
 
+      // 3. Veri kontrolü
       if (snapshot.exists) {
-        final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>;
+        // 4. Veriyi işle
+        final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>?;
 
         if (data != null) {
-          final List<Map<String, dynamic>> customersList = data.entries.map((entry) {
+          // 5. Müşteri listesine dönüştür
+          final List<Map<String, dynamic>> customers = data.entries.map((entry) {
             return {
               'id': entry.key,
-              ...Map<String, dynamic>.from(entry.value as Map),
+              ...Map<String, dynamic>.from(entry.value as Map)
             };
           }).toList();
 
-          // State güncelleme
+          // 6. State'i güncelle (mounted kontrolü ekledik)
           if (mounted) {
             setState(() {
-              customers = customersList;
+              this.customers = customers;
             });
           }
         }
@@ -58,36 +63,54 @@ class _CustomerListScreenState extends State<AddProgressTracking> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Müşteriler'),
-      ),
-      body: customers.isEmpty
-          ? Center(child: CircularProgressIndicator()) // Veriler yüklenene kadar göster
-          : ListView.builder(
-        itemCount: customers.length,
-        itemBuilder: (context, index) {
-          final customer = customers[index];
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('İlerleme Ekle', style: TextStyle(fontSize: 24)),
+          centerTitle: true,
+        ),
+        body: StreamBuilder<DatabaseEvent>(
+          stream: _databaseRef.onValue,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(child: Text('Hata oluştu: ${snapshot.error}'));
+            }
 
-          return Card(
-            child: ListTile(
-              title: Text('${customer['firstName']} ${customer['lastName']}'),
-              subtitle: Text('ID: ${customer['id']}'),
-              onTap: () {
-                // Müşteri detay sayfasına yönlendirme
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CustomerDetailScreen(customer: customer),
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
+              return Center(child: Text('Müşteri bulunamadı.'));
+            }
+
+            final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
+            final customerList = data.values.toList();
+
+            return ListView.builder(
+              itemCount: customerList.length,
+              itemBuilder: (context, index) {
+                final customerData = customerList[index] as Map<dynamic, dynamic>;
+                final customer = Customer.fromJson(customerData);
+
+                return Card(
+                  child: ListTile(
+                    title: Text('${customer.firstName} ${customer.lastName}'),
+                    subtitle: Text('ID: ${customer.customerID}'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProgressScreen(customer: customer),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
-            ),
-          );
-        },
-      ),
-    );
+            );
+          },
+        ),
+      );
   }
 }
-
 

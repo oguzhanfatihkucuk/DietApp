@@ -7,7 +7,6 @@ import '../Components/buildListInfo.dart';
 
 class CustomerDetailScreen extends StatelessWidget {
   final Customer customer;
-
   const CustomerDetailScreen({super.key, required this.customer});
 
   @override
