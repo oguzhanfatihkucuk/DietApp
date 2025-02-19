@@ -13,7 +13,7 @@ class Mainscreen extends StatefulWidget {
 class _MainscreenState extends State<Mainscreen> {
   // Başlangıçta hangi sayfanın gösterileceğini belirliyoruz
   Widget currentPage = Center(child: Text('Ana Ekran', style: TextStyle(fontSize: 24)));
-
+  Widget customMainPage= Center(child: Text('Ana Ekran', style: TextStyle(fontSize: 24)));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +29,14 @@ class _MainscreenState extends State<Mainscreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                CustomButton(
+                  text: 'Ana Ekran',
+                  onPressed: () {
+                    setState(() {
+                      currentPage = customMainPage;
+                    });
+                  },
+                ),
                 CustomButton(
                   text: 'Müşteri Kayıt',
                   onPressed: () {
