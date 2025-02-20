@@ -13,17 +13,17 @@ class AddProgressTrackingMain extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: AddProgressTracking(),
+      home: AddProgressTrackingCustomerScreen(),
     );
   }
 }
 
-class AddProgressTracking extends StatefulWidget {
+class AddProgressTrackingCustomerScreen extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
 }
 
-class _CustomerListScreenState extends State<AddProgressTracking> {
+class _CustomerListScreenState extends State<AddProgressTrackingCustomerScreen> {
   List<dynamic> customers = [];
   final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
 
@@ -101,6 +101,7 @@ class _CustomerListScreenState extends State<AddProgressTracking> {
             return ListView.builder(
               itemCount: customerList.length,
               itemBuilder: (context, index) {
+
                 final customerData = customerList[index] as Map<dynamic, dynamic>;
                 final customer = Customer.fromJson(customerData);
 
@@ -112,7 +113,7 @@ class _CustomerListScreenState extends State<AddProgressTracking> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddProgressScreen(customer: customer),
+                          builder: (context) => AddProgressTrackingScreen(customer: customer),
                         ),
                       );
                     },

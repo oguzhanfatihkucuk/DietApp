@@ -3,15 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Models/CustomerModel.dart';
 
-class AddProgressScreen extends StatefulWidget {
+class AddProgressTrackingScreen extends StatefulWidget {
   final Customer customer;
 
-  const AddProgressScreen({super.key, required this.customer});
+  const AddProgressTrackingScreen({super.key, required this.customer});
   @override
   _AddProgressScreenState createState() => _AddProgressScreenState();
 }
 
-class _AddProgressScreenState extends State<AddProgressScreen> {
+class _AddProgressScreenState extends State<AddProgressTrackingScreen> {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("customer");
   final TextEditingController weightController = TextEditingController();
   final TextEditingController bodyFatController = TextEditingController();

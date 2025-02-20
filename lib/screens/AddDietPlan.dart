@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import '../Models/CustomerModel.dart';
 import 'AddDietPlan2.dart';
 
 class AddDietPlanMain extends StatelessWidget {
@@ -11,34 +13,21 @@ class AddDietPlanMain extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: AddDietPlan(),
+      home: AddDietPlanCustomerSreen(),
     );
   }
 }
 
-class AddDietPlan extends StatefulWidget {
+class AddDietPlanCustomerSreen extends StatefulWidget {
   @override
   _CustomerListScreenState createState() => _CustomerListScreenState();
 }
 
-class _CustomerListScreenState extends State<AddDietPlan> {
-  List<String> customerIds = [];
-  DatabaseReference dbRef = FirebaseDatabase.instance.ref("customer");
+class _CustomerListScreenState extends State<AddDietPlanCustomerSreen> {
 
-  void _fetchCustomers() async {
-    DatabaseEvent event = await dbRef.once();
-    if (event.snapshot.value != null) {
-      Map<dynamic, dynamic> customersMap =
-          Map<dynamic, dynamic>.from(event.snapshot.value as Map);
+  List<dynamic> customers = [];
+  final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
 
-      // Müşteri ID’lerini listeye çevir ve setState ile güncelle
-      setState(() {
-        customerIds = customersMap.keys.map((key) => key.toString()).toList();
-      });
-
-      print("Müşteri ID'leri: $customerIds");
-    }
-  }
 
   @override
   void initState() {
@@ -46,30 +35,95 @@ class _CustomerListScreenState extends State<AddDietPlan> {
     _fetchCustomers();
   }
 
+  Future<void> _fetchCustomers() async {
+    try {
+      // 1. Firebase referansını oluştur
+      final DatabaseReference ref = FirebaseDatabase.instance.ref("customers");
+
+      // 2. Verileri çek
+      final DatabaseEvent event = await ref.once();
+      final DataSnapshot snapshot = event.snapshot;
+
+      // 3. Veri kontrolü
+      if (snapshot.exists) {
+        // 4. Veriyi işle
+        final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>?;
+
+        if (data != null) {
+          // 5. Müşteri listesine dönüştür
+          final List<Map<String, dynamic>> customers = data.entries.map((entry) {
+            return {
+              'id': entry.key,
+              ...Map<String, dynamic>.from(entry.value as Map)
+            };
+          }).toList();
+
+          // 6. State'i güncelle (mounted kontrolü ekledik)
+          if (mounted) {
+            setState(() {
+              this.customers = customers;
+            });
+          }
+        }
+      } else {
+        print("📭 Veritabanında müşteri bulunamadı");
+      }
+    } on FirebaseException catch (e) {
+      print("🔥 Firebase Hatası: ${e.code} - ${e.message}");
+    } catch (e) {
+      print("⚠️ Genel Hata: ${e.toString()}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Müşteriler")),
-      body: customerIds.isEmpty
-          ? Center(
-              child: CircularProgressIndicator()) // Veri yüklenene kadar göster
-          : ListView.builder(
-              itemCount: customerIds.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text("Müşteri ID: ${customerIds[index]}"),
+      appBar: AppBar(
+        title: Text('Diyet Planı Ekleme Menü', style: TextStyle(fontSize: 24)),
+        centerTitle: true,
+      ),
+      body: StreamBuilder<DatabaseEvent>(
+        stream: _databaseRef.onValue,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Hata oluştu: ${snapshot.error}'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
+            return Center(child: Text('Müşteri bulunamadı.'));
+          }
+
+          final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
+          final customerList = data.values.toList();
+
+          return ListView.builder(
+            itemCount: customerList.length,
+            itemBuilder: (context, index) {
+              final customerData = customerList[index] as Map<dynamic, dynamic>;
+              final customer = Customer.fromJson(customerData);
+
+              return Card(
+                child: ListTile(
+                  title: Text('${customer.firstName} ${customer.lastName}'),
+                  subtitle: Text('ID: ${customer.customerID}'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            AddDietPlanScreen(customerIds[index]),
+                        builder: (context) => AddDietPlanScreen(customer: customer),
                       ),
                     );
                   },
-                );
-              },
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

@@ -4,7 +4,6 @@ import 'CustomerDetail2.dart';
 import '../Models/CustomerModel.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-
 class CustomerDetailMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,17 +13,17 @@ class CustomerDetailMain extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: CustomerInfoScreen(),
+      home: CustomerDetailCustomerScreen(),
     );
   }
 }
 
-class CustomerInfoScreen extends StatefulWidget {
+class CustomerDetailCustomerScreen extends StatefulWidget {
   @override
   _CustomerInfoScreenState createState() => _CustomerInfoScreenState();
 }
 
-class _CustomerInfoScreenState extends State<CustomerInfoScreen> {
+class _CustomerInfoScreenState extends State<CustomerDetailCustomerScreen> {
   List<dynamic> customers = [];
   final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
 

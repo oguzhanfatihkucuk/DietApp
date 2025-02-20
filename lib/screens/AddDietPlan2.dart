@@ -2,13 +2,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../Models/CustomerModel.dart';
 import '../Models/DietPlanModel.dart';
 import 'AddDietPlan3.dart';
 
 class AddDietPlanScreen extends StatefulWidget {
-  final String customerId;
+  final Customer customer;
+  const AddDietPlanScreen({super.key, required this.customer});
 
-  AddDietPlanScreen(this.customerId);
 
   @override
   _AddDietPlanScreenState createState() => _AddDietPlanScreenState();
@@ -67,7 +68,7 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
   void _saveToFirebase(DietPlanModel plan) async {
     try {
       // Firebase reference'ı oluştur
-      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/${widget.customerId}/dietPlans").push();
+      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("-Nxyz${widget.customer.customerID}/dietPlans").push();
 
       // Plan ID'sini güncelle
       plan.planID = dietPlansRef.key!;

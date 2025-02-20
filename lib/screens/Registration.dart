@@ -187,8 +187,8 @@ class _CustomerRegistrationScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Müşteri Kayıt Ekranı'),
-        backgroundColor: Colors.blueAccent,
+        title: Text('Müşteri Kayıt', style: TextStyle(fontSize: 24)),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
