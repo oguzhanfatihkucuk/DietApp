@@ -7,11 +7,12 @@ class AddProgressTrackingScreen extends StatefulWidget {
   final Customer customer;
 
   const AddProgressTrackingScreen({super.key, required this.customer});
+
   @override
-  _AddProgressScreenState createState() => _AddProgressScreenState();
+  _AddProgressTrackingScreenState createState() => _AddProgressTrackingScreenState();
 }
 
-class _AddProgressScreenState extends State<AddProgressTrackingScreen> {
+class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("customer");
   final TextEditingController weightController = TextEditingController();
   final TextEditingController bodyFatController = TextEditingController();
@@ -58,16 +59,33 @@ class _AddProgressScreenState extends State<AddProgressTrackingScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(controller: weightController, decoration: InputDecoration(labelText: "Kilo (kg)"), keyboardType: TextInputType.number),
-            TextField(controller: bodyFatController, decoration: InputDecoration(labelText: "Vücut Yağ Oranı (%)"), keyboardType: TextInputType.number),
-            TextField(controller: muscleMassController, decoration: InputDecoration(labelText: "Kas Kütlesi (kg)"), keyboardType: TextInputType.number),
-            TextField(controller: notesController, decoration: InputDecoration(labelText: "Notlar")),
+            TextField(
+              controller: weightController,
+              decoration: InputDecoration(labelText: "Kilo (kg)"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: bodyFatController,
+              decoration: InputDecoration(labelText: "Vücut Yağ Oranı (%)"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: muscleMassController,
+              decoration: InputDecoration(labelText: "Kas Kütlesi (kg)"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: notesController,
+              decoration: InputDecoration(labelText: "Notlar"),
+            ),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: _saveProgress, child: Text("Kaydet")),
+            ElevatedButton(
+              onPressed: _saveProgress,
+              child: Text("Kaydet"),
+            ),
           ],
         ),
       ),
     );
   }
 }
-

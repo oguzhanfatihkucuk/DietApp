@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'AddProgressTracking.dart';
 import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
-import 'AddProgressTracking.dart';
 
 class Mainscreen extends StatefulWidget {
   @override

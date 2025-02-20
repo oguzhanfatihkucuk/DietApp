@@ -20,13 +20,12 @@ class CustomerDetailMain extends StatelessWidget {
 
 class CustomerDetailCustomerScreen extends StatefulWidget {
   @override
-  _CustomerInfoScreenState createState() => _CustomerInfoScreenState();
+  _CustomerDetailCustomerScreenState createState() => _CustomerDetailCustomerScreenState();
 }
 
-class _CustomerInfoScreenState extends State<CustomerDetailCustomerScreen> {
+class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScreen> {
   List<dynamic> customers = [];
-  final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
-
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customer');
 
   @override
   void initState() {

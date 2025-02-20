@@ -224,8 +224,6 @@ class CustomerDetailScreen extends StatelessWidget {
     );
   }
 
-  // Yardımcı Metotlar
-
 }
 
 

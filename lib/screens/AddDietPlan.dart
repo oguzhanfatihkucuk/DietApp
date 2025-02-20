@@ -20,14 +20,12 @@ class AddDietPlanMain extends StatelessWidget {
 
 class AddDietPlanCustomerSreen extends StatefulWidget {
   @override
-  _CustomerListScreenState createState() => _CustomerListScreenState();
+  _AddDietPlanCustomerSreenState createState() => _AddDietPlanCustomerSreenState();
 }
 
-class _CustomerListScreenState extends State<AddDietPlanCustomerSreen> {
-
+class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
   List<dynamic> customers = [];
-  final DatabaseReference _databaseRef =FirebaseDatabase.instance.ref('customer');
-
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customer');
 
   @override
   void initState() {
