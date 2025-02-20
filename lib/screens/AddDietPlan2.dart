@@ -67,9 +67,8 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
 
   void _saveToFirebase(DietPlanModel plan) async {
     try {
-      // Firebase reference'ı oluştur
-      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("-Nxyz${widget.customer.customerID}/dietPlans").push();
-
+      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/-Nxyz${widget.customer.customerID}/dietPlans").push();
+      //TODO push?
       // Plan ID'sini güncelle
       plan.planID = dietPlansRef.key!;
 

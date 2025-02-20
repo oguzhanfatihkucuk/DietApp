@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Models/CustomerModel.dart';
 
@@ -14,6 +13,7 @@ class AddProgressTrackingScreen extends StatefulWidget {
 
 class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("customer");
+
   final TextEditingController weightController = TextEditingController();
   final TextEditingController bodyFatController = TextEditingController();
   final TextEditingController muscleMassController = TextEditingController();
@@ -36,9 +36,8 @@ class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
         // Mevcut listeyi al
         List<dynamic> existingData = List<Map<dynamic, dynamic>>.from(event.snapshot.value as List<dynamic>);
         existingData.add(newProgress);
-
         // Yeni listeyi kaydet
-        progressRef.set(existingData);
+        progressRef.set(existingData);  //TODO set?
       } else {
         // İlk defa kayıt yapılıyorsa direkt liste olarak kaydet
         progressRef.set([newProgress]);

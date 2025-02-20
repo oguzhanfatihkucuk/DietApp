@@ -16,6 +16,7 @@ List<Widget> buildListInfo(String title, List<dynamic> items) {
       padding: const EdgeInsets.only(left: 16, bottom: 4),
       child: Text('• $item'),
     ))
-        .toList(),
+        .toList(), // Add .toList() here
   ];
 }
+

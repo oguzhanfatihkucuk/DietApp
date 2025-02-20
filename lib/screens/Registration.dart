@@ -43,7 +43,7 @@ class _CustomerRegistrationScreenState
 
   Future<void> saveData(String key, Map<dynamic, dynamic> data) async {
     try {
-      await database.child(key).set(data);
+      await database.child(key).set(data); //TODO set?
       print('Data saved successfully!');
     } catch (e) {
       print('Error saving data: $e');

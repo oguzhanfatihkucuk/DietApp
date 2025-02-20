@@ -4,6 +4,15 @@ import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
 
+//TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
+//TODO UI için geliştirmelerde bulun.
+//TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
+//TODO Müşteriler için ayrı bir sayfa oluşturulacak,
+//TODO Admin için ayrı bir sayfa oluşturulacak,
+//TODO Authorization işlemlerini araştır nasıl bir yöntem yapabiliriz. Admin-Diyetisyen-Müşteri
+//TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
+//TODO Düzenleme işlemlerini araştır.
+
 class Mainscreen extends StatefulWidget {
   @override
   _MainscreenState createState() => _MainscreenState();
