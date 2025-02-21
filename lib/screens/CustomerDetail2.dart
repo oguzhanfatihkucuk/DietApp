@@ -66,6 +66,8 @@ class CustomerDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             buildSectionTitle('Sağlık Durumu'),
+            buildInfoRow(
+                '', ""),
             ...buildListInfo(
                 'Kronik Hastalıklar', customer.healthStatus.chronicDiseases),
             ...buildListInfo('Alerjiler', customer.healthStatus.allergies),

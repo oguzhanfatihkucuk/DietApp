@@ -1,24 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'MainScreen.dart';
 
-class LoginScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
 
-  final TextEditingController _usernameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login(BuildContext context) {
+  bool _isLoading = false;
+
+  Future<void> _login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      // Basit bir kontrol (örnek: kullanıcı adı "admin", şifre "1234")
-      if (_usernameController.text == "admin" && _passwordController.text == "1234") {
+      setState(() => _isLoading = true);
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        // Giriş başarılıysa ana ekrana yönlendir
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Mainscreen()),
         );
-      } else {
+      } on FirebaseAuthException catch (e) {
+        String errorMessage = "Giriş başarısız!";
+        if (e.code == 'user-not-found') {
+          errorMessage = "Kullanıcı bulunamadı!";
+        } else if (e.code == 'wrong-password') {
+          errorMessage = "Şifre hatalı!";
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Kullanıcı adı veya şifre hatalı!')),
+          SnackBar(content: Text(errorMessage)),
         );
+      } finally {
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -36,11 +59,11 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: [
               TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Kullanıcı Adı'),
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'E-posta'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Lütfen kullanıcı adınızı giriniz.';
+                    return 'Lütfen e-posta adresinizi giriniz.';
                   }
                   return null;
                 },
@@ -57,7 +80,9 @@ class LoginScreen extends StatelessWidget {
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
                 onPressed: () => _login(context),
                 child: Text('Giriş Yap'),
               ),
@@ -68,3 +93,5 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
+

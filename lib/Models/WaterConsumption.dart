@@ -1,5 +1,5 @@
 class WaterConsumption {
-  double dailyWaterAmount;
+  int dailyWaterAmount;
   String waterConsumptionHabit;
 
   WaterConsumption({
@@ -18,7 +18,7 @@ class WaterConsumption {
   // JSON'dan nesne oluşturma (Veri çekerken kullanışlı olur)
   factory WaterConsumption.fromJson(Map<dynamic, dynamic> json) {
     return WaterConsumption(
-      dailyWaterAmount: json['dailyWaterAmount'] ?? 0.0,
+      dailyWaterAmount: json['dailyWaterAmount'] ?? 0,
       waterConsumptionHabit: json['waterConsumptionHabit'] ?? '',
     );
   }

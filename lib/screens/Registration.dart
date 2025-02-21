@@ -79,7 +79,6 @@ class _CustomerRegistrationScreenState
 
 // Sağlık Durumu
   List<String> allergies = [];
-
   List<String> medicationUse = [];
   List<String> chronicDiseases = []; // Eksik değişken eklendi
 
@@ -91,7 +90,7 @@ class _CustomerRegistrationScreenState
   List<String> dislikedFoods = []; // Eksik değişken eklendi
 
 // Su Tüketimi
-  double dailyWaterAmount = 0;
+  int dailyWaterAmount = 0;
   String waterConsumptionHabit = '';
 
 // Hedefler
@@ -550,7 +549,7 @@ class _CustomerRegistrationScreenState
                             return null;
                           },
                           onSaved: (value) =>
-                              dailyWaterAmount = double.parse(value!),
+                              dailyWaterAmount = int.parse(value!),
                         ),
                         SizedBox(height: 10),
                         // Expanded yerine boşluk ekleyerek daha iyi bir görünüm sağlıyoruz
