@@ -3,6 +3,7 @@ import 'AddProgressTracking.dart';
 import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
+import 'UserProfileScreen.dart';
 
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
 //TODO UI için geliştirmelerde bulun.
@@ -12,7 +13,8 @@ import 'AddDietPlan.dart';
 //TODO Authorization işlemlerini araştır nasıl bir yöntem yapabiliriz. Admin-Diyetisyen-Müşteri
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
-
+//TODO tüm kullanıcılar bastan olusturulcak
+//TODO id dağıtımları yapılacak.
 
 class Mainscreen extends StatefulWidget {
   @override
@@ -63,6 +65,7 @@ class _MainscreenState extends State<Mainscreen> {
             _buildDrawerItem(Icons.label, 'Work', 7, Center(child: Text('Work'))),
             Spacer(),
             Divider(),
+            _buildDrawerItem(Icons.settings, 'My Profile', 8, UserProfileScreen()),
             _buildDrawerItem(Icons.settings, 'Settings & Account', 8, Center(child: Text('Settings & Account'))),
           ],
         ),

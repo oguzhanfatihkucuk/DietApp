@@ -7,7 +7,7 @@ import 'HealthStatus.dart';
 import 'ProgressTracking.dart';
 
 class Customer {
-  int customerID;
+  String customerID;
   int dietitianID;
   String firstName;
   String lastName;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:diet/Models/WeeklyMealModel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../Models/CustomerModel.dart';
@@ -110,13 +111,46 @@ class _CustomerRegistrationScreenState
     return 0.0;
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance; // _auth değişkenini tanımla
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+
+  Future<String?> registerUser(String email, String password) async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Kullanıcı kaydı başarılı olduğunda uid'yi al
+      final uid = userCredential.user!.uid;
+      print('Kullanıcı kaydı başarılı. UID: $uid');
+
+      return uid; // Yeni kullanıcının uid'sini döndür
+    } catch (e) {
+      print('Kullanıcı kaydı hatası: $e');
+      return null;
+    }
+  }
+
   // Formu gönder
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      // Yeni kullanıcı için Firebase Authentication'da hesap oluştur
+      final String email = '${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com'; // Örnek e-posta
+      final String password = 'password123'; // Örnek şifre
+
+      final String? uid = await registerUser(email, password);
+
+      if (uid == null) {
+        print('Kullanıcı kaydı başarısız!');
+        return;
+      }
+
+      // Yeni müşteri nesnesi oluştur
       final newCustomer = Customer(
-        customerID: customerID,
+        customerID: uid, // Firebase Authentication'dan gelen uid'yi kullan
         dietitianID: dietitianID,
         firstName: firstName,
         lastName: lastName,
@@ -152,24 +186,22 @@ class _CustomerRegistrationScreenState
         ),
         dietPlans: dietPlans,
         progressTracking: progressTracking,
-        weeklyMeals: weeklyMeals, //
+        weeklyMeals: weeklyMeals,
       );
 
       // JSON'a çevirme ve loglama
       final customerJson = newCustomer.toJson();
       final jsonString = JsonEncoder.withIndent('  ').convert(customerJson);
 
-      final path =
-          'customer/-Nxyz${newCustomer.customerID}'; // 👈 ID'yi path'e ekle
-      saveData(path, customerJson); // 👈 Dinamik path ile kaydet
+      // Firebase'e kaydet (uid altında)
+      final path = 'customer/$uid'; // Kullanıcı uid'sini path olarak kullan
+      await database.child(path).set(customerJson);
 
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Oluşturulan JSON'),
-          content: SingleChildScrollView(
-            child: Text(jsonString),
-          ),
+          title: Text('Kayıt Başarılı'),
+          content: Text('Müşteri başarıyla kaydedildi. Firebase UID: $uid'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -178,6 +210,7 @@ class _CustomerRegistrationScreenState
           ],
         ),
       );
+
       _formKey.currentState!.reset();
     }
   }
