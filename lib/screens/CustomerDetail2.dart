@@ -39,7 +39,7 @@ class CustomerDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             buildSectionTitle('Kişisel Bilgiler'),
-            buildInfoRow('Müşteri ID', customer.customerID.toString()),
+            buildInfoRow('Müşteri ID', customer.customerID),
             buildInfoRow('Diyetisyen ID', customer.dietitianID.toString()),
             buildInfoRow(
                 'Ad Soyad', '${customer.firstName} ${customer.lastName}'),

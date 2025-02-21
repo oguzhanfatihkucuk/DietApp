@@ -138,7 +138,7 @@ class _CustomerRegistrationScreenState
       _formKey.currentState!.save();
 
       // Yeni kullanıcı için Firebase Authentication'da hesap oluştur
-      final String email = '${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com'; // Örnek e-posta
+      final String email = '${firstName.toLowerCase()}@example.com'; // Örnek e-posta
       final String password = 'password123'; // Örnek şifre
 
       final String? uid = await registerUser(email, password);

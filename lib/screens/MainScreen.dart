@@ -13,7 +13,7 @@ import 'UserProfileScreen.dart';
 //TODO Authorization işlemlerini araştır nasıl bir yöntem yapabiliriz. Admin-Diyetisyen-Müşteri
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
-//TODO tüm kullanıcılar bastan olusturulcak
+//TODO tüm kullanıcılar bastan olusturulcak.
 //TODO id dağıtımları yapılacak.
 
 class Mainscreen extends StatefulWidget {
