@@ -1,4 +1,3 @@
-import 'package:diet/screens/MainScreen.dart';
 import 'package:diet/screens/loginScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

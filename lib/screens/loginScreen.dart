@@ -35,10 +35,21 @@ class _LoginScreenState extends State<LoginScreen> {
           errorMessage = "Kullanıcı bulunamadı!";
         } else if (e.code == 'wrong-password') {
           errorMessage = "Şifre hatalı!";
+        } else if (e.code == 'invalid-email') {
+          errorMessage = "Geçersiz e-posta formatı!";
+        } else if (e.code == 'user-disabled') {
+          errorMessage = "Bu hesap devre dışı bırakılmış!";
+        } else {
+          errorMessage = "Hata: ${e.code} - ${e.message}";
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage)),
+        );
+
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Beklenmeyen bir hata oluştu: $e")),
         );
       } finally {
         setState(() => _isLoading = false);
