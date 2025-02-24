@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'MainScreen.dart';
@@ -9,8 +10,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController(text: "deneme@gmail.com");
-  final TextEditingController _passwordController = TextEditingController(text:"deneme123");
+  final TextEditingController _emailController = TextEditingController(text: "admin332@example.com");
+  final TextEditingController _passwordController = TextEditingController(text:"password123");
 
   bool _isLoading = false;
 
@@ -54,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } finally {
         setState(() => _isLoading = false);
       }
+
     }
   }
 

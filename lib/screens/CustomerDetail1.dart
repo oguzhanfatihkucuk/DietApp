@@ -36,7 +36,7 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
   Future<void> _fetchCustomers() async {
     try {
       // 1. Firebase referansını oluştur
-      final DatabaseReference ref = FirebaseDatabase.instance.ref("customers");
+      final DatabaseReference ref = FirebaseDatabase.instance.ref("customer");
 
       // 2. Verileri çek
       final DatabaseEvent event = await ref.once();
@@ -57,11 +57,7 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
           }).toList();
 
           // 6. State'i güncelle (mounted kontrolü ekledik)
-          if (mounted) {
-            setState(() {
-              this.customers = customers;
-            });
-          }
+
         }
       } else {
         print("📭 Veritabanında müşteri bulunamadı");
@@ -70,6 +66,11 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
       print("🔥 Firebase Hatası: ${e.code} - ${e.message}");
     } catch (e) {
       print("⚠️ Genel Hata: ${e.toString()}");
+    }
+    if (mounted) {
+      setState(() {
+        this.customers = customers;
+      });
     }
   }
 
