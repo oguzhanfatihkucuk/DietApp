@@ -10,7 +10,6 @@ class AddDietPlanScreen extends StatefulWidget {
   final Customer customer;
   const AddDietPlanScreen({super.key, required this.customer});
 
-
   @override
   _AddDietPlanScreenState createState() => _AddDietPlanScreenState();
 }
@@ -67,8 +66,8 @@ class _AddDietPlanScreenState extends State<AddDietPlanScreen> {
 
   void _saveToFirebase(DietPlanModel plan) async {
     try {
-      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/-Nxyz${widget.customer.customerID}/dietPlans").push();
-      //TODO push?
+      DatabaseReference dietPlansRef = FirebaseDatabase.instance.ref("customer/${widget.customer.customerID}/dietPlans").push();
+
       // Plan ID'sini güncelle
       plan.planID = dietPlansRef.key!;
 

@@ -28,8 +28,8 @@ class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
       "muscleMass": double.parse(muscleMassController.text),
       "notes": notesController.text,
     };
-
-    DatabaseReference progressRef = _dbRef.child("-Nxyz${widget.customer.customerID}/progressTracking");
+    //TODO aynı gün içerisinde ilerleme süreci ekleme yapılamayacak.
+    DatabaseReference progressRef = _dbRef.child("${widget.customer.customerID}/progressTracking");
 
     progressRef.once().then((DatabaseEvent event) {
       if (event.snapshot.value != null) {
@@ -37,7 +37,7 @@ class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
         List<dynamic> existingData = List<Map<dynamic, dynamic>>.from(event.snapshot.value as List<dynamic>);
         existingData.add(newProgress);
         // Yeni listeyi kaydet
-        progressRef.set(existingData);  //TODO set?
+        progressRef.set(existingData);
       } else {
         // İlk defa kayıt yapılıyorsa direkt liste olarak kaydet
         progressRef.set([newProgress]);
