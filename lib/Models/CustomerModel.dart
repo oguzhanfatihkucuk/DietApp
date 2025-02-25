@@ -14,6 +14,7 @@ class Customer {
   String email;
   String phone;
   bool isLoginBefore;
+  //bool isAdmin;
   int age;
   String gender;
   double height;

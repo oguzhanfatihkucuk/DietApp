@@ -18,6 +18,7 @@ import 'UserProfileScreen.dart';
 //TODO Diyetisyen:Tüm sayfalar
 //TODO Müşteri:Öğün ekle
 
+//TODO Responsive kontrollerini  yap
 class Mainscreen extends StatefulWidget {
   @override
   _MainscreenState createState() => _MainscreenState();
@@ -35,7 +36,7 @@ class _MainscreenState extends State<Mainscreen> {
         backgroundColor: Colors.blueGrey,
       ),
       drawer: Drawer(
-        child: Column(
+        child: ListView( // Column yerine ListView kullan
           children: [
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.blueGrey.shade900),
@@ -62,16 +63,12 @@ class _MainscreenState extends State<Mainscreen> {
                 child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
               ),
             ),
-            _buildDrawerItem(Icons.label, 'Family', 5, Center(child: Text('Family'))),
-            _buildDrawerItem(Icons.label, 'Friends', 6, Center(child: Text('Friends'))),
-            _buildDrawerItem(Icons.label, 'Work', 7, Center(child: Text('Work'))),
-            Spacer(),
-            Divider(),
             _buildDrawerItem(Icons.settings, 'My Profile', 8, UserProfileScreen()),
             _buildDrawerItem(Icons.settings, 'Settings & Account', 8, Center(child: Text('Settings & Account'))),
           ],
         ),
       ),
+
       body: currentPage,
     );
   }

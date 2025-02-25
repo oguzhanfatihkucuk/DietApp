@@ -10,73 +10,93 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
-
   User? _user;
   Map<String, dynamic>? _userData;
 
   @override
   void initState() {
     super.initState();
-    _getUserData();
+    _auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        _user = user;
+        _getUserData();
+      }
+    });
   }
 
   Future<void> _getUserData() async {
-    // Giriş yapmış kullanıcıyı al
-    _user = _auth.currentUser;
-
-    if (_user == null) {
-      print("Kullanıcı giriş yapmamış!");
-      return;
-    }
-
     try {
-      // Realtime Database'den kullanıcı verilerini çek
-      DataSnapshot userSnapshot = await _database.child('customer/${_user!.uid}').get();
+      final snapshot = await _database.child('customer/${_user!.uid}').get();
+      if (!snapshot.exists) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Kullanıcı verisi bulunamadı'))
+          );
+        }
+        return;
+      }
 
-      if (userSnapshot.exists) {
-        final data = userSnapshot.value as Map<Object?, Object?>;
-        final userData = data.cast<String, dynamic>();
-        setState(() {
-          _userData = userData;
-        });
-        //print("Kullanıcı verileri: $_userData");
-      } else {
-        print("Kullanıcı verisi bulunamadı!");
+      final userData = Map<String, dynamic>.from(snapshot.value as Map);
+      if (mounted) {
+        setState(() => _userData = userData);
       }
     } catch (e) {
-      print("Veri çekme hatası: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Hata: ${e.toString()}'))
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Kullanıcı Profili'),
+      appBar: AppBar(title: const Text('Profil')),
+      body: _user == null
+          ? const Center(child: Text('Lütfen giriş yapın'))
+          : StreamBuilder<DatabaseEvent>(
+        stream: _database.child('customer/${_user!.uid}').onValue,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Hata: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final userData = Map<String, dynamic>.from(
+              snapshot.data!.snapshot.value as Map
+          );
+          return _buildProfile(userData);
+        },
       ),
-      body: _userData == null
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Ad: ${_userData!['firstName']} ${_userData!['lastName']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('E-posta: ${_userData!['email']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Yaş: ${_userData!['age']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Cinsiyet: ${_userData!['gender']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Telefon: ${_userData!['phone']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 20),
-            Text('Hedef Kilo: ${_userData!['targetWeight']} kg', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Mevcut Kilo: ${_userData!['weight']} kg', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 20),
-          ],
-        ),
+    );
+  }
+
+  Widget _buildProfile(Map<String, dynamic> data) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _buildInfoRow('Ad Soyad', '${data['firstName']} ${data['lastName']}'),
+        _buildInfoRow('E-posta', data['email'] ?? '-'),
+        _buildInfoRow('Yaş', data['age']?.toString() ?? 'Belirtilmemiş'),
+        _buildInfoRow('Cinsiyet', data['gender'] ?? 'Belirtilmemiş'),
+        _buildInfoRow('Telefon', data['phone'] ?? '-'),
+        const SizedBox(height: 20),
+        _buildInfoRow('Hedef Kilo', '${data['targetWeight']} kg'),
+        _buildInfoRow('Mevcut Kilo', '${data['weight']} kg'),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Text('$title: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value)),
+        ],
       ),
     );
   }

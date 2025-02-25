@@ -24,54 +24,7 @@ class AddDietPlanCustomerSreen extends StatefulWidget {
 }
 
 class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
-  List<dynamic> customers = [];
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customer');
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchCustomers();
-  }
-
-  Future<void> _fetchCustomers() async {
-    try {
-      // 1. Firebase referansını oluştur
-      final DatabaseReference ref = FirebaseDatabase.instance.ref("customers");
-
-      // 2. Verileri çek
-      final DatabaseEvent event = await ref.once();
-      final DataSnapshot snapshot = event.snapshot;
-
-      // 3. Veri kontrolü
-      if (snapshot.exists) {
-        // 4. Veriyi işle
-        final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>?;
-
-        if (data != null) {
-          // 5. Müşteri listesine dönüştür
-          final List<Map<String, dynamic>> customers = data.entries.map((entry) {
-            return {
-              'id': entry.key,
-              ...Map<String, dynamic>.from(entry.value as Map)
-            };
-          }).toList();
-
-          // 6. State'i güncelle (mounted kontrolü ekledik)
-          if (mounted) {
-            setState(() {
-              this.customers = customers;
-            });
-          }
-        }
-      } else {
-        print("📭 Veritabanında müşteri bulunamadı");
-      }
-    } on FirebaseException catch (e) {
-      print("🔥 Firebase Hatası: ${e.code} - ${e.message}");
-    } catch (e) {
-      print("⚠️ Genel Hata: ${e.toString()}");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +49,16 @@ class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
           }
 
           final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-          final customerList = data.values.toList();
+
+          // Filtreleme ekliyoruz
+          final customerList = data.values.where((customerData) {
+            // isAdmin alanı yoksa veya false ise listeye al
+            return (customerData as Map)['isAdmin'] == false;
+          }).toList();
+
+          if (customerList.isEmpty) {
+            return Center(child: Text('Gösterilecek müşteri bulunamadı'));
+          }
 
           return ListView.builder(
             itemCount: customerList.length,

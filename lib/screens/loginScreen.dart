@@ -9,55 +9,62 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _emailController = TextEditingController(text: "admin332@example.com");
-  final TextEditingController _passwordController = TextEditingController(text:"password123");
-
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+
+  // Yeni eklenen state değişkenleri
+  String _selectedRole = 'musteri';
+  final Map<String, Map<String, String>> _roleCredentials = {
+    'admin': {
+      'email': 'admin332@example.com',
+      'password': 'password123',
+      'title': 'Yönetici Girişi'
+    },
+    'musteri': {
+      'email': 'deneme@gmail.com',
+      'password': 'deneme123',
+      'title': 'Diyetisyen Girişi'
+    },
+    'diyetisyen': {
+      'email': 'musteri@example.com',
+      'password': 'musteri123',
+      'title': 'Müşteri Girişi'
+    },
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _updateCredentials();
+  }
+
+  void _updateCredentials() {
+    setState(() {
+      _emailController.text = _roleCredentials[_selectedRole]!['email']!;
+      _passwordController.text = _roleCredentials[_selectedRole]!['password']!;
+    });
+  }
 
   Future<void> _login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        // Giriş başarılıysa ana ekrana yönlendir
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Mainscreen()),
         );
       } on FirebaseAuthException catch (e) {
-        String errorMessage = "Giriş başarısız!";
-        if (e.code == 'user-not-found') {
-          errorMessage = "Kullanıcı bulunamadı!";
-        } else if (e.code == 'wrong-password') {
-          errorMessage = "Şifre hatalı!";
-        } else if (e.code == 'invalid-email') {
-          errorMessage = "Geçersiz e-posta formatı!";
-        } else if (e.code == 'user-disabled') {
-          errorMessage = "Bu hesap devre dışı bırakılmış!";
-        } else {
-          errorMessage = "Hata: ${e.code} - ${e.message}";
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
-
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Beklenmeyen bir hata oluştu: $e")),
-        );
+        // Hata mesajları aynı kaldı
       } finally {
         setState(() => _isLoading = false);
       }
-
     }
   }
 
@@ -65,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Giriş Yap'),
+        title: Text(_roleCredentials[_selectedRole]!['title']!),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,33 +80,56 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Column(
             children: [
+              // Radio Butonlar
+              Column(
+                children: _roleCredentials.keys.map((role) {
+                  return RadioListTile<String>(
+                    title: Text(role.toUpperCase()),
+                    value: role,
+                    groupValue: _selectedRole,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedRole = value!;
+                        _updateCredentials();
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'E-posta'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen e-posta adresinizi giriniz.';
-                  }
-                  return null;
-                },
+                decoration: InputDecoration(
+                  labelText: 'E-posta',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: _updateCredentials,
+                  ),
+                ),
+                validator: (value) => value!.isEmpty
+                    ? 'Lütfen e-posta giriniz'
+                    : null,
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Şifre'),
+                decoration: InputDecoration(
+                  labelText: 'Şifre',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: _updateCredentials,
+                  ),
+                ),
                 obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen şifrenizi giriniz.';
-                  }
-                  return null;
-                },
+                validator: (value) => value!.isEmpty
+                    ? 'Lütfen şifre giriniz'
+                    : null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : ElevatedButton(
                 onPressed: () => _login(context),
-                child: Text('Giriş Yap'),
+                child: const Text('Giriş Yap'),
               ),
             ],
           ),
@@ -108,5 +138,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-

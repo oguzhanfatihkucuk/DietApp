@@ -95,9 +95,16 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
           if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
             return Center(child: Text('Müşteri bulunamadı.'));
           }
-
           final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-          final customerList = data.values.toList();
+
+          final customerList = data.values.where((customerData) {
+            // isAdmin alanı yoksa veya false ise listeye al
+            return (customerData as Map)['isAdmin'] == false;
+          }).toList();
+
+          if (customerList.isEmpty) {
+            return Center(child: Text('Gösterilecek müşteri bulunamadı'));
+          }
 
           return ListView.builder(
             itemCount: customerList.length,
