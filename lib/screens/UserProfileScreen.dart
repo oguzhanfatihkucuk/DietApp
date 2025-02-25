@@ -82,7 +82,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         _buildInfoRow('Yaş', data['age']?.toString() ?? 'Belirtilmemiş'),
         _buildInfoRow('Cinsiyet', data['gender'] ?? 'Belirtilmemiş'),
         _buildInfoRow('Telefon', data['phone'] ?? '-'),
-        const SizedBox(height: 20),
         _buildInfoRow('Hedef Kilo', '${data['targetWeight']} kg'),
         _buildInfoRow('Mevcut Kilo', '${data['weight']} kg'),
       ],

@@ -20,6 +20,8 @@ import 'UserProfileScreen.dart';
 
 //TODO Responsive kontrollerini  yap
 class Mainscreen extends StatefulWidget {
+  Mainscreen(bool isAdmin, bool isDietitian);
+
   @override
   _MainscreenState createState() => _MainscreenState();
 }

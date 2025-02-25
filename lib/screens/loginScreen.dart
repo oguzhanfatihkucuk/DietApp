@@ -28,8 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
       'title': 'Diyetisyen Girişi'
     },
     'diyetisyen': {
-      'email': 'musteri@example.com',
-      'password': 'musteri123',
+      'email': 'oguzhanfatih@example.com',
+      'password': 'password123',
       'title': 'Müşteri Girişi'
     },
   };
@@ -51,22 +51,65 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        // Kullanıcı giriş yapıyor
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Mainscreen()),
-        );
+        User? user = userCredential.user;
+
+        if (user != null) {
+          // Realtime Database'den isAdmin değerini al
+          DatabaseReference userRef = FirebaseDatabase.instance.ref().child('customer').child(user.uid);
+          DatabaseEvent event = await userRef.once();
+          DataSnapshot snapshot = event.snapshot;
+
+          bool isAdmin = false;
+          bool isDietitian = false;
+
+          if (snapshot.value != null && snapshot.child('isAdmin').value != null) {
+            isAdmin = snapshot.child('isAdmin').value == true;
+          }
+
+          if (snapshot.value != null && snapshot.child('isDietitian').value != null) {
+            isAdmin = snapshot.child('isDietitian').value == true;
+          }
+
+          // Admin bilgisi terminalde yazdırılıyor
+          print("Kullanıcı isAdmin mi? $isAdmin");
+
+          // isAdmin değerini ekrana göstermek için alert dialog açabiliriz
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Yetki Bilgisi"),
+                content: Text("Bu kullanıcı admin mi? $isAdmin"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text("Tamam"),
+                  ),
+                ],
+              );
+            },
+          );
+
+          // Kullanıcıyı ana ekrana yönlendir
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Mainscreen(isAdmin,isDietitian)),
+          );
+        }
       } on FirebaseAuthException catch (e) {
-        // Hata mesajları aynı kaldı
+        print("Firebase Auth Hatası: ${e.message}");
       } finally {
         setState(() => _isLoading = false);
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
