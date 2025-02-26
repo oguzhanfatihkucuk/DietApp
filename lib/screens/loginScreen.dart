@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // Kullanıcıyı ana ekrana yönlendir
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Mainscreen(isAdmin,isDietitian)),
+            MaterialPageRoute(builder: (context) => Mainscreen(isAdmin: isAdmin,isDietitian: isDietitian)),
           );
         }
       } on FirebaseAuthException catch (e) {
