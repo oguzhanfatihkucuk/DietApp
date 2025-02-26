@@ -6,42 +6,53 @@ import 'AddDietPlan.dart';
 import 'UserProfileScreen.dart';
 
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
+
 //TODO UI için geliştirmelerde bulun.
+//TODO Responsive kontrollerini  yap
+
 //TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
+//TODO Admin sayfasında diyetisyeni kayıtı ve admin kayıdı yapılabilsin.isADmin?, isDietitan?
+//TODO diyetisyen sadece müşteri kayıdı yapabilir,kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
 
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
 //TODO Müşteri için öğün ekleme sayfası olusturalacak
 
-//TODO Authorization işlemlerini araştır nasıl bir yöntem yapabiliriz.Diyetisyen
-//TODO Admin:hepsi+diyetisyen konrol sayfası
-//TODO Diyetisyen:Tüm sayfalar
-//TODO Müşteri:Öğün ekle
 
-//TODO Responsive kontrollerini  yap
+
 class Mainscreen extends StatefulWidget {
-  Mainscreen(bool isAdmin, bool isDietitian);
+  final bool isAdmin;
+  final bool isDietitian;
+
+  const Mainscreen({
+    Key? key,
+    required this.isAdmin,
+    required this.isDietitian,
+  }) : super(key: key);
 
   @override
   _MainscreenState createState() => _MainscreenState();
 }
 
 class _MainscreenState extends State<Mainscreen> {
-  Widget currentPage = Center(child: Text('Ana Ekran', style: TextStyle(fontSize: 24)));
+  Widget currentPage = const Center(child: Text('Ana Ekran', style: TextStyle(fontSize: 24)));
   int selectedIndex = 0;
+
+  bool get isAdmin => widget.isAdmin;
+  bool get isDietitian => widget.isDietitian;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ana Ekran'),
+        title: const Text('Ana Ekran'),
         backgroundColor: Colors.blueGrey,
       ),
       drawer: Drawer(
-        child: ListView( // Column yerine ListView kullan
+        child: ListView(
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blueGrey.shade900),
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blueGrey),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -52,25 +63,29 @@ class _MainscreenState extends State<Mainscreen> {
                 ],
               ),
             ),
-            _buildDrawerItem(Icons.home, 'Ana Ekran', 0, Center(child: Text('Ana Ekran'))),
-            _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
-            _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
-            _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
-            _buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+            // Admin ve Diyetisyenler için menü öğeleri
+            if (isAdmin || isDietitian) ...[
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
+              _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
+              _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
+              _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
+              _buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                ),
               ),
-            ),
-            _buildDrawerItem(Icons.settings, 'My Profile', 8, UserProfileScreen()),
-            _buildDrawerItem(Icons.settings, 'Settings & Account', 8, Center(child: Text('Settings & Account'))),
+              _buildDrawerItem(Icons.settings, 'Settings & Account', 8, const Center(child: Text('Settings & Account'))),
+            ],
+            // Tüm kullanıcılar için profil sayfası (Admin ve Diyetisyenler hariç)
+            if (!isAdmin && !isDietitian)
+              _buildDrawerItem(Icons.person, 'My Profile', 5, UserProfileScreen()),
           ],
         ),
       ),
-
       body: currentPage,
     );
   }
