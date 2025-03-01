@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'AddProgressTracking.dart';
 import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
 import 'UserProfileScreen.dart';
+import 'loginScreen.dart';
 
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
 
@@ -17,8 +20,6 @@ import 'UserProfileScreen.dart';
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
 //TODO Müşteri için öğün ekleme sayfası olusturalacak
-
-
 
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;
@@ -41,25 +42,62 @@ class _MainscreenState extends State<Mainscreen> {
   bool get isAdmin => widget.isAdmin;
   bool get isDietitian => widget.isDietitian;
 
+  Future<void> _logout(BuildContext context) async {
+    try {
+      // Firebase'den çıkış yap
+      await FirebaseAuth.instance.signOut();
+
+      // SharedPreferences'ten kullanıcı verilerini temizle
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('user_id');
+        await prefs.remove('is_admin');
+        await prefs.remove('is_dietitian');
+        await prefs.remove('is_logged_in');
+        print("SharedPreferences verileri temizlendi");
+      } catch (e) {
+        print("SharedPreferences temizleme hatası: $e");
+      }
+
+      // Giriş ekranına yönlendir
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+            (route) => false, // Tüm sayfaları stack'ten kaldırır
+      );
+    } catch (e) {
+      print("Çıkış hatası: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Çıkış yapılırken hata oluştu")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => _logout(context),
+          ),
+        ],
         title: const Text('Ana Ekran'),
         backgroundColor: Colors.blueGrey,
       ),
       drawer: Drawer(
         child: ListView(
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blueGrey),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.blueGrey),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Title', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 5),
-                  Text('subtext', style: TextStyle(fontSize: 14, color: Colors.white70)),
+                  const Text('Title', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5),
+                  const Text('subtext', style: TextStyle(fontSize: 14, color: Colors.white70)),
                 ],
               ),
             ),

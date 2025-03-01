@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'MainScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,6 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _updateCredentials();
+    // SharedPreferences kontrolü yapılmayacak
+    // Firebase Authentication doğrudan kontrol edilecek
   }
 
   void _updateCredentials() {
@@ -45,6 +48,20 @@ class _LoginScreenState extends State<LoginScreen> {
       _emailController.text = _roleCredentials[_selectedRole]!['email']!;
       _passwordController.text = _roleCredentials[_selectedRole]!['password']!;
     });
+  }
+
+  // Oturum bilgilerini SharedPreferences'a kaydet
+  Future<void> _saveUserDataToPrefs(String uid, bool isAdmin, bool isDietitian) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_id', uid);
+      await prefs.setBool('is_admin', isAdmin);
+      await prefs.setBool('is_dietitian', isDietitian);
+      await prefs.setBool('is_logged_in', true);
+      print("Kullanıcı verileri SharedPreferences'a kaydedildi");
+    } catch (e) {
+      print("SharedPreferences kayıt hatası: $e");
+    }
   }
 
   Future<void> _login(BuildContext context) async {
@@ -73,43 +90,41 @@ class _LoginScreenState extends State<LoginScreen> {
           }
 
           if (snapshot.value != null && snapshot.child('isDietitian').value != null) {
-            isAdmin = snapshot.child('isDietitian').value == true;
+            isDietitian = snapshot.child('isDietitian').value == true;
           }
 
           // Admin bilgisi terminalde yazdırılıyor
           print("Kullanıcı isAdmin mi? $isAdmin");
+          print("Kullanıcı isDietitian mi? $isDietitian");
 
-          // isAdmin değerini ekrana göstermek için alert dialog açabiliriz
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Yetki Bilgisi"),
-                content: Text("Bu kullanıcı admin mi? $isAdmin"),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text("Tamam"),
-                  ),
-                ],
-              );
-            },
-          );
+          // SharedPreferences'a kullanıcı verilerini kaydet
+          await _saveUserDataToPrefs(user.uid, isAdmin, isDietitian);
 
-          // Kullanıcıyı ana ekrana yönlendir
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => Mainscreen(isAdmin: isAdmin,isDietitian: isDietitian)),
           );
         }
+
       } on FirebaseAuthException catch (e) {
         print("Firebase Auth Hatası: ${e.message}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Giriş başarısız: ${e.message}")),
+        );
+      } catch (e) {
+        print("Giriş hatası: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Beklenmeyen bir hata oluştu")),
+        );
       } finally {
-        setState(() => _isLoading = false);
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
     }
-  }
 
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text(_roleCredentials[_selectedRole]!['title']!),
       ),
-      body: Padding(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -168,9 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     : null,
               ),
               const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
+              ElevatedButton(
                 onPressed: () => _login(context),
                 child: const Text('Giriş Yap'),
               ),
