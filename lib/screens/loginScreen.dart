@@ -26,12 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
     'musteri': {
       'email': 'deneme@gmail.com',
       'password': 'deneme123',
-      'title': 'Diyetisyen Girişi'
+      'title': 'Müşteri Girişi'
     },
     'diyetisyen': {
       'email': 'oguzhanfatih@example.com',
       'password': 'password123',
-      'title': 'Müşteri Girişi'
+      'title': 'Diyetisyen Girişi'
     },
   };
 
@@ -131,9 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_roleCredentials[_selectedRole]!['title']!),
-      ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
