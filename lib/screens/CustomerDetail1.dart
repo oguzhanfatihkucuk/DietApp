@@ -98,8 +98,11 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
           final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
 
           final customerList = data.values.where((customerData) {
-            // isAdmin alanı yoksa veya false ise listeye al
-            return (customerData as Map)['isAdmin'] == false;
+            final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
+
+            // İki koşulun da sağlanması gerekiyor
+            return user['isAdmin'] == false &&
+                user['isDietitian'] == false;
           }).toList();
 
           if (customerList.isEmpty) {

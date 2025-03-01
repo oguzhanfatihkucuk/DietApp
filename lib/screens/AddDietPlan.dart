@@ -52,8 +52,11 @@ class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
 
           // Filtreleme ekliyoruz
           final customerList = data.values.where((customerData) {
-            // isAdmin alanı yoksa veya false ise listeye al
-            return (customerData as Map)['isAdmin'] == false;
+            final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
+
+            // İki koşulun da sağlanması gerekiyor
+            return user['isAdmin'] == false &&
+                user['isDietitian'] == false;
           }).toList();
 
           if (customerList.isEmpty) {
