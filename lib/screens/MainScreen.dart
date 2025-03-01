@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddProgressTracking.dart';
 import 'CustomerMealAdd.dart';
+import 'DietitianDetail1.dart';
 import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
@@ -11,12 +12,16 @@ import 'UserProfileScreen.dart';
 import 'loginScreen.dart';
 
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
+
 //TODO UI için geliştirmelerde bulun.Responsive kontrollerini  yap
 //TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
+
 //TODO Admin sayfasında diyetisyeni kayıtı ve admin kayıdı yapılabilsin.isADmin?, isDietitan?
 //TODO diyetisyen sadece müşteri kayıdı yapabilir,kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
+
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
+
 //TODO Müşteri için öğün ekleme sayfası olusturalacak
 
 class Mainscreen extends StatefulWidget {
@@ -100,7 +105,7 @@ class _MainscreenState extends State<Mainscreen> {
               ),
             ),
             // Admin ve Diyetisyenler için menü öğeleri
-            if (isAdmin || isDietitian) ...[
+            if (isAdmin && isDietitian) ...[
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
               _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
               _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
@@ -114,11 +119,30 @@ class _MainscreenState extends State<Mainscreen> {
                   child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
                 ),
               ),
+              _buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
+              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
+            ],
+            if (!isAdmin && isDietitian) ...[
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
+              _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
+              _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
+              _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
+              _buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                ),
+              ),
+              //_buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
+              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
             ],
             // Tüm kullanıcılar için profil sayfası (Admin ve Diyetisyenler hariç)
-            if (!isAdmin || !isDietitian)...[
+            if (!isAdmin && !isDietitian)...[
               _buildDrawerItem(Icons.person, 'Profilim', 5, UserProfileScreen()),
-              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 8, SettingsPage()),
+              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage()),
               _buildDrawerItem(Icons.food_bank, 'Öğün Ekle', 8, WeeklyMealFormScreen()),
             ]
           ],
