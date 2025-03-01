@@ -78,7 +78,12 @@ class Customer {
       goals: Goals.fromJson(json['goals']),
       dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries.map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key)).toList() ?? [],
       progressTracking: (json['progressTracking'] as List<dynamic>?)?.map((item) => ProgressTracking.fromJson(item as Map<dynamic, dynamic>)).toList() ?? [],
-      weeklyMeals: (json['weeklyMeals'] as List<dynamic>?) ?.map((weekly) => WeeklyMealModel.fromJson(Map<dynamic, dynamic>.from(weekly))).toList() ?? [],
+      weeklyMeals: json['weeklyMeals'] != null
+          ? (json['weeklyMeals'] as Map<dynamic, dynamic>)
+          .entries
+          .map((entry) => WeeklyMealModel.fromJson(Map<String, dynamic>.from(entry.value)))
+          .toList()
+          : [],
     );
   }
 

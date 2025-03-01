@@ -1,7 +1,9 @@
+import 'package:diet/screens/SettingsScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddProgressTracking.dart';
+import 'CustomerMealAdd.dart';
 import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
@@ -9,14 +11,10 @@ import 'UserProfileScreen.dart';
 import 'loginScreen.dart';
 
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
-
-//TODO UI için geliştirmelerde bulun.
-//TODO Responsive kontrollerini  yap
-
+//TODO UI için geliştirmelerde bulun.Responsive kontrollerini  yap
 //TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
 //TODO Admin sayfasında diyetisyeni kayıtı ve admin kayıdı yapılabilsin.isADmin?, isDietitan?
 //TODO diyetisyen sadece müşteri kayıdı yapabilir,kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
-
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
 //TODO Müşteri için öğün ekleme sayfası olusturalacak
@@ -116,11 +114,13 @@ class _MainscreenState extends State<Mainscreen> {
                   child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
                 ),
               ),
-              _buildDrawerItem(Icons.settings, 'Settings & Account', 8, const Center(child: Text('Settings & Account'))),
             ],
             // Tüm kullanıcılar için profil sayfası (Admin ve Diyetisyenler hariç)
-            if (!isAdmin && !isDietitian)
-              _buildDrawerItem(Icons.person, 'My Profile', 5, UserProfileScreen()),
+            if (!isAdmin || !isDietitian)...[
+              _buildDrawerItem(Icons.person, 'Profilim', 5, UserProfileScreen()),
+              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 8, SettingsPage()),
+              _buildDrawerItem(Icons.food_bank, 'Öğün Ekle', 8, WeeklyMealFormScreen()),
+            ]
           ],
         ),
       ),

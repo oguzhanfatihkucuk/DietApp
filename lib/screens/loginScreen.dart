@@ -39,8 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _updateCredentials();
-    // SharedPreferences kontrolü yapılmayacak
-    // Firebase Authentication doğrudan kontrol edilecek
   }
 
   void _updateCredentials() {
@@ -51,7 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Oturum bilgilerini SharedPreferences'a kaydet
-  Future<void> _saveUserDataToPrefs(String uid, bool isAdmin, bool isDietitian) async {
+  Future<void> _saveUserDataToPrefs(
+      String uid, bool isAdmin, bool isDietitian) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_id', uid);
@@ -69,7 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => _isLoading = true);
       try {
         // Kullanıcı giriş yapıyor
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
@@ -78,18 +78,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (user != null) {
           // Realtime Database'den isAdmin değerini al
-          DatabaseReference userRef = FirebaseDatabase.instance.ref().child('customer').child(user.uid);
+          DatabaseReference userRef =
+              FirebaseDatabase.instance.ref().child('customer').child(user.uid);
           DatabaseEvent event = await userRef.once();
           DataSnapshot snapshot = event.snapshot;
 
           bool isAdmin = false;
           bool isDietitian = false;
 
-          if (snapshot.value != null && snapshot.child('isAdmin').value != null) {
+          if (snapshot.value != null &&
+              snapshot.child('isAdmin').value != null) {
             isAdmin = snapshot.child('isAdmin').value == true;
           }
 
-          if (snapshot.value != null && snapshot.child('isDietitian').value != null) {
+          if (snapshot.value != null &&
+              snapshot.child('isDietitian').value != null) {
             isDietitian = snapshot.child('isDietitian').value == true;
           }
 
@@ -102,10 +105,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Mainscreen(isAdmin: isAdmin,isDietitian: isDietitian)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    Mainscreen(isAdmin: isAdmin, isDietitian: isDietitian)),
           );
         }
-
       } on FirebaseAuthException catch (e) {
         print("Firebase Auth Hatası: ${e.message}");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -122,8 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     }
-
-
   }
 
   @override
@@ -135,64 +137,54 @@ class _LoginScreenState extends State<LoginScreen> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Radio Butonlar
-              Column(
-                children: _roleCredentials.keys.map((role) {
-                  return RadioListTile<String>(
-                    title: Text(role.toUpperCase()),
-                    value: role,
-                    groupValue: _selectedRole,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedRole = value!;
-                        _updateCredentials();
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'E-posta',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: _updateCredentials,
-                  ),
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // Radio Butonlar
+                    Column(
+                      children: _roleCredentials.keys.map((role) {
+                        return RadioListTile<String>(
+                          title: Text(role.toUpperCase()),
+                          value: role,
+                          groupValue: _selectedRole,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedRole = value!;
+                              _updateCredentials();
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'E-posta',
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Lütfen e-posta giriniz' : null,
+                    ),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Şifre',
+                      ),
+                      obscureText: true,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Lütfen şifre giriniz' : null,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => _login(context),
+                      child: const Text('Giriş Yap'),
+                    ),
+                  ],
                 ),
-                validator: (value) => value!.isEmpty
-                    ? 'Lütfen e-posta giriniz'
-                    : null,
               ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Şifre',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: _updateCredentials,
-                  ),
-                ),
-                obscureText: true,
-                validator: (value) => value!.isEmpty
-                    ? 'Lütfen şifre giriniz'
-                    : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _login(context),
-                child: const Text('Giriş Yap'),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
