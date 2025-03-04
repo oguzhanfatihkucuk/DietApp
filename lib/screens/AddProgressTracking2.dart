@@ -53,7 +53,7 @@ class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("İlerleme Ekle - ${widget.customer.customerID}")),
+      appBar: AppBar(title: Text("İlerleme Ekle")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

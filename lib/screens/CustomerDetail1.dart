@@ -96,13 +96,10 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
             return Center(child: Text('Müşteri bulunamadı.'));
           }
           final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-
           final customerList = data.values.where((customerData) {
             final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
 
-            // İki koşulun da sağlanması gerekiyor
-            return user['isAdmin'] == false &&
-                user['isDietitian'] == false;
+            return user['isAdmin'] == false &&user['isDietitian'] == false;
           }).toList();
 
           if (customerList.isEmpty) {
@@ -114,7 +111,7 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
             itemBuilder: (context, index) {
               final customerData = customerList[index] as Map<dynamic, dynamic>;
               final customer = Customer.fromJson(customerData);
-
+              print(customerData);
               return Card(
                 child: ListTile(
                   title: Text('${customer.firstName} ${customer.lastName}'),

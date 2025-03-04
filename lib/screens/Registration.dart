@@ -12,11 +12,6 @@ import '../Models/ProgressTracking.dart';
 import '../Models/WaterConsumption.dart';
 import 'dart:math';
 
-int generate8DigitId() {
-  final random = Random();
-  return 100000 + random.nextInt(900000);
-}
-
 class RegistrationMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -54,9 +49,10 @@ class _CustomerRegistrationScreenState
   final _formKey = GlobalKey<FormState>();
 
   // Kullanıcı Bilgileri
-  int customerID = generate8DigitId();
   int dietitianID = 1; // Eksik değişken eklendi
   bool isLoginBefore = false; // Eksik değişken eklendi
+  bool isAdmin=false;
+  bool isDietitian=false;
 
   // Kişisel Bilgiler
   late String firstName;
@@ -112,7 +108,6 @@ class _CustomerRegistrationScreenState
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance; // _auth değişkenini tanımla
-  final DatabaseReference _database = FirebaseDatabase.instance.ref();
 
   Future<String?> registerUser(String email, String password) async {
     try {
@@ -155,6 +150,8 @@ class _CustomerRegistrationScreenState
         firstName: firstName,
         lastName: lastName,
         email: email,
+        isAdmin:isAdmin,
+        isDietitian:isDietitian,
         phone: phone,
         isLoginBefore: isLoginBefore,
         age: age,

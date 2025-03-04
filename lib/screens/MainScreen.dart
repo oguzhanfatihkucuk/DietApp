@@ -24,6 +24,11 @@ import 'loginScreen.dart';
 
 //TODO Müşteri için öğün ekleme sayfası olusturalacak
 
+//TODO Diyetisyen kayıdı icin farklı bir ekran yap
+//TODO Müsteri kayıdı yapılırken isAdmin ve isDietitian kısmını false yap
+//TODO Admin kayıdı icin farklı bir ekran yap
+
+
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;
   final bool isDietitian;

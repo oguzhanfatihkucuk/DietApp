@@ -21,6 +21,8 @@ class Customer {
   double bodyMassIndex;
   double targetWeight;
   String activityLevel;
+  bool isAdmin;
+  bool isDietitian;
 
   HealthStatus healthStatus;
   DietaryHabits dietaryHabits;
@@ -38,6 +40,8 @@ class Customer {
     required this.lastName,
     required this.email,
     required this.phone,
+    required this.isAdmin,
+    required this.isDietitian,
     required this.isLoginBefore,
     required this.age,
     required this.gender,
@@ -60,6 +64,8 @@ class Customer {
     return Customer(
       customerID: json['customerID'],
       dietitianID: json['dietitianID'],
+      isAdmin: json['isAdmin'],
+      isDietitian: json['isDietitian'],
       firstName: json['firstName'],
       lastName: json['lastName'],
       email: json['email'],
@@ -92,6 +98,8 @@ class Customer {
       'customerID': customerID,
       'dietitianID': dietitianID,
       'firstName': firstName,
+      'isAdmin':isAdmin,
+      'isDietitan':isDietitian,
       'lastName': lastName,
       'email': email,
       'phone': phone,
