@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddProgressTracking.dart';
+import 'AdminAdd.dart';
 import 'CustomerMealAdd.dart';
 import 'DietitianDetail1.dart';
 import 'DietitianReg.dart';
@@ -107,8 +108,9 @@ class _MainscreenState extends State<Mainscreen> {
               ),
             ),
             // Admin ve Diyetisyenler için menü öğeleri
-            if (isAdmin && isDietitian) ...[
+            if (isAdmin ) ...[
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
+              _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11, AdminRegistrationScreen()),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
