@@ -19,68 +19,85 @@ class _AddProgressTrackingScreenState extends State<AddProgressTrackingScreen> {
   final TextEditingController muscleMassController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
 
-  void _saveProgress() {
-    String date = DateTime.now().toIso8601String().split('T')[0]; // "YYYY-MM-DD" formatında tarih
-    Map<String, dynamic> newProgress = {
+  void _saveProgress() async {
+    // Tarih formatı
+    final date = DateTime.now().toIso8601String().split('T')[0];
+
+    // Yeni progress objesi
+    final newProgress = {
       "date": date,
       "weight": double.parse(weightController.text),
       "bodyFatPercentage": double.parse(bodyFatController.text),
       "muscleMass": double.parse(muscleMassController.text),
       "notes": notesController.text,
     };
-    //TODO aynı gün içerisinde ilerleme süreci ekleme yapılamayacak.
-    DatabaseReference progressRef = _dbRef.child("${widget.customer.customerID}/progressTracking");
 
-    progressRef.once().then((DatabaseEvent event) {
-      if (event.snapshot.value != null) {
-        // Mevcut listeyi al
-        List<dynamic> existingData = List<Map<dynamic, dynamic>>.from(event.snapshot.value as List<dynamic>);
-        existingData.add(newProgress);
-        // Yeni listeyi kaydet
-        progressRef.set(existingData);
-      } else {
-        // İlk defa kayıt yapılıyorsa direkt liste olarak kaydet
-        progressRef.set([newProgress]);
+    try {
+      final progressRef = _dbRef.child(
+          "${widget.customer.customerID}/progressTracking");
+
+      // Aynı gün kontrolü
+      final existingData = await progressRef
+          .orderByChild('date')
+          .equalTo(date)
+          .once();
+
+      if (existingData.snapshot.exists) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Bugün zaten bir kayıt eklediniz!")),
+        );
+        return;
       }
-    }).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Başarıyla eklendi!")));
-      Navigator.pop(context);
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Hata: $error")));
-    });
+
+      // Push ile yeni unique ID oluştur
+      await progressRef.push().set(newProgress);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Başarıyla eklendi!")),
+        );
+        Navigator.pop(context);
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Hata: $error")),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("İlerleme Ekle")),
+      appBar: AppBar(title: const Text("İlerleme Ekle")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: weightController,
-              decoration: InputDecoration(labelText: "Kilo (kg)"),
+              decoration: const InputDecoration(labelText: "Kilo (kg)"),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: bodyFatController,
-              decoration: InputDecoration(labelText: "Vücut Yağ Oranı (%)"),
+              decoration: const InputDecoration(labelText: "Vücut Yağ Oranı (%)"),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: muscleMassController,
-              decoration: InputDecoration(labelText: "Kas Kütlesi (kg)"),
+              decoration: const InputDecoration(labelText: "Kas Kütlesi (kg)"),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: notesController,
-              decoration: InputDecoration(labelText: "Notlar"),
+              decoration: const InputDecoration(labelText: "Notlar"),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveProgress,
-              child: Text("Kaydet"),
+              child: const Text("Kaydet"),
             ),
           ],
         ),

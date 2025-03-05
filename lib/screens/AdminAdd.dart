@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import '../Models/AdminModel.dart';
 
 class AdminRegistrationScreen extends StatefulWidget {
@@ -20,8 +19,8 @@ class _AdminRegistrationScreenState extends State<AdminRegistrationScreen> {
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
 
-  bool _isAdmin = false;
-  bool _isDietitian = false;
+  final bool _isAdmin = true;
+  final bool _isDietitian = true;
 
   Future<void> _registerAdmin() async {
     if (_formKey.currentState!.validate()) {
@@ -122,24 +121,6 @@ class _AdminRegistrationScreenState extends State<AdminRegistrationScreen> {
                     return 'Soyad boş bırakılamaz';
                   }
                   return null;
-                },
-              ),
-              SwitchListTile(
-                title: Text('Admin mi?'),
-                value: _isAdmin,
-                onChanged: (bool value) {
-                  setState(() {
-                    _isAdmin = value;
-                  });
-                },
-              ),
-              SwitchListTile(
-                title: Text('Diyetisyen mi?'),
-                value: _isDietitian,
-                onChanged: (bool value) {
-                  setState(() {
-                    _isDietitian = value;
-                  });
                 },
               ),
               SizedBox(height: 20),

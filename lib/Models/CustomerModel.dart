@@ -83,7 +83,9 @@ class Customer {
       waterConsumption: WaterConsumption.fromJson(json['waterConsumption']),
       goals: Goals.fromJson(json['goals']),
       dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries.map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key)).toList() ?? [],
-      progressTracking: (json['progressTracking'] as List<dynamic>?)?.map((item) => ProgressTracking.fromJson(item as Map<dynamic, dynamic>)).toList() ?? [],
+      progressTracking: (json['progressTracking'] as Map<dynamic, dynamic>?)?.entries.map((entry) {
+        return ProgressTracking.fromJson(entry.value..['progressID'] = entry.key);
+      }).toList() ?? [],
       weeklyMeals: json['weeklyMeals'] != null
           ? (json['weeklyMeals'] as Map<dynamic, dynamic>)
           .entries
@@ -116,7 +118,10 @@ class Customer {
       'waterConsumption': waterConsumption.toJson(),
       'goals': goals.toJson(),
       'dietPlans': dietPlans.map((plan) => plan.toJson()).toList(),
-      'progressTracking': progressTracking.map((p) => p.toJson()).toList(),
+      'progressTracking': progressTracking.fold<Map<String, dynamic>>(
+        {},
+            (map, progress) => map..[progress.progressID] = progress.toJson(),
+      ),
       'weeklyMeals': weeklyMeals.map((w) => w.toJson()).toList(),
     };
   }

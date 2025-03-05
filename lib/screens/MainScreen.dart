@@ -14,18 +14,12 @@ import 'UserProfileScreen.dart';
 import 'loginScreen.dart';
 
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
-
 //TODO UI için geliştirmelerde bulun.Responsive kontrollerini  yap
-//TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
 
-//TODO Admin sayfasında diyetisyeni kayıtı ve admin kayıdı yapılabilsin.isADmin?, isDietitan?
+//TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
 //TODO diyetisyen sadece müşteri kayıdı yapabilir,kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
 
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
-//TODO Düzenleme işlemlerini araştır.
-
-//TODO Admin kayıdı icin farklı bir ekran ve modelyap
-
 
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;

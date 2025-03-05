@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 class ProgressTracking {
+  String progressID;
   final DateTime date;
   final double weight;
   final double bodyFatPercentage;
@@ -8,6 +9,7 @@ class ProgressTracking {
   final String notes;
 
   ProgressTracking({
+    required this.progressID,
     required this.date,
     required this.weight,
     required this.bodyFatPercentage,
@@ -17,6 +19,7 @@ class ProgressTracking {
 
   factory ProgressTracking.fromJson(Map<dynamic, dynamic> json) { // dynamic → String
     return ProgressTracking(
+      progressID:json['progressID']?.toString() ?? '',
       date: json['date'] != null
           ? DateTime.parse(json['date'] as String)
           : DateTime.now(),
@@ -29,6 +32,7 @@ class ProgressTracking {
 
   Map<dynamic, dynamic> toJson() {
     return {
+      'progressID': progressID,
       'date': DateFormat('yyyy-MM-dd').format(date), // EKSİK OLAN KISIM
       'weight': weight,
       'bodyFatPercentage': bodyFatPercentage,
