@@ -10,7 +10,7 @@ import '../Models/Goals.dart';
 import '../Models/HealthStatus.dart';
 import '../Models/ProgressTracking.dart';
 import '../Models/WaterConsumption.dart';
-import 'dart:math';
+
 
 class RegistrationMain extends StatelessWidget {
   @override

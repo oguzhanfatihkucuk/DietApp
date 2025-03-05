@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'CustomerDetail2.dart';
-import '../Models/CustomerModel.dart';
+import '../Models/DietitianModel.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import 'DietitianDetail2.dart';
 
 class DietitianListScreen extends StatefulWidget {
@@ -50,17 +48,17 @@ class _DietitianListScreenState extends State<DietitianListScreen> {
             itemCount: customerList.length,
             itemBuilder: (context, index) {
               final customerData = customerList[index] as Map<dynamic, dynamic>;
-              final customer = Customer.fromJson(customerData);
+              final dietitian = Dietitian.fromJson(customerData);
 
               return Card(
                 child: ListTile(
-                  title: Text('${customer.firstName} ${customer.lastName}'),
-                  subtitle: Text('ID: ${customer.customerID}'),
+                  title: Text('${dietitian.firstName} ${dietitian.lastName}'),
+                  subtitle: Text('ID: ${dietitian.uid}'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DietitianDetailScreen(customer: customer),
+                        builder: (context) => DietitianDetailScreen( dietitian: dietitian),
                       ),
                     );
                   },

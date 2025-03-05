@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'AddProgressTracking.dart';
 import 'CustomerMealAdd.dart';
 import 'DietitianDetail1.dart';
+import 'DietitianReg.dart';
 import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
@@ -22,11 +23,8 @@ import 'loginScreen.dart';
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
 
-//TODO Müşteri için öğün ekleme sayfası olusturalacak
-
-//TODO Diyetisyen kayıdı icin farklı bir ekran yap
-//TODO Müsteri kayıdı yapılırken isAdmin ve isDietitian kısmını false yap
-//TODO Admin kayıdı icin farklı bir ekran yap
+//TODO Diyetisyen kayıdı icin farklı bir ekran ve model yap
+//TODO Admin kayıdı icin farklı bir ekran ve modelyap
 
 
 class Mainscreen extends StatefulWidget {
@@ -112,6 +110,24 @@ class _MainscreenState extends State<Mainscreen> {
             // Admin ve Diyetisyenler için menü öğeleri
             if (isAdmin && isDietitian) ...[
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Diyetisyen İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                ),
+              ),
+              _buildDrawerItem(Icons.person_add, 'Diyetisyen Kayıt', 10, DietitianRegistrationForm()),
+              _buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Müsteri İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                ),
+              ),
               _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
               _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
               _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
@@ -121,14 +137,21 @@ class _MainscreenState extends State<Mainscreen> {
                 padding: EdgeInsets.all(8.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  child: Text('Ayarlar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
                 ),
               ),
-              _buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
             ],
             if (!isAdmin && isDietitian) ...[
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Müsteri İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                ),
+              ),
               _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
               _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
               _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
@@ -138,7 +161,7 @@ class _MainscreenState extends State<Mainscreen> {
                 padding: EdgeInsets.all(8.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Labels', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  child: Text('Ayarlar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
                 ),
               ),
               //_buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),

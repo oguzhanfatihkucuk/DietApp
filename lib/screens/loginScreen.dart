@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'title': 'Müşteri Girişi'
     },
     'diyetisyen': {
-      'email': 'oguzhanfatih@example.com',
+      'email': 'fatma@gmail.com',
       'password': 'password123',
       'title': 'Diyetisyen Girişi'
     },
