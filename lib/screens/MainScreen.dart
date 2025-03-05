@@ -23,7 +23,6 @@ import 'loginScreen.dart';
 //TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
 //TODO Düzenleme işlemlerini araştır.
 
-//TODO Diyetisyen kayıdı icin farklı bir ekran ve model yap
 //TODO Admin kayıdı icin farklı bir ekran ve modelyap
 
 
