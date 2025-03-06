@@ -121,9 +121,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
           children: [
             _buildPersonalInfo(),
             _buildHealthSection(),
-            _buildDietSection(),
-            _buildProgressSection(),
             _buildWaterConsumption(),
+            _buildDietSection(),
+            _buildProgressTrack(),
+            _buildDoneMeals(),
             _buildDietPlans(),
           ],
         ),
@@ -138,6 +139,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: _navigateToEditScreen,
+              ),
             buildSectionTitle('Kişisel Bilgiler'),
             buildInfoRow('Müşteri ID', customer.customerID),
             buildInfoRow('Diyetisyen ID', customer.dietitianID.toString()),
@@ -202,7 +207,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
 
   // 4. İLERLEME TAKİBİ
-  Widget _buildProgressSection() {
+  Widget _buildProgressTrack() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -210,72 +215,76 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
           children: [
             buildSectionTitle('İlerleme Takibi'),
             ...(customer.progressTracking ?? []) // Null ise boş liste kullan
-                .map((progress) =>
-                ExpansionTile(
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => confirmDelete(
-                        'customer/${customer.customerID}/progressTracking/${progress.progressID}'
+                .map((progress) => ExpansionTile(
+              trailing: IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () => confirmDelete(
+                    'customer/${customer.customerID}/progressTracking/${progress.progressID}'),
+              ),
+              key: ValueKey(progress.date.toString()), // Unique key
+              title: Text(DateFormat('dd/MM/yyyy').format(progress.date)),
+              children: [
+                buildInfoRow('Kilo', '${progress.weight} kg'),
+                buildInfoRow('Vücut Yağı',
+                    '%${progress.bodyFatPercentage.toStringAsFixed(1)}'),
+                buildInfoRow('Kas Kütlesi', '${progress.muscleMass} kg'),
+                buildInfoRow('Notlar', progress.notes),
+              ],
+            ))
+                .toList(),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildDoneMeals() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            buildSectionTitle('Tamamlanan Öğünler'),
+            ...customer.weeklyMeals.map((weekly) => ExpansionTile(
+              title: Text(DateFormat('dd.MM.yyyy').format(weekly.date)),// Tarih formatı zaten string olarak geliyor
+              subtitle: Text('Toplam Kalori: ${weekly.totalCaloriesConsumed} kcal'),
+              // Tüm tarihin öğünlerini silmek için düğme ekleyin
+              trailing: IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () => confirmDelete(
+                    'customer/${customer.customerID}/weeklyMeals/${weekly.weeklyID}' // ID'yi kullanarak silme
+                ),
+              ),
+              children: [
+                ...weekly.meals.map((meal) => ExpansionTile(
+                  title: Text(meal.mealName),
+                  subtitle: Text('${meal.totalCalories} kcal'),
+                  children: [
+                    ...meal.foods.map((food) => ListTile(
+                      title: Text(food.foodName),
+                      subtitle: Text('${food.calories} kcal - ${food.portion}'),
+                      leading: Icon(Icons.fastfood),
+                    )).toList(),
+                    ListTile(
+                      dense: true,
+                      title: Text('Toplam Kalori: ${meal.totalCalories} kcal'),
+                      textColor: Colors.blue,
+                    ),
+                  ],
+                )).toList(),
+                // Günlük toplam
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Günlük Toplam: ${weekly.totalCaloriesConsumed} kcal',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                        fontSize: 16
                     ),
                   ),
-                  key: ValueKey(progress.date.toString()), // Unique key
-                  title:
-                  Text(DateFormat('dd/MM/yyyy').format(progress.date)),
-                  children: [
-                    buildInfoRow('Kilo', '${progress.weight} kg'),
-                    buildInfoRow('Vücut Yağı',
-                        '%${progress.bodyFatPercentage.toStringAsFixed(1)}'),
-                    buildInfoRow(
-                        'Kas Kütlesi', '${progress.muscleMass} kg'),
-                    buildInfoRow('Notlar', progress.notes),
-                  ],
-                ))
-                .toList(),
-            buildSectionTitle('Tamamlanan Öğünler'),
-            ...customer.weeklyMeals.map((weekly) =>
-                ExpansionTile(
-                  title: Text(DateFormat('dd/MM/yyyy').format(weekly.date)),
-                  subtitle: Text(
-                      'Toplam Kalori: ${weekly.totalCaloriesConsumed} kcal'),
-                  children: [
-                    ...weekly.meals.map((meal) =>
-                        ExpansionTile(
-                          title: Text(meal.mealName),
-                          subtitle: Text('${meal.totalCalories} kcal'),
-                          trailing: Text('${meal.foods.length} çeşit'),
-                          children: [
-                            ...meal.foods.map((food) =>
-                                ListTile(
-                                  title: Text(food.foodName),
-                                  subtitle: Text('${food.calories} kcal - ${food
-                                      .portion}'),
-                                  leading: Icon(Icons.fastfood),
-                                )).toList(),
-
-                            // Ek bilgi satırı
-                            ListTile(
-                              dense: true,
-                              title: Text(
-                                  'Toplam Kalori: ${meal.totalCalories} kcal'),
-                              textColor: Colors.blue,
-                            ),
-                          ],
-                        )).toList(),
-
-                    // Haftalık toplam
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        'Günlük Toplam: ${weekly.totalCaloriesConsumed} kcal',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                            fontSize: 16
-                        ),
-                      ),
-                    )
-                  ],
-                )).toList()
+                )
+              ],
+            )).toList()
           ],
         ),
       ),

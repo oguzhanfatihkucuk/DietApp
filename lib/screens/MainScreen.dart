@@ -19,7 +19,7 @@ import 'loginScreen.dart';
 //TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
 //TODO diyetisyen sadece müşteri kayıdı yapabilir,kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
 
-//TODO Müşteri silme-diyet planı silme-ilerleme süreci silme bunları yapmaya calis.
+//TODO Müşteri tamamlanan öğünler silme bunları yapmaya calis.
 
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;

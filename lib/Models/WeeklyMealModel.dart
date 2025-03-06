@@ -1,20 +1,22 @@
 import 'package:intl/intl.dart';
 
 class WeeklyMealModel {
+  final String? weeklyID; // Firebase'deki benzersiz ID'yi tutacak alan
   final DateTime date;
   final List<WeeklyMeal> meals;
   final int totalCaloriesConsumed;
 
   WeeklyMealModel({
+    this.weeklyID,
     required this.date,
     required this.meals,
     required this.totalCaloriesConsumed,
   });
 
-  factory WeeklyMealModel.fromJson(Map<dynamic, dynamic> json) {
+  factory WeeklyMealModel.fromJson(String id, Map<dynamic, dynamic> json) {
     final dateFormat = DateFormat('dd.MM.yyyy'); // Formatı belirle
-
     return WeeklyMealModel(
+      weeklyID: id, // Firebase'den gelen ID'yi atıyoruz
       date: json['date'] != null
           ? dateFormat.parse(json['date'] as String) // String → DateTime
           : DateTime.now(),
@@ -27,8 +29,8 @@ class WeeklyMealModel {
 
   Map<dynamic, dynamic> toJson() {
     final dateFormat = DateFormat('dd.MM.yyyy'); // Aynı format
-
     return {
+      // weeklyID'yi JSON'a kaydetmiyoruz çünkü bu Firebase tarafından otomatik oluşturuluyor
       'date': dateFormat.format(date), // DateTime → String
       'meals': meals.map((meal) => meal.toJson()).toList(),
       'totalCaloriesConsumed': totalCaloriesConsumed,

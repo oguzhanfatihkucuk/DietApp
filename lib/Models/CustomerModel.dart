@@ -82,14 +82,21 @@ class Customer {
       dietaryHabits: DietaryHabits.fromJson(json['dietaryHabits']),
       waterConsumption: WaterConsumption.fromJson(json['waterConsumption']),
       goals: Goals.fromJson(json['goals']),
-      dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries.map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key)).toList() ?? [],
-      progressTracking: (json['progressTracking'] as Map<dynamic, dynamic>?)?.entries.map((entry) {
+      dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries
+          .map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key))
+          .toList() ?? [],
+      progressTracking: (json['progressTracking'] as Map<dynamic, dynamic>?)?.entries
+          .map((entry) {
         return ProgressTracking.fromJson(entry.value..['progressID'] = entry.key);
-      }).toList() ?? [],
+      })
+          .toList() ?? [],
       weeklyMeals: json['weeklyMeals'] != null
           ? (json['weeklyMeals'] as Map<dynamic, dynamic>)
           .entries
-          .map((entry) => WeeklyMealModel.fromJson(Map<String, dynamic>.from(entry.value)))
+          .map((entry) => WeeklyMealModel.fromJson(
+          entry.key, // Firebase'den gelen ID
+          Map<dynamic, dynamic>.from(entry.value)
+      ))
           .toList()
           : [],
     );
