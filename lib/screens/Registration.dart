@@ -11,7 +11,6 @@ import '../Models/HealthStatus.dart';
 import '../Models/ProgressTracking.dart';
 import '../Models/WaterConsumption.dart';
 
-
 class RegistrationMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -36,6 +35,26 @@ class CustomerRegistrationScreen extends StatefulWidget {
 class _CustomerRegistrationScreenState
     extends State<CustomerRegistrationScreen> {
   final database = FirebaseDatabase.instance.ref();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String? currentDietitianID;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentDietitianID();
+  }
+
+  void getCurrentDietitianID() {
+    final User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      setState(() {
+        currentDietitianID = currentUser.uid;
+      });
+    } else {
+      print('Kullanıcı giriş yapmamış!');
+    }
+  }
 
   Future<void> saveData(String key, Map<dynamic, dynamic> data) async {
     try {
@@ -48,58 +67,38 @@ class _CustomerRegistrationScreenState
 
   final _formKey = GlobalKey<FormState>();
 
-  // Kullanıcı Bilgileri
-  int dietitianID = 1; // Eksik değişken eklendi
-  bool isLoginBefore = false; // Eksik değişken eklendi
-  bool isAdmin=false;
-  bool isDietitian=false;
+  bool isLoginBefore = false;
+  bool isAdmin = false;
+  bool isDietitian = false;
 
-  // Kişisel Bilgiler
   late String firstName;
-
   late String lastName;
-
   late String email;
-
   late String phone;
-
   late int age;
-
-  late String gender = "Kadın"; // Default değeri Kadın
+  late String gender = "Kadın";
   late double height;
-
   late double weight;
-
   late double targetWeight;
-
   late String activityLevel = "Orta";
 
-// Sağlık Durumu
   List<String> allergies = [];
   List<String> medicationUse = [];
-  List<String> chronicDiseases = []; // Eksik değişken eklendi
-
-// Beslenme Alışkanlıkları
+  List<String> chronicDiseases = [];
   String dietaryHabits = 'Normal';
   bool vegan = false;
   bool vegetarian = false;
-  List<String> likedFoods = []; // Eksik değişken eklendi
-  List<String> dislikedFoods = []; // Eksik değişken eklendi
-
-// Su Tüketimi
+  List<String> likedFoods = [];
+  List<String> dislikedFoods = [];
   int dailyWaterAmount = 0;
   String waterConsumptionHabit = '';
-
-// Hedefler
   bool weightLoss = false;
   bool muscleGain = false;
   bool healthierEating = false;
-
-  List<DietPlanModel> dietPlans = []; // Diyet Listesi
+  List<DietPlanModel> dietPlans = [];
   List<ProgressTracking> progressTracking = [];
   List<WeeklyMealModel> weeklyMeals = [];
 
-// Vücut Kitle İndeksi Hesaplaması
   double get bodyMassIndex {
     if (height > 0) {
       return weight / ((height / 100) * (height / 100));
@@ -107,34 +106,44 @@ class _CustomerRegistrationScreenState
     return 0.0;
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance; // _auth değişkenini tanımla
-
   Future<String?> registerUser(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-
-      // Kullanıcı kaydı başarılı olduğunda uid'yi al
       final uid = userCredential.user!.uid;
       print('Kullanıcı kaydı başarılı. UID: $uid');
-
-      return uid; // Yeni kullanıcının uid'sini döndür
+      return uid;
     } catch (e) {
       print('Kullanıcı kaydı hatası: $e');
       return null;
     }
   }
 
-  // Formu gönder
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Yeni kullanıcı için Firebase Authentication'da hesap oluştur
-      final String email = '${firstName.toLowerCase()}@example.com'; // Örnek e-posta
-      final String password = 'password123'; // Örnek şifre
+      if (currentDietitianID == null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Hata'),
+            content: Text('Diyetisyen hesabı ile giriş yapmalısınız!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Tamam'),
+              )
+            ],
+          ),
+        );
+        return;
+      }
+
+      final String email = '${firstName.toLowerCase()}@example.com';
+      final String password = 'password123';
 
       final String? uid = await registerUser(email, password);
 
@@ -143,15 +152,14 @@ class _CustomerRegistrationScreenState
         return;
       }
 
-      // Yeni müşteri nesnesi oluştur
       final newCustomer = Customer(
-        customerID: uid, // Firebase Authentication'dan gelen uid'yi kullan
-        dietitianID: dietitianID,
+        customerID: uid,
+        dietitianID: currentDietitianID!,
         firstName: firstName,
         lastName: lastName,
         email: email,
-        isAdmin:isAdmin,
-        isDietitian:isDietitian,
+        isAdmin: isAdmin,
+        isDietitian: isDietitian,
         phone: phone,
         isLoginBefore: isLoginBefore,
         age: age,
@@ -186,19 +194,17 @@ class _CustomerRegistrationScreenState
         weeklyMeals: weeklyMeals,
       );
 
-      // JSON'a çevirme ve loglama
       final customerJson = newCustomer.toJson();
       final jsonString = JsonEncoder.withIndent('  ').convert(customerJson);
 
-      // Firebase'e kaydet (uid altında)
-      final path = 'customer/$uid'; // Kullanıcı uid'sini path olarak kullan
+      final path = 'customer/$uid';
       await database.child(path).set(customerJson);
 
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Kayıt Başarılı'),
-          content: Text('Müşteri başarıyla kaydedildi. Firebase UID: $uid'),
+          content: Text('Müşteri başarıyla kaydedildi. Firebase UID: $uid\nDiyetisyen ID: $currentDietitianID'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -214,6 +220,31 @@ class _CustomerRegistrationScreenState
 
   @override
   Widget build(BuildContext context) {
+    if (currentDietitianID == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Müşteri Kayıt', style: TextStyle(fontSize: 24)),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Diyetisyen hesabı ile giriş yapmalısınız!',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  getCurrentDietitianID();
+                },
+                child: Text('Yeniden Dene'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Müşteri Kayıt', style: TextStyle(fontSize: 24)),
@@ -226,6 +257,30 @@ class _CustomerRegistrationScreenState
           child: SingleChildScrollView(
             child: Column(
               children: [
+                Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.person, size: 32, color: Colors.blue),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Diyetisyen ID', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              SizedBox(height: 4),
+                              Text(currentDietitianID!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+
                 // Kişisel Bilgiler
                 Card(
                   elevation: 4,
@@ -316,14 +371,13 @@ class _CustomerRegistrationScreenState
                               child: DropdownButtonFormField<String>(
                                 value: gender,
                                 decoration:
-                                    InputDecoration(labelText: 'Cinsiyet'),
+                                InputDecoration(labelText: 'Cinsiyet'),
                                 onChanged: (newValue) {
                                   setState(() {
                                     gender = newValue!;
                                   });
                                 },
                                 validator: (value) {
-                                  // Form validation için
                                   if (value == null) {
                                     return 'Lütfen cinsiyet seçiniz';
                                   }
@@ -331,9 +385,9 @@ class _CustomerRegistrationScreenState
                                 },
                                 items: ['Kadın', 'Erkek']
                                     .map((label) => DropdownMenuItem(
-                                          child: Text(label),
-                                          value: label,
-                                        ))
+                                  child: Text(label),
+                                  value: label,
+                                ))
                                     .toList(),
                               ),
                             ),
@@ -344,11 +398,11 @@ class _CustomerRegistrationScreenState
                             Expanded(
                               child: TextFormField(
                                 decoration:
-                                    InputDecoration(labelText: 'Boy (cm)'),
+                                InputDecoration(labelText: 'Boy (cm)'),
                                 keyboardType: TextInputType.number,
                                 initialValue: "1",
                                 onSaved: (value) =>
-                                    height = double.parse(value!),
+                                height = double.parse(value!),
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty ||
@@ -363,11 +417,11 @@ class _CustomerRegistrationScreenState
                             Expanded(
                               child: TextFormField(
                                 decoration:
-                                    InputDecoration(labelText: 'Kilo (kg)'),
+                                InputDecoration(labelText: 'Kilo (kg)'),
                                 keyboardType: TextInputType.number,
                                 initialValue: "1",
                                 onSaved: (value) =>
-                                    weight = double.parse(value!),
+                                weight = double.parse(value!),
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty ||
@@ -385,7 +439,7 @@ class _CustomerRegistrationScreenState
                             Expanded(
                               child: TextFormField(
                                 decoration:
-                                    InputDecoration(labelText: 'Hedef Kilo'),
+                                InputDecoration(labelText: 'Hedef Kilo'),
                                 initialValue: "1",
                                 keyboardType: TextInputType.number,
                                 validator: (value) {
@@ -397,21 +451,19 @@ class _CustomerRegistrationScreenState
                                   return null;
                                 },
                                 onSaved: (value) =>
-                                    targetWeight = double.parse(value!),
+                                targetWeight = double.parse(value!),
                               ),
                             ),
                             SizedBox(width: 10),
                             Expanded(
                               child: DropdownButtonFormField<String>(
                                 value: activityLevel.isNotEmpty &&
-                                        ['Az', 'Orta', 'Yeterli', 'Yüksek']
-                                            .contains(activityLevel)
+                                    ['Az', 'Orta', 'Yeterli', 'Yüksek']
+                                        .contains(activityLevel)
                                     ? activityLevel
                                     : "Az",
-                                // Eğer geçerli bir değer değilse null yap
                                 decoration: InputDecoration(
                                     labelText: 'Aktivite Seviyesi'),
-
                                 onChanged: (newValue) {
                                   setState(() {
                                     activityLevel = newValue!;
@@ -419,9 +471,9 @@ class _CustomerRegistrationScreenState
                                 },
                                 items: ['Az', 'Orta', 'Yeterli', 'Yüksek']
                                     .map((label) => DropdownMenuItem(
-                                          value: label,
-                                          child: Text(label),
-                                        ))
+                                  value: label,
+                                  child: Text(label),
+                                ))
                                     .toList(),
                               ),
                             ),
@@ -449,12 +501,12 @@ class _CustomerRegistrationScreenState
                             labelText: 'Kronik Hastalıklar (virgülle ayırın)',
                           ),
                           onSaved: (value) => chronicDiseases =
-                              value!.isEmpty ? [] : value.split(', '),
+                          value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen kronik hastalıklarınızı giriniz.';
                             }
-                            return null; // Geçerli bir değer girildiğinde null döndürülür.
+                            return null;
                           },
                         ),
                         TextFormField(
@@ -462,7 +514,7 @@ class _CustomerRegistrationScreenState
                             labelText: 'Alerjiler (virgülle ayırın)',
                           ),
                           onSaved: (value) => allergies =
-                              value!.isEmpty ? [] : value.split(', '),
+                          value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen alerjilerinizi giriniz.';
@@ -475,7 +527,7 @@ class _CustomerRegistrationScreenState
                             labelText: 'İlaçlar (virgülle ayırın)',
                           ),
                           onSaved: (value) => medicationUse =
-                              value!.isEmpty ? [] : value.split(', '),
+                          value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen kullandığınız ilaçları giriniz.';
@@ -505,7 +557,7 @@ class _CustomerRegistrationScreenState
                             labelText: 'Sevdiği Yiyecekler (virgülle ayırın)',
                           ),
                           onSaved: (value) => likedFoods =
-                              value!.isEmpty ? [] : value.split(', '),
+                          value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen sevdiğiniz yiyecekleri giriniz.';
@@ -518,7 +570,7 @@ class _CustomerRegistrationScreenState
                             labelText: 'Sevmediği Yiyecekler (virgülle ayırın)',
                           ),
                           onSaved: (value) => dislikedFoods =
-                              value!.isEmpty ? [] : value.split(', '),
+                          value!.isEmpty ? [] : value.split(', '),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Lütfen sevmediğiniz yiyecekleri giriniz.';
@@ -557,7 +609,6 @@ class _CustomerRegistrationScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
-                      // Column'un içeriğe göre boyut almasını sağla
                       children: [
                         Text(
                           'Su Tüketimi',
@@ -579,16 +630,15 @@ class _CustomerRegistrationScreenState
                             return null;
                           },
                           onSaved: (value) =>
-                              dailyWaterAmount = int.parse(value!),
+                          dailyWaterAmount = int.parse(value!),
                         ),
                         SizedBox(height: 10),
-                        // Expanded yerine boşluk ekleyerek daha iyi bir görünüm sağlıyoruz
                         DropdownButtonFormField<String>(
                           value: waterConsumptionHabit != null &&
-                                  ['Kötü', 'Orta', 'Yeterli', 'İyi']
-                                      .contains(waterConsumptionHabit)
+                              ['Kötü', 'Orta', 'Yeterli', 'İyi']
+                                  .contains(waterConsumptionHabit)
                               ? waterConsumptionHabit
-                              : null, // Eğer geçerli bir değer değilse null yap
+                              : null,
                           decoration: InputDecoration(
                               labelText: 'Su Tüketim Alışkanlığı'),
                           onChanged: (newValue) {
@@ -598,9 +648,9 @@ class _CustomerRegistrationScreenState
                           },
                           items: ['Kötü', 'Orta', 'Yeterli', 'İyi']
                               .map((label) => DropdownMenuItem(
-                                    value: label,
-                                    child: Text(label),
-                                  ))
+                            value: label,
+                            child: Text(label),
+                          ))
                               .toList(),
                         ),
                       ],
