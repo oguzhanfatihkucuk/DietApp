@@ -8,7 +8,7 @@ import 'ProgressTracking.dart';
 
 class Customer {
   String customerID;
-  int dietitianID;
+  String dietitianID;
   String firstName;
   String lastName;
   String email;
@@ -93,7 +93,7 @@ class Customer {
       'dietitianID': dietitianID,
       'firstName': firstName,
       'isAdmin':isAdmin,
-      'isDietitan':isDietitian,
+      'isDietitian':isDietitian,
       'lastName': lastName,
       'email': email,
       'phone': phone,
