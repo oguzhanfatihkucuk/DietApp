@@ -5,6 +5,7 @@ import 'package:diet/Models/CustomerModel.dart';
 import '../Components/buildInfoRow.dart';
 import '../Components/buildSectionTitle.dart';
 import '../Components/buildListInfo.dart';
+import '../Models/WeeklyMealModel.dart';
 import 'CustomerEditScreen.dart';
 
 class CustomerDetailScreen extends StatefulWidget {
@@ -293,6 +294,16 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
 
   Widget _buildDoneMeals() {
+    // Tarihe göre gruplama yap
+    final Map<String, List<WeeklyMealModel>> groupedMeals = {};
+    for (var weekly in customer.weeklyMeals) {
+      final dateKey = DateFormat('dd.MM.yyyy').format(weekly.date);
+      if (!groupedMeals.containsKey(dateKey)) {
+        groupedMeals[dateKey] = [];
+      }
+      groupedMeals[dateKey]!.add(weekly);
+    }
+
     return Card(
       elevation: 4.0,
       margin: EdgeInsets.all(8.0),
@@ -306,122 +317,132 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
           children: [
             buildSectionTitle('Tamamlanan Öğünler'),
             SizedBox(height: 8.0),
-            ...customer.weeklyMeals.map((weekly) => Card(
-              margin: EdgeInsets.symmetric(vertical: 8.0),
-              elevation: 2.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: ExpansionTile(
-                title: Text(
-                  DateFormat('dd.MM.yyyy').format(weekly.date),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+            ...groupedMeals.entries.map((entry) {
+              final date = entry.key;
+              final weeklyMeals = entry.value;
+
+              // Tarihe ait toplam kaloriyi hesapla
+              final totalCalories = weeklyMeals.fold(0, (sum, weekly) => sum + weekly.totalCaloriesConsumed);
+
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                elevation: 2.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                subtitle: Text(
-                  'Toplam Kalori: ${weekly.totalCaloriesConsumed} kcal',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 14,
-                  ),
-                ),
-                // Remove the trailing property with the delete button
-                children: [
-                  // Add a header with delete button here, similar to progress tracking
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Öğün Detayları',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => confirmDelete(
-                              'customer/${customer.customerID}/weeklyMeals/${weekly.weeklyID}'),
-                        ),
-                      ],
+                child: ExpansionTile(
+                  title: Text(
+                    date,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
-                  // Rest of the expanded content
-                  ...weekly.meals.map((meal) => Card(
-                    margin: EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 8.0),
-                    elevation: 1.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                  subtitle: Text(
+                    'Toplam Kalori: $totalCalories kcal',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 14,
                     ),
-                    child: ExpansionTile(
-                      title: Text(
-                        meal.mealName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                      subtitle: Text(
-                        '${meal.totalCalories} kcal',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 13,
-                        ),
-                      ),
+                  ),
+                  children: [
+                    // Tarihe ait tüm öğünleri göster
+                    ...weeklyMeals.map((weekly) => Column(
                       children: [
-                        ...meal.foods.map((food) => ListTile(
-                          title: Text(
-                            food.foodName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Öğün Detayları',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => confirmDelete(
+                                    'customer/${customer.customerID}/weeklyMeals/${weekly.weeklyID}'),
+                              ),
+                            ],
                           ),
-                          subtitle: Text(
-                            '${food.calories} kcal - ${food.portion}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 13,
-                            ),
+                        ),
+                        ...weekly.meals.map((meal) => Card(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 8.0),
+                          elevation: 1.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          leading: Icon(
-                            Icons.fastfood,
-                            color: Colors.orange,
+                          child: ExpansionTile(
+                            title: Text(
+                              meal.mealName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${meal.totalCalories} kcal',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 13,
+                              ),
+                            ),
+                            children: [
+                              ...meal.foods.map((food) => ListTile(
+                                title: Text(
+                                  food.foodName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '${food.calories} kcal - ${food.portion}',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                leading: Icon(
+                                  Icons.fastfood,
+                                  color: Colors.orange,
+                                ),
+                              )).toList(),
+                              ListTile(
+                                dense: true,
+                                title: Text(
+                                  'Toplam Kalori: ${meal.totalCalories} kcal',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         )).toList(),
-                        ListTile(
-                          dense: true,
-                          title: Text(
-                            'Toplam Kalori: ${meal.totalCalories} kcal',
+                        Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'Günlük Toplam: ${weekly.totalCaloriesConsumed} kcal',
                             style: TextStyle(
-                              color: Colors.blue,
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              color: Colors.green,
+                              fontSize: 16,
                             ),
                           ),
                         ),
                       ],
-                    ),
-                  )).toList(),
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      'Günlük Toplam: ${weekly.totalCaloriesConsumed} kcal',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )).toList(),
+                    )).toList(),
+                  ],
+                ),
+              );
+            }).toList(),
           ],
         ),
       ),
