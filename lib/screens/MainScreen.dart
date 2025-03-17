@@ -16,9 +16,6 @@ import 'loginScreen.dart';
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
 //TODO UI için geliştirmelerde bulun.Responsive kontrollerini  yap
 
-//TODO Diyetisyen kendi müşterilerini görebilsin.
-//TODO diyetisyen kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
-
 //TODO Beslenme alıskanlıkları- su tüketimi- sağlık durumu bilgilerini güncelleyebilme özelliği koy.
 
 //TODO Öğün ekle kısmına öğünleri card olarak ekle ve json food icin json verilerini olustur.
@@ -120,6 +117,7 @@ class _MainscreenState extends State<Mainscreen> {
               ),
               _buildDrawerItem(Icons.person_add, 'Diyetisyen Kayıt', 10, DietitianRegistrationForm()),
               _buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
+              /*
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -128,10 +126,10 @@ class _MainscreenState extends State<Mainscreen> {
                   child: Text('Müsteri İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
                 ),
               ),
-              _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
-              _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
-              _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
-              _buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
+              //_buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
+              //_buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
+              //_buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
+              //_buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -141,7 +139,7 @@ class _MainscreenState extends State<Mainscreen> {
                 ),
               ),
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
-            ],
+            */],
             if (!isAdmin && isDietitian) ...[
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
               const Divider(),
