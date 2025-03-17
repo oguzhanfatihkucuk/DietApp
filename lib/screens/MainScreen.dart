@@ -16,10 +16,15 @@ import 'loginScreen.dart';
 //TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
 //TODO UI için geliştirmelerde bulun.Responsive kontrollerini  yap
 
-//TODO Diyetisyen girişi sağlansın ve diyetisyen kendi müşterilerini görebilsin.
-//TODO diyetisyen sadece müşteri kayıdı yapabilir,kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
+//TODO Diyetisyen kendi müşterilerini görebilsin.
+//TODO diyetisyen kayıt yaptığında o kişi otomatik olarak o dietitanID ye sahip olsun
 
-//TODO Müşteri tamamlanan öğünler silme bunları yapmaya calis.
+//TODO Beslenme alıskanlıkları- su tüketimi- sağlık durumu bilgilerini güncelleyebilme özelliği koy.
+
+//TODO Öğün ekle kısmına öğünleri card olarak ekle ve json food icin json verilerini olustur.
+//TODO Ana sayfaya bir kac bir sey ekle(Tarifler vs)
+
+//TODO Müşteri silme ve diyetisyen silme ekle
 
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;

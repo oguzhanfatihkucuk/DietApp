@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../Models/CustomerModel.dart';
@@ -52,11 +51,11 @@ class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
 
           // Filtreleme ekliyoruz
           final customerList = data.values.where((customerData) {
-            final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
 
+            final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
             // İki koşulun da sağlanması gerekiyor
-            return user['isAdmin'] == false &&
-                user['isDietitian'] == false;
+            return user['isAdmin'] == false && user['isDietitian'] == false;
+
           }).toList();
 
           if (customerList.isEmpty) {

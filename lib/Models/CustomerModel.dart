@@ -57,7 +57,6 @@ class Customer {
     required this.dietPlans,
     required this.progressTracking,
     required this.weeklyMeals,
-    
   });
 
   factory Customer.fromJson(Map<dynamic, dynamic> json) {
@@ -82,23 +81,9 @@ class Customer {
       dietaryHabits: DietaryHabits.fromJson(json['dietaryHabits']),
       waterConsumption: WaterConsumption.fromJson(json['waterConsumption']),
       goals: Goals.fromJson(json['goals']),
-      dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries
-          .map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key))
-          .toList() ?? [],
-      progressTracking: (json['progressTracking'] as Map<dynamic, dynamic>?)?.entries
-          .map((entry) {
-        return ProgressTracking.fromJson(entry.value..['progressID'] = entry.key);
-      })
-          .toList() ?? [],
-      weeklyMeals: json['weeklyMeals'] != null
-          ? (json['weeklyMeals'] as Map<dynamic, dynamic>)
-          .entries
-          .map((entry) => WeeklyMealModel.fromJson(
-          entry.key, // Firebase'den gelen ID
-          Map<dynamic, dynamic>.from(entry.value)
-      ))
-          .toList()
-          : [],
+      dietPlans: (json['dietPlans'] as Map<dynamic, dynamic>?)?.entries.map((entry) => DietPlanModel.fromJson(entry.value..['planID'] = entry.key)).toList() ?? [],
+      progressTracking: (json['progressTracking'] as Map<dynamic, dynamic>?)?.entries.map((entry) {return ProgressTracking.fromJson(entry.value..['progressID'] = entry.key);}).toList() ?? [],
+      weeklyMeals: json['weeklyMeals'] != null ? (json['weeklyMeals'] as Map<dynamic, dynamic>).entries.map((entry) => WeeklyMealModel.fromJson(entry.key,Map<dynamic, dynamic>.from(entry.value))).toList(): [],
     );
   }
 
@@ -125,10 +110,7 @@ class Customer {
       'waterConsumption': waterConsumption.toJson(),
       'goals': goals.toJson(),
       'dietPlans': dietPlans.map((plan) => plan.toJson()).toList(),
-      'progressTracking': progressTracking.fold<Map<String, dynamic>>(
-        {},
-            (map, progress) => map..[progress.progressID] = progress.toJson(),
-      ),
+      'progressTracking': progressTracking.fold<Map<String, dynamic>>({},(map, progress) => map..[progress.progressID] = progress.toJson(),),
       'weeklyMeals': weeklyMeals.map((w) => w.toJson()).toList(),
     };
   }

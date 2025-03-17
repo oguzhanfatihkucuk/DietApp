@@ -56,8 +56,6 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
             };
           }).toList();
 
-          // 6. State'i güncelle (mounted kontrolü ekledik)
-
         }
       } else {
         print("📭 Veritabanında müşteri bulunamadı");

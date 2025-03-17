@@ -48,6 +48,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       ),
     );
   }
+
   Future<void> deleteEntry(String path) async {
     try {
       await FirebaseDatabase.instance.ref(path).remove();
@@ -61,19 +62,19 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       );
     }
   }
+
   // Müşteri verilerini güncelleme metodu
   Future<void> _refreshCustomerData() async {
     try {
       // Firebase'den müşteri verilerini yeniden çek
-      final ref = FirebaseDatabase.instance.ref(
-          'customer/${customer.customerID}');
+      final ref =
+          FirebaseDatabase.instance.ref('customer/${customer.customerID}');
       final snapshot = await ref.get();
 
       if (snapshot.exists) {
         setState(() {
           // Mevcut müşteriyi güncelle
-          customer =
-              Customer.fromJson(snapshot.value as Map<dynamic, dynamic>);
+          customer = Customer.fromJson(snapshot.value as Map<dynamic, dynamic>);
         });
       }
     } catch (e) {
@@ -139,10 +140,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: _navigateToEditScreen,
-              ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: _navigateToEditScreen,
+            ),
             buildSectionTitle('Kişisel Bilgiler'),
             buildInfoRow('Müşteri ID', customer.customerID),
             buildInfoRow('Diyetisyen ID', customer.dietitianID.toString()),
@@ -171,8 +172,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         child: Column(
           children: [
             buildSectionTitle('Sağlık Durumu'),
-            buildInfoRow(
-                '', ""),
+            buildInfoRow('', ""),
             ...buildListInfo(
                 'Kronik Hastalıklar', customer.healthStatus.chronicDiseases),
             ...buildListInfo('Alerjiler', customer.healthStatus.allergies),
@@ -209,27 +209,81 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   // 4. İLERLEME TAKİBİ
   Widget _buildProgressTrack() {
     return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.all(8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildSectionTitle('İlerleme Takibi'),
-            ...(customer.progressTracking ?? []) // Null ise boş liste kullan
-                .map((progress) => ExpansionTile(
-              trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: () => confirmDelete(
-                    'customer/${customer.customerID}/progressTracking/${progress.progressID}'),
+            SizedBox(height: 8.0),
+            ...(customer.progressTracking ?? [])
+                .map((progress) => Card(
+              margin: EdgeInsets.symmetric(vertical: 8.0),
+              elevation: 2.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              key: ValueKey(progress.date.toString()), // Unique key
-              title: Text(DateFormat('dd/MM/yyyy').format(progress.date)),
-              children: [
-                buildInfoRow('Kilo', '${progress.weight} kg'),
-                buildInfoRow('Vücut Yağı',
-                    '%${progress.bodyFatPercentage.toStringAsFixed(1)}'),
-                buildInfoRow('Kas Kütlesi', '${progress.muscleMass} kg'),
-                buildInfoRow('Notlar', progress.notes),
-              ],
+              child: ExpansionTile(
+                key: ValueKey(progress.date.toString()),
+                title: Text(
+                  DateFormat('dd/MM/yyyy').format(progress.date),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                children: [
+                  Card(
+                    margin: EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 8.0),
+                    elevation: 1.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'İlerleme Detayları',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => confirmDelete(
+                                    'customer/${customer.customerID}/progressTracking/${progress.progressID}'),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8.0),
+                          buildInfoRow('Kilo', '${progress.weight} kg'),
+                          SizedBox(height: 4.0),
+                          buildInfoRow('Vücut Yağı',
+                              '%${progress.bodyFatPercentage.toStringAsFixed(1)}'),
+                          SizedBox(height: 4.0),
+                          buildInfoRow(
+                              'Kas Kütlesi', '${progress.muscleMass} kg'),
+                          SizedBox(height: 4.0),
+                          buildInfoRow('Notlar', progress.notes),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ))
                 .toList(),
           ],
@@ -237,54 +291,137 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       ),
     );
   }
+
   Widget _buildDoneMeals() {
     return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.all(8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildSectionTitle('Tamamlanan Öğünler'),
-            ...customer.weeklyMeals.map((weekly) => ExpansionTile(
-              title: Text(DateFormat('dd.MM.yyyy').format(weekly.date)),// Tarih formatı zaten string olarak geliyor
-              subtitle: Text('Toplam Kalori: ${weekly.totalCaloriesConsumed} kcal'),
-              // Tüm tarihin öğünlerini silmek için düğme ekleyin
-              trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: () => confirmDelete(
-                    'customer/${customer.customerID}/weeklyMeals/${weekly.weeklyID}' // ID'yi kullanarak silme
-                ),
+            SizedBox(height: 8.0),
+            ...customer.weeklyMeals.map((weekly) => Card(
+              margin: EdgeInsets.symmetric(vertical: 8.0),
+              elevation: 2.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              children: [
-                ...weekly.meals.map((meal) => ExpansionTile(
-                  title: Text(meal.mealName),
-                  subtitle: Text('${meal.totalCalories} kcal'),
-                  children: [
-                    ...meal.foods.map((food) => ListTile(
-                      title: Text(food.foodName),
-                      subtitle: Text('${food.calories} kcal - ${food.portion}'),
-                      leading: Icon(Icons.fastfood),
-                    )).toList(),
-                    ListTile(
-                      dense: true,
-                      title: Text('Toplam Kalori: ${meal.totalCalories} kcal'),
-                      textColor: Colors.blue,
-                    ),
-                  ],
-                )).toList(),
-                // Günlük toplam
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Günlük Toplam: ${weekly.totalCaloriesConsumed} kcal',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                        fontSize: 16
+              child: ExpansionTile(
+                title: Text(
+                  DateFormat('dd.MM.yyyy').format(weekly.date),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                subtitle: Text(
+                  'Toplam Kalori: ${weekly.totalCaloriesConsumed} kcal',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 14,
+                  ),
+                ),
+                // Remove the trailing property with the delete button
+                children: [
+                  // Add a header with delete button here, similar to progress tracking
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Öğün Detayları',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => confirmDelete(
+                              'customer/${customer.customerID}/weeklyMeals/${weekly.weeklyID}'),
+                        ),
+                      ],
                     ),
                   ),
-                )
-              ],
-            )).toList()
+                  // Rest of the expanded content
+                  ...weekly.meals.map((meal) => Card(
+                    margin: EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
+                    elevation: 1.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ExpansionTile(
+                      title: Text(
+                        meal.mealName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${meal.totalCalories} kcal',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 13,
+                        ),
+                      ),
+                      children: [
+                        ...meal.foods.map((food) => ListTile(
+                          title: Text(
+                            food.foodName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                          subtitle: Text(
+                            '${food.calories} kcal - ${food.portion}',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 13,
+                            ),
+                          ),
+                          leading: Icon(
+                            Icons.fastfood,
+                            color: Colors.orange,
+                          ),
+                        )).toList(),
+                        ListTile(
+                          dense: true,
+                          title: Text(
+                            'Toplam Kalori: ${meal.totalCalories} kcal',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )).toList(),
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Günlük Toplam: ${weekly.totalCaloriesConsumed} kcal',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )).toList(),
           ],
         ),
       ),
@@ -312,46 +449,146 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   // 6. DİYET PLANLARI
   Widget _buildDietPlans() {
     return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.all(8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildSectionTitle('Aktif Diyet Planları'),
+            SizedBox(height: 8.0),
             ...customer.dietPlans
-                .map((plan) =>
-                ExpansionTile(
-                  title: Text(plan.planName),
-                  subtitle: Text(
-                      '${DateFormat('dd/MM/yyyy').format(plan.startDate)} - '
-                          '${DateFormat('dd/MM/yyyy').format(plan.endDate)}'),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => confirmDelete(
-                        'customer/${customer.customerID}/dietPlans/${plan.planID}'
+                .map((plan) => Card(
+              margin: EdgeInsets.symmetric(vertical: 8.0),
+              elevation: 2.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: ExpansionTile(
+                title: Text(
+                  plan.planName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                subtitle: Text(
+                  '${DateFormat('dd/MM/yyyy').format(plan.startDate)} - '
+                      '${DateFormat('dd/MM/yyyy').format(plan.endDate)}',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 14,
+                  ),
+                ),
+                children: [
+                  Card(
+                    margin: EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 8.0),
+                    elevation: 1.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Plan Detayları',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => confirmDelete(
+                                    'customer/${customer.customerID}/dietPlans/${plan.planID}'),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8.0),
+                          buildInfoRow('Günlük Kalori',
+                              '${plan.dailyCalorieTarget} kcal'),
+                          SizedBox(height: 4.0),
+                          buildInfoRow(
+                              'Protein', '${plan.dailyProteinTarget} g'),
+                          SizedBox(height: 4.0),
+                          buildInfoRow('Yağ', '${plan.dailyFatTarget} g'),
+                          SizedBox(height: 4.0),
+                          buildInfoRow('Karbonhidrat',
+                              '${plan.dailyCarbohydrateTarget} g'),
+                        ],
+                      ),
                     ),
                   ),
-                  children: [
-                    buildInfoRow(
-                        'Günlük Kalori', '${plan.dailyCalorieTarget} kcal'),
-                    buildInfoRow('Protein', '${plan.dailyProteinTarget} g'),
-                    buildInfoRow('Yağ', '${plan.dailyFatTarget} g'),
-                    buildInfoRow('Karbonhidrat',
-                        '${plan.dailyCarbohydrateTarget} g'),
-                    ...plan.meals
-                        .map((meal) =>
-                        ExpansionTile(
-                          title: Text(meal.mealName),
-                          subtitle: Text('${meal.calories} kcal'),
-                          children: meal.foods
-                              .map<Widget>((food) =>
-                              ListTile( // Tür dönüşümü
-                                title: Text(food), // Direkt String'i göster
-                              ))
-                              .toList(),
-                        ))
-                    ,
-                  ],
-                ))
+                  // Meals section
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 16.0, right: 16.0, top: 8.0, bottom: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Öğünler',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        ...plan.meals.map((meal) => Card(
+                          margin: EdgeInsets.only(bottom: 8.0),
+                          elevation: 1.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: ExpansionTile(
+                            title: Text(
+                              meal.mealName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${meal.calories} kcal',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 13,
+                              ),
+                            ),
+                            children: meal.foods
+                                .map<Widget>((food) => ListTile(
+                              title: Text(
+                                food,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              leading: Icon(
+                                Icons.fastfood,
+                                color: Colors.orange,
+                              ),
+                            ))
+                                .toList(),
+                          ),
+                        )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ))
                 .toList(),
           ],
         ),
@@ -359,4 +596,3 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     );
   }
 }
-
