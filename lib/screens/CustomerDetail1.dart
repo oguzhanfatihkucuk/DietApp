@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'CustomerDetail2.dart';
@@ -31,8 +32,22 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
   void initState() {
     super.initState();
     _fetchCustomers();
+    getCurrentDietitianID();
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? currentDietitianID;
+
+  void getCurrentDietitianID() {
+    final User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      setState(() {
+        currentDietitianID = currentUser.uid;
+      });
+    } else {
+      print('Kullanıcı giriş yapmamış!');
+    }
+  }
   Future<void> _fetchCustomers() async {
     try {
       // 1. Firebase referansını oluştur
@@ -46,13 +61,11 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
       if (snapshot.exists) {
         // 4. Veriyi işle
         final Map<dynamic, dynamic>? data = snapshot.value as Map<dynamic, dynamic>?;
-
         if (data != null) {
           // 5. Müşteri listesine dönüştür
           final List<Map<String, dynamic>> customers = data.entries.map((entry) {
             return {
-              'id': entry.key,
-              ...Map<String, dynamic>.from(entry.value as Map)
+              'id': entry.key,...Map<String, dynamic>.from(entry.value as Map)
             };
           }).toList();
 
@@ -93,11 +106,16 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
           if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
             return Center(child: Text('Müşteri bulunamadı.'));
           }
+
           final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
+
+          // Giriş yapan diyetisyenin müşterilerini filtrele
           final customerList = data.values.where((customerData) {
             final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
-
-            return user['isAdmin'] == false &&user['isDietitian'] == false;
+            // Müşteri, giriş yapan diyetisyene ait mi?
+            return user['isAdmin'] == false &&
+                user['isDietitian'] == false &&
+                user['dietitianID'] == currentDietitianID;
           }).toList();
 
           if (customerList.isEmpty) {
@@ -109,7 +127,6 @@ class _CustomerDetailCustomerScreenState extends State<CustomerDetailCustomerScr
             itemBuilder: (context, index) {
               final customerData = customerList[index] as Map<dynamic, dynamic>;
               final customer = Customer.fromJson(customerData);
-              print(customerData);
               return Card(
                 child: ListTile(
                   title: Text('${customer.firstName} ${customer.lastName}'),
