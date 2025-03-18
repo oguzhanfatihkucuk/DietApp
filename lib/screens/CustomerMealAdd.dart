@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
@@ -23,8 +24,32 @@ class _WeeklyMealFormScreenState extends State<WeeklyMealFormScreen> {
     )
   ];
 
-  String customerID = "QvO2U78xzPZbHTMJd0mouPsZzqA2"; // Örnek kullanıcı ID
+  String customerID = "";
 
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUserId();
+  }
+
+  // Mevcut kullanıcının ID'sini almak için fonksiyon
+  void getCurrentUserId() {
+    // Firebase Authentication'dan mevcut kullanıcıyı al
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      // Eğer kullanıcı giriş yapmışsa, ID'sini değişkene ata
+      setState(() {
+        customerID = currentUser.uid;
+      });
+      print("Giriş yapmış kullanıcı ID: $customerID");
+    } else {
+      // Kullanıcı giriş yapmamışsa yapılacak işlemler
+      print("Giriş yapmış kullanıcı bulunamadı!");
+      // Burada kullanıcıyı giriş sayfasına yönlendirebilirsiniz
+      // Navigator.of(context).pushReplacementNamed('/login');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -353,7 +378,7 @@ class _WeeklyMealFormScreenState extends State<WeeklyMealFormScreen> {
             meals: finalMeals,
             totalCaloriesConsumed: totalCaloriesConsumed
         );
-
+        print(weeklyMealModel.toJson());
         // Firebase Realtime Database'e veri kaydetme
         databaseRef
             .child('customer')
