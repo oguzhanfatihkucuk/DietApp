@@ -1,9 +1,11 @@
+import 'package:diet/screens/MainScreenDetail.dart';
 import 'package:diet/screens/SettingsScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddProgressTracking.dart';
 import 'AdminAdd.dart';
+import 'CustomerDietPlanView.dart';
 import 'CustomerMealAdd.dart';
 import 'DietitianDetail1.dart';
 import 'DietitianReg.dart';
@@ -19,10 +21,11 @@ import 'loginScreen.dart';
 //TODO Beslenme alıskanlıkları- su tüketimi- sağlık durumu bilgilerini güncelleyebilme özelliği koy.
 
 //TODO Öğün ekle kısmına öğünleri card olarak ekle ve json food icin json verilerini olustur.
-//TODO Ana sayfaya bir kac bir sey ekle(Tarifler vs)
 
-//TODO Müşteri silme ve diyetisyen silme ekle
+//TODO Müşteri silme ve diyetisyen silme ekle(ekstra kontreller ekle)
+//TODO Diyetisyen silinince otomatik olarak kendi kullanıcıları admin userlarına gecsin ya da baska bir sey bul
 
+//TODO müşteri aktif diyet planlarını görebilsin
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;
   final bool isDietitian;
@@ -38,10 +41,11 @@ class Mainscreen extends StatefulWidget {
 }
 
 class _MainscreenState extends State<Mainscreen> {
-  Widget currentPage = const Center(child: Text('Ana Ekran', style: TextStyle(fontSize: 24)));
+  Widget currentPage =AnimasyonOrnegi();
   int selectedIndex = 0;
 
   bool get isAdmin => widget.isAdmin;
+
   bool get isDietitian => widget.isDietitian;
 
   Future<void> _logout(BuildContext context) async {
@@ -65,7 +69,7 @@ class _MainscreenState extends State<Mainscreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
-            (route) => false, // Tüm sayfaları stack'ten kaldırır
+        (route) => false, // Tüm sayfaları stack'ten kaldırır
       );
     } catch (e) {
       print("Çıkış hatası: $e");
@@ -97,26 +101,39 @@ class _MainscreenState extends State<Mainscreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Title', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold)),
+                  const Text('Title',
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
                   const SizedBox(height: 5),
-                  const Text('subtext', style: TextStyle(fontSize: 14, color: Colors.white70)),
+                  const Text('subtext',
+                      style: TextStyle(fontSize: 14, color: Colors.white70)),
                 ],
               ),
             ),
             // Admin ve Diyetisyenler için menü öğeleri
-            if (isAdmin ) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
-              _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11, AdminRegistrationScreen()),
+            if (isAdmin) ...[
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
+
+              _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11,
+                  AdminRegistrationScreen()),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Diyetisyen İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  child: Text('Diyetisyen İslemleri',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54)),
                 ),
               ),
-              _buildDrawerItem(Icons.person_add, 'Diyetisyen Kayıt', 10, DietitianRegistrationForm()),
-              _buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
+              _buildDrawerItem(Icons.person_add, 'Diyetisyen Kayıt', 10,
+                  DietitianRegistrationForm()),
+              _buildDrawerItem(
+                  Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
               /*
               const Divider(),
               const Padding(
@@ -139,37 +156,53 @@ class _MainscreenState extends State<Mainscreen> {
                 ),
               ),
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
-            */],
+            */
+            ],
             if (!isAdmin && isDietitian) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, const Center(child: Text('Ana Ekran'))),
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Müsteri İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  child: Text('Müsteri İslemleri',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54)),
                 ),
               ),
-              _buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
-              _buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
-              _buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
-              _buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
+              _buildDrawerItem(
+                  Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
+              _buildDrawerItem(
+                  Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
+              _buildDrawerItem(
+                  Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
+              _buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4,
+                  AddProgressTrackingMain()),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Ayarlar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+                  child: Text('Ayarlar',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54)),
                 ),
               ),
               //_buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
             ],
             // Tüm kullanıcılar için profil sayfası (Admin ve Diyetisyenler hariç)
-            if (!isAdmin && !isDietitian)...[
-              _buildDrawerItem(Icons.person, 'Profilim', 5, UserProfileScreen()),
+            if (!isAdmin && !isDietitian) ...[
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
+              _buildDrawerItem(
+                  Icons.person, 'Profilim', 5, UserProfileScreen()),
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage()),
               _buildDrawerItem(Icons.food_bank, 'Öğün Ekle', 8, WeeklyMealFormScreen()),
+              _buildDrawerItem(Icons.food_bank, 'Diyet Planlarım', 15, DietPlansPage()),
             ]
           ],
         ),
@@ -180,8 +213,11 @@ class _MainscreenState extends State<Mainscreen> {
 
   Widget _buildDrawerItem(IconData icon, String text, int index, Widget page) {
     return ListTile(
-      leading: Icon(icon, color: selectedIndex == index ? Colors.blueGrey : Colors.black54),
-      title: Text(text, style: TextStyle(color: selectedIndex == index ? Colors.blueGrey : Colors.black)),
+      leading: Icon(icon,
+          color: selectedIndex == index ? Colors.blueGrey : Colors.black54),
+      title: Text(text,
+          style: TextStyle(
+              color: selectedIndex == index ? Colors.blueGrey : Colors.black)),
       tileColor: selectedIndex == index ? Colors.blueGrey.shade100 : null,
       onTap: () {
         setState(() {
