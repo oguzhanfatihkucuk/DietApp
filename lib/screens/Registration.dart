@@ -257,30 +257,6 @@ class _CustomerRegistrationScreenState
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.person, size: 32, color: Colors.blue),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Diyetisyen ID', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                              SizedBox(height: 4),
-                              Text(currentDietitianID!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-
                 // Kişisel Bilgiler
                 Card(
                   elevation: 4,
