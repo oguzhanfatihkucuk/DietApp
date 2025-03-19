@@ -86,7 +86,7 @@ class _DietPlansPageState extends State<DietPlansPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Diyet Planlarım'),
-        backgroundColor: Colors.green[700],
+        centerTitle: true,
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

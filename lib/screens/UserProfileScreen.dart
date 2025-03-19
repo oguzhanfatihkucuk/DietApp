@@ -52,14 +52,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profil')),
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        title: const Text('Profil', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+        elevation: 0,
+      ),
       body: _user == null
-          ? const Center(child: Text('Lütfen giriş yapın'))
+          ? const Center(child: Text('Lütfen giriş yapın', style: TextStyle(fontSize: 18, color: Colors.black)))
           : StreamBuilder<DatabaseEvent>(
         stream: _database.child('customer/${_user!.uid}').onValue,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Hata: ${snapshot.error}'));
+            return Center(child: Text('Hata: ${snapshot.error}', style: TextStyle(color: Colors.red)));
           }
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -77,25 +83,77 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _buildInfoRow('Ad Soyad', '${data['firstName']} ${data['lastName']}'),
-        _buildInfoRow('E-posta', data['email'] ?? '-'),
-        _buildInfoRow('Yaş', data['age']?.toString() ?? 'Belirtilmemiş'),
-        _buildInfoRow('Cinsiyet', data['gender'] ?? 'Belirtilmemiş'),
-        _buildInfoRow('Telefon', data['phone'] ?? '-'),
-        _buildInfoRow('Hedef Kilo', '${data['targetWeight']} kg'),
-        _buildInfoRow('Mevcut Kilo', '${data['weight']} kg'),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.lightBlueAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, size: 50, color: Colors.blueAccent),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '${data['firstName']} ${data['lastName']}',
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                data['email'] ?? '-',
+                style: const TextStyle(fontSize: 16, color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildInfoCard('Yaş', data['age']?.toString() ?? 'Belirtilmemiş', Icons.calendar_today),
+        _buildInfoCard('Cinsiyet', data['gender'] ?? 'Belirtilmemiş', Icons.people),
+        _buildInfoCard('Telefon', data['phone'] ?? '-', Icons.phone),
+        _buildInfoCard('Hedef Kilo', '${data['targetWeight']} kg', Icons.fitness_center),
+        _buildInfoCard('Mevcut Kilo', '${data['weight']} kg', Icons.monitor_weight),
       ],
     );
   }
 
-  Widget _buildInfoRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Text('$title: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value)),
-        ],
+  Widget _buildInfoCard(String title, String value, IconData icon) {
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(icon, size: 30, color: Colors.blueAccent),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

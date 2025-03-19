@@ -55,6 +55,7 @@ class _WeeklyMealFormScreenState extends State<WeeklyMealFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Haftalık Öğün Takibi'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),

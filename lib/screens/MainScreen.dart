@@ -25,7 +25,6 @@ import 'loginScreen.dart';
 //TODO Müşteri silme ve diyetisyen silme ekle(ekstra kontreller ekle)
 //TODO Diyetisyen silinince otomatik olarak kendi kullanıcıları admin userlarına gecsin ya da baska bir sey bul
 
-//TODO müşteri aktif diyet planlarını görebilsin
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;
   final bool isDietitian;
@@ -41,7 +40,7 @@ class Mainscreen extends StatefulWidget {
 }
 
 class _MainscreenState extends State<Mainscreen> {
-  Widget currentPage =AnimasyonOrnegi();
+  Widget currentPage = AnimasyonOrnegi();
   int selectedIndex = 0;
 
   bool get isAdmin => widget.isAdmin;
@@ -89,7 +88,6 @@ class _MainscreenState extends State<Mainscreen> {
             onPressed: () => _logout(context),
           ),
         ],
-        title: const Text('Ana Ekran'),
         backgroundColor: Colors.blueGrey,
       ),
       drawer: Drawer(
@@ -115,7 +113,6 @@ class _MainscreenState extends State<Mainscreen> {
             // Admin ve Diyetisyenler için menü öğeleri
             if (isAdmin) ...[
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
-
               _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11,
                   AdminRegistrationScreen()),
               const Divider(),
@@ -200,9 +197,11 @@ class _MainscreenState extends State<Mainscreen> {
               _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
               _buildDrawerItem(
                   Icons.person, 'Profilim', 5, UserProfileScreen()),
-              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage()),
-              _buildDrawerItem(Icons.food_bank, 'Öğün Ekle', 8, WeeklyMealFormScreen()),
-              _buildDrawerItem(Icons.food_bank, 'Diyet Planlarım', 15, DietPlansPage()),
+              _buildDrawerItem(
+                  Icons.fastfood, 'Öğün Ekle', 8, WeeklyMealFormScreen()),
+              _buildDrawerItem(
+                  Icons.list_alt, 'Diyet Planlarım', 15, DietPlansPage()),
+              _buildDrawerItem(Icons.settings, 'Ayarlar', 6, SettingsPage()),
             ]
           ],
         ),

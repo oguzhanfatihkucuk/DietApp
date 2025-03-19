@@ -11,6 +11,8 @@ class CustomerEditScreen extends StatefulWidget {
   _CustomerEditScreenState createState() => _CustomerEditScreenState();
 }
 
+//TODO güncelleme sonrası weeklyMeal Progrestracking ve dietplans list olarak kaydediliyor onları map yapısına cevir
+
 class _CustomerEditScreenState extends State<CustomerEditScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
