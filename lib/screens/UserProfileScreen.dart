@@ -106,7 +106,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 50, color: Colors.blueAccent),
+                backgroundImage: AssetImage('assets/images/indir.jpeg'),
+                // Eğer görüntü yüklenemezse simge gösterilecek
+                child: Container(), // Boş bir container kullanarak simgenin görünmesini engelliyoruz
               ),
               const SizedBox(height: 16),
               Text(
