@@ -54,25 +54,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Profil', style: TextStyle(color: Colors.white)),
+        title: const Text('Profil', style: TextStyle(color: Colors.black)),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
         elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
       body: _user == null
-          ? const Center(child: Text('Lütfen giriş yapın', style: TextStyle(fontSize: 18, color: Colors.black)))
+          ? const Center(child: CircularProgressIndicator())
           : StreamBuilder<DatabaseEvent>(
         stream: _database.child('customer/${_user!.uid}').onValue,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Hata: ${snapshot.error}', style: TextStyle(color: Colors.red)));
+            return Center(child: Text('Hata: ${snapshot.error}'));
           }
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
           final userData = Map<String, dynamic>.from(
-              snapshot.data!.snapshot.value as Map
-          );
+              snapshot.data!.snapshot.value as Map);
           return _buildProfile(userData);
         },
       ),
@@ -83,79 +82,151 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        // Header Section
         Container(
-          width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.lightBlueAccent],
+            gradient: const LinearGradient(
+              colors: [Color(0xFF6A88E7), Color(0xFF8F94FB)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black26,
+                color: Colors.black.withOpacity(0.1),
                 blurRadius: 10,
-                offset: Offset(0, 5),
+                offset: const Offset(0, 5),
               ),
             ],
           ),
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/indir.jpeg'),
-                // Eğer görüntü yüklenemezse simge gösterilecek
-                child: Container(), // Boş bir container kullanarak simgenin görünmesini engelliyoruz
+              const CircleAvatar(
+                radius: 40,
+                backgroundImage: AssetImage('assets/images/profile_pic.png'),
               ),
               const SizedBox(height: 16),
               Text(
                 '${data['firstName']} ${data['lastName']}',
-                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
-                data['email'] ?? '-',
-                style: const TextStyle(fontSize: 16, color: Colors.white70),
+                'Art Director', // Firebase'den bu veriyi eklemeniz gerekir
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white.withOpacity(0.8),
+                ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        _buildInfoCard('Yaş', data['age']?.toString() ?? 'Belirtilmemiş', Icons.calendar_today),
-        _buildInfoCard('Cinsiyet', data['gender'] ?? 'Belirtilmemiş', Icons.people),
-        _buildInfoCard('Telefon', data['phone'] ?? '-', Icons.phone),
-        _buildInfoCard('Hedef Kilo', '${data['targetWeight']} kg', Icons.fitness_center),
-        _buildInfoCard('Mevcut Kilo', '${data['weight']} kg', Icons.monitor_weight),
+
+        const SizedBox(height: 24),
+
+        // Personal Info Section
+        _buildSectionTitle('PERSONAL INFORMATION'),
+        _buildInfoRow('AGE', '${data['age']} years old'),
+        _buildInfoRow('BLOOD', data['bloodGroup'] ?? 'AB'),
+        _buildInfoRow('HEIGHT', '${data['height']} cm'),
+        _buildInfoRow('WEIGHT', '${data['weight']} kg'),
+
+        const SizedBox(height: 24),
+
+        // Healthcare Section
+        _buildSectionTitle('CHECKING YOUR HEALTHCARE'),
+        _buildActionButton('Safe Help', Icons.medical_services),
+        _buildActionButton('Coal Settings', Icons.settings),
+        _buildActionButton('Doctor Favorites', Icons.favorite),
       ],
     );
   }
 
-  Widget _buildInfoCard(String title, String value, IconData icon) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(icon, size: 30, color: Colors.blueAccent),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: const TextStyle(fontSize: 16, color: Colors.grey)),
-                Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ],
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey[600],
+          letterSpacing: 1.2,
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(String text, IconData icon) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: const Color(0xFF6A88E7)),
+        title: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {},
       ),
     );
   }

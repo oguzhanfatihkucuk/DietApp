@@ -13,17 +13,8 @@ import 'Registration.dart';
 import 'CustomerDetail1.dart';
 import 'AddDietPlan.dart';
 import 'UserProfileScreen.dart';
+import 'KesfetScreen.dart';
 import 'loginScreen.dart';
-
-//TODO Tüm sayfalardaki firebase işlemlerini gözden geçir riskleri değerlendir tüm save methodlarını aynı biçimde olmasını sağla.
-//TODO UI için geliştirmelerde bulun.Responsive kontrollerini  yap
-
-//TODO Beslenme alıskanlıkları- su tüketimi- sağlık durumu bilgilerini güncelleyebilme özelliği koy.
-
-//TODO Öğün ekle kısmına öğünleri card olarak ekle ve json food icin json verilerini olustur.
-
-//TODO Müşteri silme ve diyetisyen silme ekle(ekstra kontreller ekle)
-//TODO Diyetisyen silinince otomatik olarak kendi kullanıcıları admin userlarına gecsin ya da baska bir sey bul
 
 class Mainscreen extends StatefulWidget {
   final bool isAdmin;
@@ -40,35 +31,35 @@ class Mainscreen extends StatefulWidget {
 }
 
 class _MainscreenState extends State<Mainscreen> {
-  Widget currentPage = AnimasyonOrnegi();
-  int selectedIndex = 0;
+  int selectedIndex = 0; // Drawer için seçili indeks
+  int _bottomNavIndex = 0; // BottomNavigationBar için seçili indeks
+  Widget currentPage = GunlukIlerlemeEkrani(); // Şu anki sayfa
 
   bool get isAdmin => widget.isAdmin;
-
   bool get isDietitian => widget.isDietitian;
+
+  // BottomNavigationBar'da gösterilecek sayfalar
+  final List<Widget> _bottomNavPages = [
+    GunlukIlerlemeEkrani(), // Ana Ekran
+    KesfetScreen(),
+    UserProfileScreen(),
+    SettingsPage(), // Ayarlar
+  ];
 
   Future<void> _logout(BuildContext context) async {
     try {
-      // Firebase'den çıkış yap
       await FirebaseAuth.instance.signOut();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_id');
+      await prefs.remove('is_admin');
+      await prefs.remove('is_dietitian');
+      await prefs.remove('is_logged_in');
+      print("SharedPreferences verileri temizlendi");
 
-      // SharedPreferences'ten kullanıcı verilerini temizle
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.remove('user_id');
-        await prefs.remove('is_admin');
-        await prefs.remove('is_dietitian');
-        await prefs.remove('is_logged_in');
-        print("SharedPreferences verileri temizlendi");
-      } catch (e) {
-        print("SharedPreferences temizleme hatası: $e");
-      }
-
-      // Giriş ekranına yönlendir
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
-        (route) => false, // Tüm sayfaları stack'ten kaldırır
+            (route) => false,
       );
     } catch (e) {
       print("Çıkış hatası: $e");
@@ -110,9 +101,8 @@ class _MainscreenState extends State<Mainscreen> {
                 ],
               ),
             ),
-            // Admin ve Diyetisyenler için menü öğeleri
             if (isAdmin) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
               _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11,
                   AdminRegistrationScreen()),
               const Divider(),
@@ -131,32 +121,9 @@ class _MainscreenState extends State<Mainscreen> {
                   DietitianRegistrationForm()),
               _buildDrawerItem(
                   Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
-              /*
-              const Divider(),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Müsteri İslemleri', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
-                ),
-              ),
-              //_buildDrawerItem(Icons.person_add, 'Müşteri Kayıt', 1, RegistrationMain()),
-              //_buildDrawerItem(Icons.people, 'Müşteri İzleme', 2, CustomerDetailMain()),
-              //_buildDrawerItem(Icons.restaurant, 'Diyet Planı Ekleme', 3, AddDietPlanMain()),
-              //_buildDrawerItem(Icons.track_changes, 'İlerleme Süreci Ekleme', 4, AddProgressTrackingMain()),
-              const Divider(),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Ayarlar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
-                ),
-              ),
-              _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
-            */
             ],
             if (!isAdmin && isDietitian) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -189,12 +156,10 @@ class _MainscreenState extends State<Mainscreen> {
                           color: Colors.black54)),
                 ),
               ),
-              //_buildDrawerItem(Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
             ],
-            // Tüm kullanıcılar için profil sayfası (Admin ve Diyetisyenler hariç)
             if (!isAdmin && !isDietitian) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, AnimasyonOrnegi()),
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
               _buildDrawerItem(
                   Icons.person, 'Profilim', 5, UserProfileScreen()),
               _buildDrawerItem(
@@ -206,7 +171,38 @@ class _MainscreenState extends State<Mainscreen> {
           ],
         ),
       ),
-      body: currentPage,
+      body: currentPage, // Şu anki sayfa
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _bottomNavIndex,
+        onTap: (index) {
+          setState(() {
+            _bottomNavIndex = index; // BottomNavigationBar indeksini güncelle
+            currentPage = _bottomNavPages[index]; // Sayfayı güncelle
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.area_chart),
+            label: 'İlerlemem',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Kesfet',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Ayarlar',
+          ),
+
+        ],
+        selectedItemColor: Colors.blueGrey,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+      ),
     );
   }
 
@@ -220,10 +216,11 @@ class _MainscreenState extends State<Mainscreen> {
       tileColor: selectedIndex == index ? Colors.blueGrey.shade100 : null,
       onTap: () {
         setState(() {
-          selectedIndex = index;
-          currentPage = page;
+          selectedIndex = index; // Drawer indeksini güncelle
+          currentPage = page; // Sayfayı güncelle
+          _bottomNavIndex = 0; // BottomNavigationBar'ı sıfırla (geçerli bir indeks yap)
         });
-        Navigator.pop(context);
+        Navigator.pop(context); // Drawer'ı kapat
       },
     );
   }

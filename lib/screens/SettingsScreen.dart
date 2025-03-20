@@ -74,8 +74,8 @@ class _SettingsPageState extends State<SettingsPage> {
         _buildSectionHeader('Profil'),
         ListTile(
           leading: CircleAvatar(
-            backgroundColor: Colors.green.shade100,
-            child: Icon(Icons.person, color: Colors.green.shade800),
+            backgroundColor: Colors.blue.shade100,
+            child: Icon(Icons.person, color: Colors.blue.shade800),
           ),
           title: const Text('Profil Bilgilerim'),
           subtitle: const Text('Kişisel bilgilerinizi güncelleyin'),

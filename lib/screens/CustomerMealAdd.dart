@@ -4,7 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import '../Models/WeeklyMealModel.dart';
 
-
 class WeeklyMealFormScreen extends StatefulWidget {
   @override
   _WeeklyMealFormScreenState createState() => _WeeklyMealFormScreenState();

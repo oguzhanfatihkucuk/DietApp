@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
-class AnimasyonOrnegi extends StatefulWidget {
+class GunlukIlerlemeEkrani extends StatefulWidget {
   @override
 
-  _AnimasyonOrnegiState createState() => _AnimasyonOrnegiState();
+  _GunlukIlerlemeEkraniState createState() => _GunlukIlerlemeEkraniState();
 }
 
-class _AnimasyonOrnegiState extends State<AnimasyonOrnegi> {
+class _GunlukIlerlemeEkraniState extends State<GunlukIlerlemeEkrani> {
   // Yemek tarifleri için örnek veri
   final List<Map<String, dynamic>> tarifler = [
     {
-      'isim': 'Karnıyarak',
+      'isim': 'Karnıyırak',
       'sure': '45 dk',
       'zorluk': 'Orta',
       'aciklama': 'Geleneksel Türk mutfağının en sevilen yemeklerinden biri olan karnıyarık, patlıcan ve kıyma ile hazırlanır.',
@@ -64,65 +64,7 @@ class _AnimasyonOrnegiState extends State<AnimasyonOrnegi> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Kalori Takip Kısmı
             _buildKaloriTakipWidget(),
-
-            // Ana İçerik
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tarifler Keşfet',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Bugün ne pişirmek istersiniz?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-
-                  // Arama çubuğu
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Tarif ara...',
-                        prefixIcon: Icon(Icons.search),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(vertical: 15),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 25),
-                  Text(
-                    'Popüler Tarifler',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  SizedBox(height: 15),
-
-                  // Tarif kartları
-                  ...tarifler.map((tarif) => _buildTarifCard(tarif)).toList(),
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -175,61 +117,6 @@ class _AnimasyonOrnegiState extends State<AnimasyonOrnegi> {
                   ),
                 ],
               ),
-            ),
-          ),
-
-          // Premium banner
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.green[400]!, Colors.green[300]!],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'PRO',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Upgrade to premium ARISE',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'Spring Offer: Enjoy with more features',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ),
           ),
 
@@ -389,32 +276,6 @@ class _AnimasyonOrnegiState extends State<AnimasyonOrnegi> {
             ),
           ),
 
-          // Alt kıvrım çizgisi
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(50),
-              ),
-            ),
-            child: Center(
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.green[400],
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.keyboard_arrow_right,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-
           // Su takibi
           Container(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -568,121 +429,4 @@ class _AnimasyonOrnegiState extends State<AnimasyonOrnegi> {
     );
   }
 
-  Widget _buildTarifCard(Map<String, dynamic> tarif) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: tarif['renk'] ?? Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 150,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.restaurant,
-                size: 60,
-                color: Colors.grey[600],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      tarif['isim'],
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Icon(
-                      Icons.favorite_border,
-                      color: Colors.red,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      tarif['sure'],
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Icon(
-                      Icons.signal_cellular_alt,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      tarif['zorluk'],
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Text(
-                  tarif['aciklama'],
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                  ),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[800],
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    'Tarifi Görüntüle',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
