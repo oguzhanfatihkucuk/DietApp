@@ -32,20 +32,83 @@ class Mainscreen extends StatefulWidget {
 
 class _MainscreenState extends State<Mainscreen> {
   int selectedIndex = 0; // Drawer için seçili indeks
-  int _bottomNavIndex = 0; // BottomNavigationBar için seçili indeks
-  Widget currentPage = GunlukIlerlemeEkrani(); // Şu anki sayfa
+  int _bottomNavIndex = 0 ; // BottomNavigationBar için seçili indeks
+  Widget currentPage = KesfetScreen(); // Şu anki sayfa
 
   bool get isAdmin => widget.isAdmin;
   bool get isDietitian => widget.isDietitian;
 
   // BottomNavigationBar'da gösterilecek sayfalar
-  final List<Widget> _bottomNavPages = [
-    GunlukIlerlemeEkrani(), // Ana Ekran
-    KesfetScreen(),
-    UserProfileScreen(),
-    SettingsPage(), // Ayarlar
-  ];
+  List<Widget> get _bottomNavPages {
+    if (widget.isDietitian) {
+      return [
+        KesfetScreen(),
+        SettingsPage(),
+      ];
+    } else if (widget.isAdmin) {
+      return [
+        KesfetScreen(),
+        UserProfileScreen(),
+        SettingsPage(),
+      ];
+    } else {
+      return [
+        KesfetScreen(),
+        GunlukIlerlemeEkrani(),
+        UserProfileScreen(),
+        SettingsPage(),
+      ];
+    }
+  }
 
+  List<BottomNavigationBarItem> get _bottomNavItems {
+    if (widget.isDietitian) {
+      return const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Keşfet',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Ayarlar',
+        ),
+      ];
+    } else if (widget.isAdmin) {
+      return const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Keşfet',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profil',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Ayarlar',
+        ),
+      ];
+    } else {
+      return const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Keşfet',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.area_chart),
+          label: 'İlerlemem',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profil',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Ayarlar',
+        ),
+      ];
+    }
+  }
   Future<void> _logout(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -176,32 +239,15 @@ class _MainscreenState extends State<Mainscreen> {
         currentIndex: _bottomNavIndex,
         onTap: (index) {
           setState(() {
-            _bottomNavIndex = index; // BottomNavigationBar indeksini güncelle
-            currentPage = _bottomNavPages[index]; // Sayfayı güncelle
+            _bottomNavIndex = index;
+            currentPage = _bottomNavPages[index];
           });
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.area_chart),
-            label: 'İlerlemem',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Kesfet',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Ayarlar',
-          ),
-
-        ],
+        items: _bottomNavItems,
         selectedItemColor: Colors.blueGrey,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
