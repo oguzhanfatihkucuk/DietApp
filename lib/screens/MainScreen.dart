@@ -165,7 +165,7 @@ class _MainscreenState extends State<Mainscreen> {
               ),
             ),
             if (isAdmin) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
+              //_buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
               _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11,
                   AdminRegistrationScreen()),
               const Divider(),
@@ -186,8 +186,8 @@ class _MainscreenState extends State<Mainscreen> {
                   Icons.food_bank, 'Diyetisyen İzle', 9, DietitianListScreen()),
             ],
             if (!isAdmin && isDietitian) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
-              const Divider(),
+              //_buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
+              //const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Align(
@@ -222,9 +222,9 @@ class _MainscreenState extends State<Mainscreen> {
               _buildDrawerItem(Icons.food_bank, 'Ayarlar', 6, SettingsPage())
             ],
             if (!isAdmin && !isDietitian) ...[
-              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
-              _buildDrawerItem(
-                  Icons.person, 'Profilim', 5, UserProfileScreen()),
+             // _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
+              //_buildDrawerItem(Icons.person, 'Profilim', 5, UserProfileScreen()),
+
               _buildDrawerItem(
                   Icons.fastfood, 'Öğün Ekle', 8, WeeklyMealFormScreen()),
               _buildDrawerItem(

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'KesfetScreenDetails/SaglikHaberDetayScreen.dart';
+import 'KesfetScreenDetails/SporAktiviteDetayScreen.dart';
+import 'KesfetScreenDetails/TarifDetayScreen.dart';
 
 class KesfetScreen extends StatefulWidget {
   @override
@@ -8,40 +11,94 @@ class KesfetScreen extends StatefulWidget {
 
 class _KesfetScreenState extends State<KesfetScreen> {
   // Yemek tarifleri için örnek veri
+  // KesfetScreen.dart (Güncellenmiş kısım)
   final List<Map<String, dynamic>> tarifler = [
     {
       'isim': 'Karnıyarık',
       'sure': '45 dk',
       'zorluk': 'Orta',
+      'kalori': '380 kcal',
+      'kisiSayisi': '4 Kişilik',
+      'resim': 'https://example.com/karniyarik.jpg',
+      'malzemeler': [
+        '4 adet orta boy patlıcan',
+        '300 gr kıyma',
+        '2 adet soğan',
+        '3 adet domates',
+        '2 adet yeşil biber',
+        '3 diş sarımsak',
+        '2 yemek kaşığı zeytinyağı',
+        '1 tatlı kaşığı biber salçası',
+        'Tuz, karabiber, pul biber'
+      ],
+      'adimlar': [
+        'Patlıcanları alacalı soyun ve tuzlu suda 15 dakika bekletin.',
+        'Soğanları küp küp doğrayıp zeytinyağında kavurun.',
+        'Kıymayı ekleyip renk alana kadar kavurmaya devam edin.',
+        'Küp doğranmış domates, biber ve sarımsağı ekleyin.',
+        'Salça ve baharatları ilave edip 5 dakika daha pişirin.',
+        'Patlıcanları ortadan ikiye kesip içlerini hafifçe oyun.',
+        'Hazırlanan iç harcı patlıcanlara doldurun.',
+        'Önceden ısıtılmış 180 derece fırında 25-30 dakika pişirin.'
+      ],
       'aciklama': 'Geleneksel Türk mutfağının en sevilen yemeklerinden biri olan karnıyarık, patlıcan ve kıyma ile hazırlanır.',
       'renk': Colors.purple[100],
     },
     {
-      'isim': 'Mercimek Çorbası',
-      'sure': '30 dk',
-      'zorluk': 'Kolay',
-      'aciklama': 'Kırmızı mercimek kullanılarak hazırlanan, protein açısından zengin, besleyici bir çorba tarifi.',
+      'isim': 'Lazanya',
+      'sure': '1 saat 30 dk',
+      'zorluk': 'Zor',
+      'kalori': '600 kcal',
+      'kisiSayisi': '6 Kişilik',
+      'resim': 'https://example.com/lazanya.jpg',
+      'malzemeler': [
+        '12 adet lazanya hamuru',
+        '500 gr kıyma',
+        '2 adet soğan',
+        '3 adet domates',
+        '2 yemek kaşığı domates salçası',
+        '3 diş sarımsak',
+        '400 gr beşamel sos',
+        '200 gr rendelenmiş mozzarella peyniri',
+        'Tuz, karabiber, kekik',
+        '2 yemek kaşığı zeytinyağı'
+      ],
+      'adimlar': [
+        'Soğanları doğrayıp zeytinyağında kavurun.',
+        'Kıymayı ekleyin ve suyunu salıp çekene kadar pişirin.',
+        'Domatesleri doğrayıp, domates salçasını ve baharatları ekleyin.',
+        'Lazanya hamurlarını haşlayın.',
+        'Bir fırın kabına bir kat lazanya, üzerine kıymalı harç ve beşamel sosu dökün.',
+        'İşlemi 3 kat olacak şekilde tekrarlayın.',
+        'Üst katmana mozzarella peynirini serpip 180 derece fırında 40-45 dakika pişirin.'
+      ],
+      'aciklama': 'İtalyan mutfağının en sevilen yemeklerinden biri olan lazanya, bol malzemeli katmanları ile lezzetli bir yemektir.',
       'renk': Colors.orange[100],
     },
     {
-      'isim': 'Mantı',
-      'sure': '90 dk',
-      'zorluk': 'Zor',
-      'aciklama': 'Hamur içerisine kıyma konularak yapılan, yoğurt ve sarımsaklı sos ile servis edilen geleneksel bir Türk yemeği.',
-      'renk': Colors.green[100],
-    },
-    {
-      'isim': 'Fırında Tavuk',
-      'sure': '60 dk',
-      'zorluk': 'Orta',
-      'aciklama': 'Baharatlarla marine edilmiş tavuk parçalarının fırında pişirilmesiyle hazırlanan lezzetli bir ana yemek.',
-      'renk': Colors.red[100],
-    },
-    {
-      'isim': 'Revani Tatlısı',
-      'sure': '50 dk',
-      'zorluk': 'Orta',
-      'aciklama': 'İrmik kullanılarak yapılan, şerbetli ve hafif bir Türk tatlısı. Servis ederken üzerine hindistan cevizi serpilir.',
+      'isim': 'Fırın Tavuk',
+      'sure': '1 saat',
+      'zorluk': 'Kolay',
+      'kalori': '450 kcal',
+      'kisiSayisi': '4 Kişilik',
+      'resim': 'https://example.com/firin_tavuk.jpg',
+      'malzemeler': [
+        '1 bütün tavuk',
+        '2 yemek kaşığı zeytinyağı',
+        '1 tatlı kaşığı kekik',
+        '1 tatlı kaşığı pul biber',
+        'Tuz, karabiber',
+        '2 diş sarımsak',
+        '1 adet limon'
+      ],
+      'adimlar': [
+        'Tavuğu yıkayıp, üzerine zeytinyağını, baharatları ve tuzu sürün.',
+        'Sarımsakları ezip tavuğun içine koyun.',
+        'Limonu ortadan ikiye kesip tavuk ile birlikte pişireceğiniz tepsiye yerleştirin.',
+        'Önceden ısıtılmış 200 derece fırında 45-50 dakika pişirin.',
+        'Tavuk piştikten sonra üzerine biraz daha kekik serpip servis edin.'
+      ],
+      'aciklama': 'Pratik ve lezzetli bir şekilde hazırlanan fırın tavuk, özellikle hafta sonu yemekleri için ideal bir tercihtir.',
       'renk': Colors.yellow[100],
     },
   ];
@@ -93,20 +150,9 @@ class _KesfetScreenState extends State<KesfetScreen> {
     },
   ];
 
-  // Günlük hedef değerleri
-  final double gunlukKaloriHedefi = 2181;
-  final double yakilanKalori = 690;
-  final double tuketilenKalori = 536;
-  final double kalanKalori = 1645;
-  final double suHedefi = 1.4; // Litre
-  final double suTuketimi = 0.9; // Litre
-
   @override
   Widget build(BuildContext context) {
-    // Ekran boyutlarını al
     final screenWidth = MediaQuery.of(context).size.width;
-
-    // Kartların genişliğini ekran genişliğine göre ayarla
     final cardWidth = screenWidth * 0.65;
     final smallCardWidth = screenWidth * 0.6;
 
@@ -115,7 +161,6 @@ class _KesfetScreenState extends State<KesfetScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Ana İçerik
             Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -138,8 +183,6 @@ class _KesfetScreenState extends State<KesfetScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-
-                  // Arama çubuğu
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
@@ -154,57 +197,51 @@ class _KesfetScreenState extends State<KesfetScreen> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Popüler Tarifler Başlık
                   _buildSectionHeader('Popüler Tarifler'),
                   SizedBox(height: 10),
-
-                  // Yatay Kaydırılabilir Popüler Tarifler
                   SizedBox(
-                    height: MediaQuery.of(context).size.width * 0.75, // Responsive yükseklik
+                    height: MediaQuery.of(context).size.width * 0.75,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: tarifler.length,
                       itemBuilder: (context, index) {
-                        return _buildHorizontalTarifCard(tarifler[index], cardWidth);
+                        return GestureDetector(
+                          onTap: () => _navigateToTarifDetay(tarifler[index], context),
+                          child: _buildHorizontalTarifCard(tarifler[index], cardWidth),
+                        );
                       },
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Sağlık Haberleri Başlık
                   _buildSectionHeader('Sağlık Haberleri'),
                   SizedBox(height: 10),
-
-                  // Yatay Kaydırılabilir Sağlık Haberleri
                   SizedBox(
-                    height: MediaQuery.of(context).size.width * 0.45, // Responsive yükseklik
+                    height: MediaQuery.of(context).size.width * 0.45,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: saglikHaberleri.length,
                       itemBuilder: (context, index) {
-                        return _buildSaglikHaberCard(saglikHaberleri[index], smallCardWidth);
+                        return GestureDetector(
+                          onTap: () => _navigateToSaglikHaberDetay(saglikHaberleri[index], context),
+                          child: _buildSaglikHaberCard(saglikHaberleri[index], smallCardWidth),
+                        );
                       },
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Spor Aktiviteleri Başlık
                   _buildSectionHeader('Spor Aktiviteleri'),
                   SizedBox(height: 10),
-
-                  // Yatay Kaydırılabilir Spor Aktiviteleri
                   SizedBox(
-                    height: MediaQuery.of(context).size.width * 0.55, // Responsive yükseklik
+                    height: MediaQuery.of(context).size.width * 0.55,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: sporAktiviteleri.length,
                       itemBuilder: (context, index) {
-                        return _buildSporAktiviteCard(sporAktiviteleri[index], cardWidth);
+                        return GestureDetector(
+                          onTap: () => _navigateToSporAktiviteDetay(sporAktiviteleri[index], context),
+                          child: _buildSporAktiviteCard(sporAktiviteleri[index], cardWidth),
+                        );
                       },
                     ),
                   ),
@@ -217,7 +254,29 @@ class _KesfetScreenState extends State<KesfetScreen> {
     );
   }
 
-  // Bölüm başlıkları için widget
+  // NAVİGASYON FONKSİYONLARI
+  void _navigateToTarifDetay(Map<String, dynamic> tarif, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TarifDetayScreen(tarif: tarif)),
+    );
+  }
+
+  void _navigateToSaglikHaberDetay(Map<String, dynamic> haber, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SaglikHaberDetayScreen(haber: haber)),
+    );
+  }
+
+  void _navigateToSporAktiviteDetay(Map<String, dynamic> aktivite, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SporAktiviteDetayScreen(aktivite: aktivite)),
+    );
+  }
+
+  // DİĞER WIDGETLAR
   Widget _buildSectionHeader(String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,16 +293,13 @@ class _KesfetScreenState extends State<KesfetScreen> {
           onPressed: () {},
           child: Text(
             'Tümünü Gör',
-            style: TextStyle(
-              color: Colors.orange[800],
-            ),
+            style: TextStyle(color: Colors.orange[800]),
           ),
         ),
       ],
     );
   }
 
-  // Yatay kaydırmada kullanılacak tarif kartı
   Widget _buildHorizontalTarifCard(Map<String, dynamic> tarif, double width) {
     return Container(
       width: width,
@@ -263,7 +319,6 @@ class _KesfetScreenState extends State<KesfetScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Resim alanı
           Expanded(
             flex: 4,
             child: Container(
@@ -275,16 +330,10 @@ class _KesfetScreenState extends State<KesfetScreen> {
                 ),
               ),
               child: Center(
-                child: Icon(
-                  Icons.restaurant,
-                  size: 50,
-                  color: Colors.grey[600],
-                ),
+                child: Icon(Icons.restaurant, size: 50, color: Colors.grey[600]),
               ),
             ),
           ),
-
-          // İçerik alanı
           Expanded(
             flex: 6,
             child: Padding(
@@ -298,60 +347,30 @@ class _KesfetScreenState extends State<KesfetScreen> {
                       Expanded(
                         child: Text(
                           tarif['isim'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Icon(
-                        Icons.favorite_border,
-                        color: Colors.red,
-                        size: 20,
-                      ),
+                      Icon(Icons.favorite_border, color: Colors.red, size: 20),
                     ],
                   ),
                   SizedBox(height: 6),
                   Row(
                     children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 14,
-                        color: Colors.grey[600],
-                      ),
+                      Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
                       SizedBox(width: 4),
-                      Text(
-                        tarif['sure'],
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(tarif['sure'], style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                       SizedBox(width: 12),
-                      Icon(
-                        Icons.signal_cellular_alt,
-                        size: 14,
-                        color: Colors.grey[600],
-                      ),
+                      Icon(Icons.signal_cellular_alt, size: 14, color: Colors.grey[600]),
                       SizedBox(width: 4),
-                      Text(
-                        tarif['zorluk'],
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(tarif['zorluk'], style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                     ],
                   ),
                   SizedBox(height: 8),
                   Expanded(
                     child: Text(
                       tarif['aciklama'],
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.grey[700], fontSize: 12),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -361,17 +380,9 @@ class _KesfetScreenState extends State<KesfetScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange[800],
                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: Text(
-                      'Tarifi Görüntüle',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
+                    child: Text('Tarifi Görüntüle', style: TextStyle(color: Colors.white, fontSize: 12)),
                   ),
                 ],
               ),
@@ -382,7 +393,6 @@ class _KesfetScreenState extends State<KesfetScreen> {
     );
   }
 
-  // Sağlık haberi kartı
   Widget _buildSaglikHaberCard(Map<String, dynamic> haber, double width) {
     return Container(
       width: width,
@@ -406,28 +416,15 @@ class _KesfetScreenState extends State<KesfetScreen> {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.health_and_safety,
-                  color: Colors.green,
-                  size: 20,
-                ),
+                Icon(Icons.health_and_safety, color: Colors.green, size: 20),
                 SizedBox(width: 8),
-                Text(
-                  haber['tarih'],
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
+                Text(haber['tarih'], style: TextStyle(fontSize: 12, color: Colors.grey[600])),
               ],
             ),
             SizedBox(height: 10),
             Text(
               haber['baslik'],
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -435,21 +432,14 @@ class _KesfetScreenState extends State<KesfetScreen> {
             Expanded(
               child: Text(
                 haber['ozet'],
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             Text(
               'Devamını Oku',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[700],
-              ),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.blue[700]),
             ),
           ],
         ),
@@ -457,7 +447,6 @@ class _KesfetScreenState extends State<KesfetScreen> {
     );
   }
 
-  // Spor aktivitesi kartı
   Widget _buildSporAktiviteCard(Map<String, dynamic> aktivite, double width) {
     return Container(
       width: width,
@@ -477,7 +466,6 @@ class _KesfetScreenState extends State<KesfetScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Resim alanı
           Expanded(
             flex: 4,
             child: Container(
@@ -489,16 +477,10 @@ class _KesfetScreenState extends State<KesfetScreen> {
                 ),
               ),
               child: Center(
-                child: Icon(
-                  Icons.fitness_center,
-                  size: 50,
-                  color: Colors.grey[600],
-                ),
+                child: Icon(Icons.fitness_center, size: 50, color: Colors.grey[600]),
               ),
             ),
           ),
-
-          // İçerik alanı
           Expanded(
             flex: 6,
             child: Padding(
@@ -508,52 +490,26 @@ class _KesfetScreenState extends State<KesfetScreen> {
                 children: [
                   Text(
                     aktivite['baslik'],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 6),
                   Row(
                     children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 14,
-                        color: Colors.grey[600],
-                      ),
+                      Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
                       SizedBox(width: 4),
-                      Text(
-                        aktivite['sure'],
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(aktivite['sure'], style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                       SizedBox(width: 12),
-                      Icon(
-                        Icons.fitness_center,
-                        size: 14,
-                        color: Colors.grey[600],
-                      ),
+                      Icon(Icons.fitness_center, size: 14, color: Colors.grey[600]),
                       SizedBox(width: 4),
-                      Text(
-                        aktivite['seviye'],
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
+                      Text(aktivite['seviye'], style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                     ],
                   ),
                   SizedBox(height: 8),
                   Expanded(
                     child: Text(
                       aktivite['aciklama'],
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.grey[700], fontSize: 12),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
