@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../Models/DietPlanModel.dart';
+import '../../Models/DietPlanModel.dart';
 
 class AddMealScreen extends StatefulWidget {
   @override

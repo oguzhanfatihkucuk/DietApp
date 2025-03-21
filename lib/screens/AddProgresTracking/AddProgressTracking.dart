@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import '../Models/CustomerModel.dart';
-import 'AddDietPlan2.dart';
+import '../../Models/CustomerModel.dart';
+import './AddProgressTracking2.dart';
 
-class AddDietPlanMain extends StatelessWidget {
+class AddProgressTrackingMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,24 +12,24 @@ class AddDietPlanMain extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: AddDietPlanCustomerSreen(),
+      home: AddProgressTrackingCustomerScreen(),
     );
   }
 }
 
-class AddDietPlanCustomerSreen extends StatefulWidget {
+class AddProgressTrackingCustomerScreen extends StatefulWidget {
   @override
-  _AddDietPlanCustomerSreenState createState() => _AddDietPlanCustomerSreenState();
+  _AddProgressTrackingCustomerScreenState createState() => _AddProgressTrackingCustomerScreenState();
 }
 
-class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
+class _AddProgressTrackingCustomerScreenState extends State<AddProgressTrackingCustomerScreen> {
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customer');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Diyet Planı Ekleme Menü', style: TextStyle(fontSize: 24)),
+        title: Text('İlerleme Ekle', style: TextStyle(fontSize: 24)),
         centerTitle: true,
       ),
       body: StreamBuilder<DatabaseEvent>(
@@ -51,11 +51,11 @@ class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
 
           // Filtreleme ekliyoruz
           final customerList = data.values.where((customerData) {
-
             final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
-            // İki koşulun da sağlanması gerekiyor
-            return user['isAdmin'] == false && user['isDietitian'] == false;
 
+            // İki koşulun da sağlanması gerekiyor
+            return user['isAdmin'] == false &&
+                user['isDietitian'] == false;
           }).toList();
 
           if (customerList.isEmpty) {
@@ -76,7 +76,7 @@ class _AddDietPlanCustomerSreenState extends State<AddDietPlanCustomerSreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddDietPlanScreen(customer: customer),
+                        builder: (context) => AddProgressTrackingScreen(customer: customer),
                       ),
                     );
                   },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../Models/DietitianModel.dart';
-import '../Components/buildInfoRow.dart';
-import '../Components/buildSectionTitle.dart';
+import '../../Models/DietitianModel.dart';
+import '../../Components/buildInfoRow.dart';
+import '../../Components/buildSectionTitle.dart';
 
 class DietitianDetailScreen extends StatelessWidget {
   final Dietitian dietitian;

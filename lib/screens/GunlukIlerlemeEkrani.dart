@@ -111,12 +111,145 @@ class _GunlukIlerlemeEkraniState extends State<GunlukIlerlemeEkrani> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildKaloriTakipWidget(),
+            _buildBugununOgunleri(),
+          ],
+        ),
+      ),
+    );
+  }
+  // Yeni eklenen widget
+  Widget _buildBugununOgunleri() {
+    if (_userData == null) return SizedBox.shrink();
+
+    final weeklyMeals = _userData!['weeklyMeals'] as Map<dynamic, dynamic>? ?? {};
+    final today = DateFormat('dd.MM.yyyy').format(DateTime.now());
+    final bugununOgunleri = weeklyMeals.values.where((meal) => meal['date'] == today).toList();
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Today's Meals",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800],
+            ),
+          ),
+          SizedBox(height: 10),
+          if (bugununOgunleri.isEmpty)
+            _buildBosOgunKarti()
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: bugununOgunleri.length,
+              itemBuilder: (context, index) {
+                final gunlukOgun = bugununOgunleri[index];
+                return _buildOgunKarti(gunlukOgun);
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+// Öğün kartı widget'ı
+  Widget _buildOgunKarti(Map<dynamic, dynamic> ogun) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 16),
+      elevation: 3,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  ogun['totalCaloriesConsumed'].toString() + ' kcal',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+                Chip(
+                  label: Text('Total'),
+                  backgroundColor: Colors.green[100],
+                )
+              ],
+            ),
+            SizedBox(height: 10),
+            ...(ogun['meals'] as List<dynamic>).map((meal) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(),
+                  SizedBox(height: 8),
+                  Text(
+                    meal['mealName'] ?? 'Meal',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  ...(meal['foods'] as List<dynamic>).map((food) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          Icon(Icons.restaurant_menu, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              '${food['foodName']} (${food['portion']})',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                          Text(
+                            '${food['calories']} kcal',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ],
+              );
+            }).toList(),
           ],
         ),
       ),
     );
   }
 
+// Boş öğün durumu için widget
+  Widget _buildBosOgunKarti() {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Icon(Icons.fastfood, size: 40, color: Colors.grey[400]),
+            SizedBox(height: 10),
+            Text(
+              'No meals recorded today',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
   Widget _buildKaloriTakipWidget() {
     if (_userData == null) {
       return Center(child: CircularProgressIndicator());

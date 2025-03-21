@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../Models/CustomerModel.dart';
-import '../Models/DietPlanModel.dart';
+import '../../Models/CustomerModel.dart';
+import '../../Models/DietPlanModel.dart';
 import 'AddDietPlan3.dart';
 
 class AddDietPlanScreen extends StatefulWidget {

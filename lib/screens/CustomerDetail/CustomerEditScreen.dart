@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import '../Models/CustomerModel.dart';
+import '../../Models/CustomerModel.dart';
 
 class CustomerEditScreen extends StatefulWidget {
   final Customer customer;

@@ -1,35 +1,21 @@
 import 'package:flutter/material.dart';
+import '../../Models/DietitianModel.dart';
 import 'package:firebase_database/firebase_database.dart';
-import '../Models/CustomerModel.dart';
-import 'AddProgressTracking2.dart';
+import './DietitianDetail2.dart';
 
-class AddProgressTrackingMain extends StatelessWidget {
+class DietitianListScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: AddProgressTrackingCustomerScreen(),
-    );
-  }
+  _DietitianListScreenState createState() => _DietitianListScreenState();
 }
 
-class AddProgressTrackingCustomerScreen extends StatefulWidget {
-  @override
-  _AddProgressTrackingCustomerScreenState createState() => _AddProgressTrackingCustomerScreenState();
-}
-
-class _AddProgressTrackingCustomerScreenState extends State<AddProgressTrackingCustomerScreen> {
+class _DietitianListScreenState extends State<DietitianListScreen> {
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref('customer');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('İlerleme Ekle', style: TextStyle(fontSize: 24)),
+        title: Text('Diyetisyen Listesi', style: TextStyle(fontSize: 24)),
         centerTitle: true,
       ),
       body: StreamBuilder<DatabaseEvent>(
@@ -44,39 +30,35 @@ class _AddProgressTrackingCustomerScreenState extends State<AddProgressTrackingC
           }
 
           if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
-            return Center(child: Text('Müşteri bulunamadı.'));
+            return Center(child: Text('Veri bulunamadı.'));
           }
 
           final data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-
-          // Filtreleme ekliyoruz
           final customerList = data.values.where((customerData) {
-            final Map<dynamic, dynamic> user = customerData as Map<dynamic, dynamic>;
-
-            // İki koşulun da sağlanması gerekiyor
-            return user['isAdmin'] == false &&
-                user['isDietitian'] == false;
+            final customerMap = customerData as Map<dynamic, dynamic>;
+            return customerMap['isAdmin'] == false &&
+                customerMap['isDietitian'] == true;
           }).toList();
 
           if (customerList.isEmpty) {
-            return Center(child: Text('Gösterilecek müşteri bulunamadı'));
+            return Center(child: Text('Listelenecek diyetisyen bulunamadı'));
           }
 
           return ListView.builder(
             itemCount: customerList.length,
             itemBuilder: (context, index) {
               final customerData = customerList[index] as Map<dynamic, dynamic>;
-              final customer = Customer.fromJson(customerData);
+              final dietitian = Dietitian.fromJson(customerData);
 
               return Card(
                 child: ListTile(
-                  title: Text('${customer.firstName} ${customer.lastName}'),
-                  subtitle: Text('ID: ${customer.customerID}'),
+                  title: Text('${dietitian.firstName} ${dietitian.lastName}'),
+                  subtitle: Text('ID: ${dietitian.uid}'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddProgressTrackingScreen(customer: customer),
+                        builder: (context) => DietitianDetailScreen( dietitian: dietitian),
                       ),
                     );
                   },

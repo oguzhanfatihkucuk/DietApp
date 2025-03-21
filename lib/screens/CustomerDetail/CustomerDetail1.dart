@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'CustomerDetail2.dart';
-import '../Models/CustomerModel.dart';
+import './CustomerDetail2.dart';
+import '../../Models/CustomerModel.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class CustomerDetailMain extends StatelessWidget {

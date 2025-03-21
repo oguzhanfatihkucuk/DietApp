@@ -2,10 +2,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:diet/Models/CustomerModel.dart';
-import '../Components/buildInfoRow.dart';
-import '../Components/buildSectionTitle.dart';
-import '../Components/buildListInfo.dart';
-import '../Models/WeeklyMealModel.dart';
+import '../../Components/buildInfoRow.dart';
+import '../../Components/buildSectionTitle.dart';
+import '../../Components/buildListInfo.dart';
+import '../../Models/WeeklyMealModel.dart';
 import 'CustomerEditScreen.dart';
 
 class CustomerDetailScreen extends StatefulWidget {
