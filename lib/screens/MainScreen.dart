@@ -1,17 +1,17 @@
-import 'package:diet/screens/MainScreenDetail.dart';
+import 'package:diet/screens/GunlukIlerlemeEkrani.dart';
 import 'package:diet/screens/SettingsScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'AddProgressTracking.dart';
+import 'AddProgresTracking/AddProgressTracking.dart';
 import 'AdminAdd.dart';
 import 'CustomerDietPlanView.dart';
 import 'CustomerMealAdd.dart';
-import 'DietitianDetail1.dart';
+import 'DietitianDetail/DietitianDetail1.dart';
 import 'DietitianReg.dart';
 import 'Registration.dart';
-import 'CustomerDetail1.dart';
-import 'AddDietPlan.dart';
+import 'CustomerDetail/CustomerDetail1.dart';
+import 'AddDietPlan/AddDietPlan.dart';
 import 'UserProfileScreen.dart';
 import 'KesfetScreen.dart';
 import 'loginScreen.dart';
@@ -165,9 +165,10 @@ class _MainscreenState extends State<Mainscreen> {
               ),
             ),
             if (isAdmin) ...[
-              //_buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
+              _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
               _buildDrawerItem(Icons.person_add, 'Admin Kayıt', 11,
                   AdminRegistrationScreen()),
+
               const Divider(),
               const Padding(
                 padding: EdgeInsets.all(8.0),

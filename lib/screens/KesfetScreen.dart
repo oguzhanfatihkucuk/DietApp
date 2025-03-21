@@ -11,7 +11,6 @@ class KesfetScreen extends StatefulWidget {
 
 class _KesfetScreenState extends State<KesfetScreen> {
   // Yemek tarifleri için örnek veri
-  // KesfetScreen.dart (Güncellenmiş kısım)
   final List<Map<String, dynamic>> tarifler = [
     {
       'isim': 'Karnıyarık',
