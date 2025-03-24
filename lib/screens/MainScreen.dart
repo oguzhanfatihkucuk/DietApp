@@ -7,6 +7,7 @@ import 'AddProgresTracking/AddProgressTracking.dart';
 import 'AdminAdd.dart';
 import 'CustomerDietPlanView.dart';
 import 'CustomerMealAdd.dart';
+import 'CustomerProgressTracking.dart';
 import 'DietitianDetail/DietitianDetail1.dart';
 import 'DietitianReg.dart';
 import 'Registration.dart';
@@ -57,6 +58,7 @@ class _MainscreenState extends State<Mainscreen> {
         GunlukIlerlemeEkrani(),
         UserProfileScreen(),
         SettingsPage(),
+
       ];
     }
   }
@@ -224,7 +226,7 @@ class _MainscreenState extends State<Mainscreen> {
             ],
             if (!isAdmin && !isDietitian) ...[
              // _buildDrawerItem(Icons.home, 'Ana Ekran', 0, GunlukIlerlemeEkrani()),
-              //_buildDrawerItem(Icons.person, 'Profilim', 5, UserProfileScreen()),
+              _buildDrawerItem(Icons.person, 'İlerleme Takvimim', 18, ProgressTrackingPage()),
 
               _buildDrawerItem(
                   Icons.fastfood, 'Öğün Ekle', 8, WeeklyMealFormScreen()),

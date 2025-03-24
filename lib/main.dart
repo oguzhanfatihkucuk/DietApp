@@ -6,6 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
+//TODO öğün ekleme kısmında öğün şeç gibi bir kısım yap, burada porsiyon tipi de olsun kullanıcı eklediği öğünler kalorisi otomatik hesaplansın
+
+//TODO Ekleme kısmını hallet, kullanıcının belirlene hedef su miktarı olsun ve su ekleyebilsin
+
+//TODO Müşteri için ilerme ekranı koy - burada haftalık ya da aylık olarak kg,yağ
+
+//TODO admin için diyetisyen silme kısmı getir, diyetisyen silinince otomatik olarak müşteriler de silinsin
+
+//TODO diyetisyenler için müşteri sil kısmı getir
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
